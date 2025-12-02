@@ -14,7 +14,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <title>ElecStore</title>
 
@@ -25,23 +24,17 @@ s
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
 
     <!-- Slick -->
-    <%--    <link type="text/css" rel="stylesheet" href="css/slick.css"/>--%>
-    <%--    <link type="text/css" rel="stylesheet" href="css/slick-theme.css"/>--%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css"/>
 
     <!-- nouislider -->
-    <%--    <link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>--%>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.css">
 
     <!-- Font Awesome Icon -->
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <%--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />--%>
 
     <!-- Custom stlylesheet -->
     <link rel="stylesheet" href="css/style.css"/>
-    <%--    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">--%>
-
 
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
