@@ -188,7 +188,7 @@ s
 </nav>
 <!-- /NAVIGATION -->
 
-<!-- SECTION -->
+<!-- SECTION Shop now -->
 <div class="section">
     <!-- container -->
     <div class="container">
@@ -319,7 +319,7 @@ s
 </div>
 <!-- /SECTION -->
 
-<!-- HOT DEAL SECTION -->
+<!-- SECTION Hot deal -->
 <div id="hot-deal" class="section">
     <!-- container -->
     <div class="container">
