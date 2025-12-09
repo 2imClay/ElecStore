@@ -19,7 +19,6 @@
 
     <!-- Google font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
-s
     <!-- Bootstrap -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css"/>
 
@@ -402,7 +401,7 @@ s
                                 <c:forEach items="${products}" var="p" begin="0" end="7">
 
                                     <!-- product -->
-                                    <div class="product">
+                                    <div class="product" style="height: 500px">
                                         <div class="product-img" style="z-index: 20;background-color: white">
                                             <img src="${p.imageUrl}" alt="">
                                             <div class="product-label">
