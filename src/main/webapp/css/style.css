@@ -859,6 +859,7 @@ textarea.input {
 .product {
   position: relative;
   height: 500px;
+  background-color: white;
   margin: 15px 0 60px 0;
   -webkit-box-shadow: 0 0 0 0 #E4E7ED, 0 0 0 1px #E4E7ED;
   box-shadow: 0 0 0 0 #E4E7ED, 0 0 0 1px #E4E7ED;
