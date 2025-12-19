@@ -1,5 +1,8 @@
 package com.elecstore.model;
 
+import com.elecstore.dao.CategoryDAO;
+import com.elecstore.dao.CategoryDAOImpl;
+
 public class Product {
     private int id;
     private String name;
@@ -78,5 +81,19 @@ public class Product {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public String getCategoryName() {
+        if (categoryId <= 0) {
+            return "Unknown";
+        }
+
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        Category category = categoryDAO.findById(categoryId);
+
+        if (category != null) {
+            return category.getName();
+        }
+        return "Unknown";
     }
 }

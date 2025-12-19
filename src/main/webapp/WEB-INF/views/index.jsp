@@ -80,12 +80,13 @@
                     <div class="header-search">
                         <form>
                                 <select class="input-select">
-                                    <option value="0">All Categories</option>
+                                    <option value="0">Danh mục</option>
+                                    <%--                Categories                    --%>
                                     <option value="1">Category 01</option>
                                     <option value="1">Category 02</option>
                                 </select>
-                                <input class="input" placeholder="Search here">
-                            <button class="search-btn">Search</button>
+                                <input class="input" placeholder="Nhập từ khóa để tìm sản phẩm">
+                            <button class="search-btn">Tìm kiếm</button>
                         </form>
                     </div>
                 </div>
@@ -98,8 +99,8 @@
                         <div>
                             <a href="#">
                                 <i class="fa fa-heart-o"></i>
-                                <span>Your Wishlist</span>
-                                <div class="qty">2</div>
+                                <span>Yêu thích</span>
+                                <div class="qty">0</div>
                             </a>
                         </div>
                         <!-- /Wishlist -->
@@ -108,8 +109,8 @@
                         <div class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-shopping-cart"></i>
-                                <span>Your Cart</span>
-                                <div class="qty">3</div>
+                                <span>Giỏ hàng</span>
+                                <div class="qty">0</div>
                             </a>
                             <div class="cart-dropdown">
                                 <div class="cart-list">
@@ -175,9 +176,9 @@
         <div id="responsive-nav">
             <!-- NAV -->
             <ul class="main-nav nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Hot Deals</a></li>
-                <li><a href="#">Categories</a></li>
+                <li class="active"><a href="#">Trang chủ</a></li>
+                <li><a href="#">Cửa hàng</a></li>
+                <li><a href="#">Ưu đãi</a></li>
             </ul>
             <!-- /NAV -->
         </div>
@@ -200,8 +201,8 @@
                         <img src="${pageContext.request.contextPath}/images/shop01.png" alt="">
                     </div>
                     <div class="shop-body">
-                        <h3>Laptop<br>Collection</h3>
-                        <a href="${pageContext.request.contextPath}/home/store" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                        <h3>Tổng hợp<br>Thiết bị điện tử</h3>
+                        <a href="${pageContext.request.contextPath}/home/store" class="cta-btn">Mua ngay <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -214,8 +215,8 @@
                         <img src="${pageContext.request.contextPath}/images/shop03.png" alt="">
                     </div>
                     <div class="shop-body">
-                        <h3>Accessories<br>Collection</h3>
-                        <a href="${pageContext.request.contextPath}/home/store" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                        <h3>Tổng hợp<br>Phụ kiện</h3>
+                        <a href="${pageContext.request.contextPath}/home/store" class="cta-btn">Mua ngay <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -228,8 +229,8 @@
                         <img src="${pageContext.request.contextPath}/images/shop02.png" alt="">
                     </div>
                     <div class="shop-body">
-                        <h3>Cameras<br>Collection</h3>
-                        <a href="${pageContext.request.contextPath}/home/store" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                        <h3>Tổng hợp<br>Máy móc</h3>
+                        <a href="${pageContext.request.contextPath}/home/store" class="cta-btn">Mua ngay <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -251,9 +252,10 @@
             <!-- section title -->
             <div class="col-md-12">
                 <div class="section-title">
-                    <h3 class="title">New Products</h3>
+                    <h3 class="title">Sản phẩm mới</h3>
                     <div class="section-nav">
                         <ul class="section-tab-nav tab-nav">
+                            <%--             Categories               --%>
                             <li class="active"><a data-toggle="tab" href="#tab1">Laptops</a></li>
                             <li><a data-toggle="tab" href="#tab1">Smartphones</a></li>
                             <li><a data-toggle="tab" href="#tab1">Cameras</a></li>
@@ -272,6 +274,7 @@
                         <div id="tab1" class="tab-pane active">
                             <div class="products-slick" data-nav="#slick-nav-1">
 
+
                                 <c:forEach items="${products}" var="p" begin="0" end="7">
 
                                 <!-- product -->
@@ -285,7 +288,7 @@
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">Category</p>
-                                        <h3 class="product-name"><a href="#" >${p.name}</a></h3>
+                                        <h3 class="product-name"><a href="${pageContext.request.contextPath}/product-detail?id=${p.id}" >${p.name}</a></h3>
                                         <h4 class="product-price">${p.price}<del class="product-old-price">${p.price}</del></h4>
                                         <div class="product-rating">
                                             <i class="fa fa-star"></i>
@@ -295,13 +298,13 @@
                                             <i class="fa fa-star"></i>
                                         </div>
                                         <div class="product-btns">
-                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+<%--                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>--%>
+<%--                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>--%>
+                                            <button href="${pageContext.request.contextPath}/product-detail?id=${p.id}" class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Chi tiết sản phẩm</span></button>
                                         </div>
                                     </div>
                                     <div class="add-to-cart" style="z-index: -20">
-                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Giỏ hàng</button>
                                     </div>
                                 </div>
                                 <!-- /product -->
@@ -356,9 +359,9 @@
                             </div>
                         </li>
                     </ul>
-                    <h2 class="text-uppercase">hot deal this week</h2>
-                    <p>New Collection Up to 50% OFF</p>
-                    <a class="primary-btn cta-btn" href="${pageContext.request.contextPath}/home/store">Shop now</a>
+                    <h2 class="text-uppercase">Ưa đãi tuần này</h2>
+                    <p>Khuyến mãi lên đến 50%</p>
+                    <a class="primary-btn cta-btn" href="${pageContext.request.contextPath}/home/store">Mua ngay</a>
                 </div>
             </div>
         </div>
@@ -378,9 +381,10 @@
             <!-- section title -->
             <div class="col-md-12">
                 <div class="section-title">
-                    <h3 class="title">Top-selling</h3>
+                    <h3 class="title">Bán chạy</h3>
                     <div class="section-nav">
                         <ul class="section-tab-nav tab-nav">
+                            <%--             Categories               --%>
                             <li class="active"><a data-toggle="tab" href="#tab2">Laptops</a></li>
                             <li><a data-toggle="tab" href="#tab2">Smartphones</a></li>
                             <li><a data-toggle="tab" href="#tab2">Cameras</a></li>
@@ -411,7 +415,7 @@
                                         </div>
                                         <div class="product-body">
                                             <p class="product-category">Category</p>
-                                            <h3 class="product-name"><a href="#" >${p.name}</a></h3>
+                                            <h3 class="product-name"><a href="${pageContext.request.contextPath}/product-detail?id=${p.id}" >${p.name}</a></h3>
                                             <h4 class="product-price">${p.price}<del class="product-old-price">${p.price}</del></h4>
                                             <div class="product-rating">
                                                 <i class="fa fa-star"></i>
@@ -421,13 +425,13 @@
                                                 <i class="fa fa-star"></i>
                                             </div>
                                             <div class="product-btns">
-                                                <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                                <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                                                <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+<%--                                                <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>--%>
+<%--                                                <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>--%>
+                                                <button href="${pageContext.request.contextPath}/product-detail?id=${p.id}" class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Chi tiết sản phẩm</span></button>
                                             </div>
                                         </div>
                                         <div class="add-to-cart" style="z-index: -20">
-                                            <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                                            <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Giỏ hàng</button>
                                         </div>
                                     </div>
                                     <!-- /product -->

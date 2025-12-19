@@ -228,17 +228,19 @@
             <div id="aside" class="col-md-3">
                 <!-- aside Widget -->
                 <div class="aside">
-                    <h3 class="aside-title">Categories</h3>
+                    <h3 class="aside-title">Danh mục</h3>
+                    <c:forEach items="${categories}" var="c">
                     <div class="checkbox-filter">
                         <div class="input-checkbox">
-                            <input type="checkbox" id="category-1">
-                            <label for="category-1">
-                                <span></span>
-                                Laptops
-                                <small>(120)</small>
-                            </label>
+                            <input type="checkbox" id="category">
+                                <label for="category">
+                                    <span></span>
+                                    ${c.name}
+<%--                                    <small>(120)</small>--%>
+                                </label>
                         </div>
                     </div>
+                    </c:forEach>
                 </div>
                 <!-- /aside Widget -->
 
@@ -323,8 +325,8 @@
                                         </div>
                                     </div>
                                     <div class="product-body">
-                                        <p class="product-category">Category</p>
-                                        <h3 class="product-name"><a href="#" >${p.name}</a></h3>
+                                        <p class="product-category">${p.categoryName}</p>
+                                        <h3 class="product-name"><a href="${pageContext.request.contextPath}/product-detail?id=${p.id}" >${p.name}</a></h3>
                                         <h4 class="product-price">${p.price}<del class="product-old-price">${p.price}</del></h4>
                                         <div class="product-rating">
                                             <i class="fa fa-star"></i>
@@ -334,9 +336,9 @@
                                             <i class="fa fa-star"></i>
                                         </div>
                                         <div class="product-btns">
-                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+<%--                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>--%>
+<%--                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>--%>
+                                            <button href="${pageContext.request.contextPath}/product-detail?id=${p.id}" class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Chi tiết sản phẩm</span></button>
                                         </div>
                                     </div>
                                     <div class="add-to-cart" style="z-index: -20">
