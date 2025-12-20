@@ -79,6 +79,29 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
+    public List<Product> searchByName(String keyword) {
+
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE name LIKE ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)
+        ){
+
+            ps.setString(1, "%"+keyword+"%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapRow(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    @Override
     public void insert(Product p) {
         String sql = "INSERT INTO products(name, image_url, description, "
                 + "category_id, brand, price) VALUES (?, ?, ?, ?, ?, ?)";
@@ -130,4 +153,6 @@ public class ProductDAOImpl implements ProductDAO {
             e.printStackTrace();
         }
     }
+
+
 }

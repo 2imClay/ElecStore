@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/home/store")
+@WebServlet("/store")
 public class StoreServlet extends HttpServlet {
 
     @Override
@@ -23,8 +23,26 @@ public class StoreServlet extends HttpServlet {
         ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();
         CategoryDAO categoryDAO = DAOFactory.getInstance().getCategoryDAO();
 
+        String keyword = req.getParameter("keyword");
+        String categoryIdStr = req.getParameter("categoryId");
+
         List<Product> products = productDAO.findAll();
         List<Category> categories = categoryDAO.findAll();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            products = productDAO.searchByName(keyword.trim());
+            req.setAttribute("keyword", keyword);
+        } else if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+            try {
+                int categoryId = Integer.parseInt(categoryIdStr);
+                products = productDAO.findByCategoryId(categoryId);
+                req.setAttribute("categoryId", categoryId);
+            } catch (NumberFormatException e) {
+                products = productDAO.findAll();
+            }
+        } else {
+            products = productDAO.findAll();
+        }
 
         req.setAttribute("products",products);
         req.setAttribute("categories",categories);

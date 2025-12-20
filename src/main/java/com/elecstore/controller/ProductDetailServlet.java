@@ -1,9 +1,6 @@
 package com.elecstore.controller;
 
-import com.elecstore.dao.CategoryDAO;
-import com.elecstore.dao.CategoryDAOImpl;
-import com.elecstore.dao.ProductDAO;
-import com.elecstore.dao.ProductDAOImpl;
+import com.elecstore.dao.*;
 import com.elecstore.model.Category;
 import com.elecstore.model.Product;
 import jakarta.servlet.ServletException;
@@ -17,8 +14,8 @@ import java.io.IOException;
 @WebServlet("/product-detail")
 public class ProductDetailServlet extends HttpServlet {
 
-    private ProductDAO productDAO = new ProductDAOImpl();
-    private CategoryDAO  categoryDAO = new CategoryDAOImpl();
+    ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();
+    CategoryDAO categoryDAO = DAOFactory.getInstance().getCategoryDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
