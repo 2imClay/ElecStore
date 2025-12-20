@@ -43,21 +43,6 @@
 <body>
 <!-- HEADER -->
 <header>
-    <!-- TOP HEADER -->
-    <div id="top-header">
-        <div class="container">
-            <ul class="header-links pull-left">
-                <li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
-                <li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
-                <li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
-            </ul>
-            <ul class="header-links pull-right">
-                <li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-                <li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
-            </ul>
-        </div>
-    </div>
-    <!-- /TOP HEADER -->
 
     <!-- MAIN HEADER -->
     <div id="header">
@@ -68,7 +53,7 @@
                 <!-- LOGO -->
                 <div class="col-md-3">
                     <div class="header-logo">
-                        <a href="#" class="logo">
+                        <a href="${pageContext.request.contextPath}/home" class="logo">
                             <img src="${pageContext.request.contextPath}/images/logo.png" alt="">
                         </a>
                     </div>
@@ -78,28 +63,45 @@
                 <!-- SEARCH BAR -->
                 <div class="col-md-6">
                     <div class="header-search">
-                        <form>
-                            <select class="input-select">
-                                <option value="0">All Categories</option>
-                                <option value="1">Category 01</option>
-                                <option value="1">Category 02</option>
-                            </select>
-                            <input class="input" placeholder="Search here">
-                            <button class="search-btn">Search</button>
+                        <form id="searchForm" method="get" action="${pageContext.request.contextPath}/store" style="display: flex":>
+                            <div style="position: relative; flex: 1; width: 100%">
+                                <input class="input" id="searchInput" name="keyword"
+                                       placeholder="Nhập từ khóa để tìm sản phẩm"
+                                       autocomplete="off"
+                                       style="width: 100%; border-radius: 40px 0 0 40px;"
+                                >
+
+                                <!-- Dropdown gợi ý -->
+                                <div id="suggestDropdown" style="
+                                        display: none;
+                                        position: absolute;
+                                        top: 100%;
+                                        left: 0;
+                                        right: 0;
+                                        background: white;
+                                        border: 1px solid #ddd;
+                                        border-top: none;
+                                        max-height: 300px;
+                                        overflow-y: auto;
+                                        z-index: 999;
+                                    ">
+                                </div>
+                            </div>
+                            <button class="search-btn" type="submit">Tìm kiếm</button>
                         </form>
                     </div>
                 </div>
                 <!-- /SEARCH BAR -->
 
                 <!-- ACCOUNT -->
-                <div class="col-md-3 clearfix">
-                    <div class="header-ctn">
+                <div class="col-md-3 clearfix" style="display: flex">
+                    <div class="header-ctn" style="display: flex">
                         <!-- Wishlist -->
                         <div>
                             <a href="#">
                                 <i class="fa fa-heart-o"></i>
-                                <span>Your Wishlist</span>
-                                <div class="qty">2</div>
+                                <span>Yêu thích</span>
+                                <div class="qty">0</div>
                             </a>
                         </div>
                         <!-- /Wishlist -->
@@ -108,8 +110,8 @@
                         <div class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-shopping-cart"></i>
-                                <span>Your Cart</span>
-                                <div class="qty">3</div>
+                                <span>Giỏ hàng</span>
+                                <div class="qty">0</div>
                             </a>
                             <div class="cart-dropdown">
                                 <div class="cart-list">
@@ -147,6 +149,18 @@
                         </div>
                         <!-- /Cart -->
 
+                        <!-- Account -->
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-user-o"></i>
+                                <span>Account</span>
+                            </a>
+                            <div class="acc-dropdown cart-dropdown" style="width: 100px; height: 100px">
+
+                            </div>
+                        </div>
+                        <!-- /Account -->
+
                         <!-- Menu Toogle -->
                         <div class="menu-toggle">
                             <a href="#">
@@ -175,9 +189,9 @@
         <div id="responsive-nav">
             <!-- NAV -->
             <ul class="main-nav nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Hot Deals</a></li>
-                <li><a href="#">Categories</a></li>
+                <li class="active"><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
+                <li><a href="${pageContext.request.contextPath}/store">Cửa hàng</a></li>
+                <li><a href="#">Ưu đãi</a></li>
             </ul>
             <!-- /NAV -->
         </div>
