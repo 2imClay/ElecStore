@@ -41,22 +41,6 @@
 <body>
 <!-- HEADER -->
 <header>
-<%--    <!-- TOP HEADER -->--%>
-<%--    <div id="top-header">--%>
-<%--        <div class="container">--%>
-<%--            <ul class="header-links pull-left">--%>
-<%--                <li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>--%>
-<%--                <li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>--%>
-<%--                <li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>--%>
-<%--            </ul>--%>
-<%--            <ul class="header-links pull-right">--%>
-<%--                <li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>--%>
-<%--                <li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>--%>
-<%--            </ul>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-<%--    <!-- /TOP HEADER -->--%>
-
     <!-- MAIN HEADER -->
     <div id="header">
         <!-- container -->
@@ -66,7 +50,7 @@
                 <!-- LOGO -->
                 <div class="col-md-3">
                     <div class="header-logo">
-                        <a href="#" class="logo">
+                        <a href="${pageContext.request.contextPath}/home" class="logo">
                             <img src="${pageContext.request.contextPath}/images/logo.png" alt="">
                         </a>
                     </div>
@@ -76,14 +60,37 @@
                 <!-- SEARCH BAR -->
                 <div class="col-md-6">
                     <div class="header-search">
-                        <form>
-                            <select class="input-select">
-                                <option value="0">All Categories</option>
-                                <option value="1">Category 01</option>
-                                <option value="1">Category 02</option>
-                            </select>
-                            <input class="input" placeholder="Search here">
-                            <button class="search-btn">Search</button>
+                        <form id="searchForm" method="get" action="${pageContext.request.contextPath}/store" style="display: flex":>
+                            <%--                                <select class="input-select">--%>
+                            <%--                                    <option value="0">Danh mục</option>--%>
+                            <%--                                    &lt;%&ndash;                Categories                    &ndash;%&gt;--%>
+                            <%--                                    <option value="1">Category 01</option>--%>
+                            <%--                                    <option value="1">Category 02</option>--%>
+                            <%--                                </select>--%>
+                            <div style="position: relative; flex: 1; width: 100%">
+                                <input class="input" id="searchInput" name="keyword"
+                                       placeholder="Nhập từ khóa để tìm sản phẩm"
+                                       autocomplete="off"
+                                       style="width: 100%; border-radius: 40px 0 0 40px;"
+                                >
+
+                                <!-- Dropdown gợi ý -->
+                                <div id="suggestDropdown" style="
+                                        display: none;
+                                        position: absolute;
+                                        top: 100%;
+                                        left: 0;
+                                        right: 0;
+                                        background: white;
+                                        border: 1px solid #ddd;
+                                        border-top: none;
+                                        max-height: 300px;
+                                        overflow-y: auto;
+                                        z-index: 999;
+                                    ">
+                                </div>
+                            </div>
+                            <button class="search-btn" type="submit">Tìm kiếm</button>
                         </form>
                     </div>
                 </div>
@@ -96,8 +103,8 @@
                         <div>
                             <a href="#">
                                 <i class="fa fa-heart-o"></i>
-                                <span>Your Wishlist</span>
-                                <div class="qty">2</div>
+                                <span>Yêu thích</span>
+                                <div class="qty">0</div>
                             </a>
                         </div>
                         <!-- /Wishlist -->
@@ -106,8 +113,8 @@
                         <div class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-shopping-cart"></i>
-                                <span>Your Cart</span>
-                                <div class="qty">3</div>
+                                <span>Giỏ hàng</span>
+                                <div class="qty">0</div>
                             </a>
                             <div class="cart-dropdown">
                                 <div class="cart-list">
@@ -185,9 +192,9 @@
         <div id="responsive-nav">
             <!-- NAV -->
             <ul class="main-nav nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Hot Deals</a></li>
-                <li><a href="#">Categories</a></li>
+                <li><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
+                <li class="active"><a href="${pageContext.request.contextPath}/store">Cửa hàng</a></li>
+                <li><a href="#">Ưu đãi</a></li>
             </ul>
             <!-- /NAV -->
         </div>
@@ -196,27 +203,6 @@
     <!-- /container -->
 </nav>
 <!-- /NAVIGATION -->
-
-<!-- BREADCRUMB -->
-<%--<div id="breadcrumb" class="section">--%>
-<%--    <!-- container -->--%>
-<%--    <div class="container">--%>
-<%--        <!-- row -->--%>
-<%--        <div class="row">--%>
-<%--            <div class="col-md-12">--%>
-<%--                <ul class="breadcrumb-tree">--%>
-<%--                    <li><a href="#">Home</a></li>--%>
-<%--                    <li><a href="#">All Categories</a></li>--%>
-<%--                    <li><a href="#">Accessories</a></li>--%>
-<%--                    <li class="active">Headphones (227,490 Results)</li>--%>
-<%--                </ul>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <!-- /row -->--%>
-<%--    </div>--%>
-<%--    <!-- /container -->--%>
-<%--</div>--%>
-<!-- /BREADCRUMB -->
 
 <!-- SECTION -->
 <div class="section">
@@ -231,14 +217,12 @@
                     <h3 class="aside-title">Danh mục</h3>
                     <c:forEach items="${categories}" var="c">
                     <div class="checkbox-filter">
-                        <div class="input-checkbox">
-                            <input type="checkbox" id="category">
                                 <label for="category">
                                     <span></span>
-                                    ${c.name}
-<%--                                    <small>(120)</small>--%>
+                                    <a href="${pageContext.request.contextPath}/store?categoryId=${c.id}">
+                                            ${c.name}
+                                    </a>
                                 </label>
-                        </div>
                     </div>
                     </c:forEach>
                 </div>
@@ -474,6 +458,73 @@
 <script src="${pageContext.request.contextPath}/js/nouislider.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery.zoom.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // AJAX gợi ý tìm kiếm
+        $('#searchInput').on('keyup', function() {
+            let keyword = $(this).val().trim();
+            let dropdown = $('#suggestDropdown');
+
+            if (keyword.length < 2) {
+                dropdown.hide();
+                return;
+            }
+
+            $.ajax({
+                url: '${pageContext.request.contextPath}/search',
+                method: 'GET',
+                data: { keyword: keyword },
+                dataType: 'json',
+                success: function(data) {
+                    dropdown.empty();
+
+                    if (data.length === 0) {
+                        dropdown.html('<div style="padding: 10px; color: #999;">No results</div>');
+                        dropdown.show();
+                        return;
+                    }
+
+                    data.forEach(function(product) {
+                        let html = `
+                        <a href="${pageContext.request.contextPath}/product-detail?id=` + product.id + `"
+                           style="
+                               display: block;
+                               padding: 10px 15px;
+                               color: #333;
+                               text-decoration: none;
+                               border-bottom: 1px solid #eee;
+                           "
+                           onmouseover="this.style.backgroundColor='#f5f5f5'"
+                           onmouseout="this.style.backgroundColor='white'"
+                        >
+
+                            <strong>` + product.name + `</strong>
+                            <br>
+                            <small style="color: #999;">$` + product.price + `</small>
+                        </a>
+                    `;
+                        dropdown.append(html);
+                    });
+
+                    dropdown.show();
+                }
+            });
+        });
+
+        // Đóng dropdown khi click bên ngoài
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.header-search').length) {
+                $('#suggestDropdown').hide();
+            }
+        });
+
+        // Đóng dropdown khi submit form
+        $('#searchForm').on('submit', function() {
+            $('#suggestDropdown').hide();
+        });
+    });
+</script>
 
 </body>
 </html>
