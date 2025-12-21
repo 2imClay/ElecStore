@@ -1,31 +1,397 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: dell
-  Date: 20/12/2025
-  Time: 6:12 CH
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+/* ===== REGISTER.JSP - Trang Đăng Ký ===== */
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký - ElecStore</title>
+    <title>Đăng Ký - ElecStore</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- Google font -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css"/>
-    <!-- Font Awesome Icon -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/font-awesome.min.css">
-    <!-- Custom stylesheet -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/register.css"/>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
+        .register-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Left Side - Banner */
+        .register-banner {
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .register-banner h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .register-banner p {
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .banner-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        /* Right Side - Form */
+        .register-form-section {
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .register-form-section h3 {
+            font-size: 28px;
+            color: #212121;
+            margin-bottom: 10px;
+        }
+
+        .register-form-section > p {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #d32f2f;
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        }
+
+        /* Error Styling */
+        .form-group input.error,
+        .form-group select.error {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-group input.error ~ .error-message,
+        .form-group select.error ~ .error-message {
+            display: block;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2e7d32;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Password Strength */
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            background: #ccc;
+            width: 0%;
+            transition: all 0.3s ease;
+        }
+
+        .password-strength-bar.weak {
+            background: #f44336;
+            width: 33%;
+        }
+
+        .password-strength-bar.medium {
+            background: #ff9800;
+            width: 66%;
+        }
+
+        .password-strength-bar.strong {
+            background: #4caf50;
+            width: 100%;
+        }
+
+        .password-strength-text {
+            font-size: 11px;
+            margin-top: 4px;
+            color: #666;
+        }
+
+        /* Two Column Form */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Checkbox */
+        .form-checkbox {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #d32f2f;
+            flex-shrink: 0;
+        }
+
+        .form-checkbox label {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .form-checkbox a {
+            color: #d32f2f;
+            text-decoration: none;
+        }
+
+        .form-checkbox a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .form-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn-register {
+            flex: 1;
+            padding: 14px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-register:hover:not(:disabled) {
+            background: #b71c1c;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-reset {
+            padding: 14px 24px;
+            background: transparent;
+            color: #d32f2f;
+            border: 2px solid #d32f2f;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-reset:hover {
+            background: #fff5f5;
+        }
+
+        /* Login Link */
+        .login-link {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .login-link p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .login-link a {
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(211, 47, 47, 0.3);
+            border-top: 2px solid #d32f2f;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+        }
+
+        .btn-register.loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-register.loading .spinner {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert.error {
+            background: #ffebee;
+            color: #f44336;
+            border-left: 4px solid #f44336;
+        }
+
+        .alert.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .alert.warning {
+            background: #fff3e0;
+            color: #e65100;
+            border-left: 4px solid #e65100;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .register-container {
+                grid-template-columns: 1fr;
+            }
+
+            .register-banner {
+                padding: 40px 20px;
+            }
+
+            .register-form-section {
+                padding: 40px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .register-banner h2 {
+                font-size: 24px;
+            }
+
+            .register-form-section h3 {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-
     <div class="register-container">
         <!-- Banner Section -->
         <div class="register-banner">
@@ -130,9 +496,7 @@
         </div>
     </div>
 
-<script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-
+    <!-- JavaScript Validation & Submission -->
     <script>
         const form = document.getElementById('registerForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -302,6 +666,5 @@
             });
         });
     </script>
-
 </body>
 </html>

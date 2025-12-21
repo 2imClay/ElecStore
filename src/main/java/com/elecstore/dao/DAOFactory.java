@@ -19,4 +19,8 @@ public class DAOFactory {
         return new CategoryDAOImpl();
     }
 
+    public UserDAO getUserDAO() {
+        return new UserDAOImpl();
+    }
+
 }

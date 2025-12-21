@@ -155,19 +155,25 @@
                                 <i class="fa fa-user-o"></i>
                                 <span>Account</span>
                             </a>
-                            <div class="acc-dropdown cart-dropdown" style="width: 100px; height: 100px">
-
+                            <div class="acc-dropdown cart-dropdown" style="width: 200%; display: flex; flex-direction: column">
+                                <button style="background-color: transparent; width: 100%; border: none; border-bottom: 1px solid black">
+                                    <a href="${pageContext.request.contextPath}/user-information">USERNAME</a>
+                                </button>
+                                <button style="background-color: transparent; width: 100%; border: none;">
+                                    <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
+                                </button>
+                            </div>
                             </div>
                         </div>
                         <!-- /Account -->
 
                         <!-- Menu Toogle -->
-                        <div class="menu-toggle">
-                            <a href="#">
-                                <i class="fa fa-bars"></i>
-                                <span>Menu</span>
-                            </a>
-                        </div>
+<%--                        <div class="menu-toggle">--%>
+<%--                            <a href="#">--%>
+<%--                                <i class="fa fa-bars"></i>--%>
+<%--                                <span>Menu</span>--%>
+<%--                            </a>--%>
+<%--                        </div>--%>
                         <!-- /Menu Toogle -->
                     </div>
                 </div>
