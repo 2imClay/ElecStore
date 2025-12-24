@@ -4,14 +4,12 @@ import com.elecstore.dao.*;
 import com.elecstore.model.Category;
 import com.elecstore.model.Product;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/product-detail")
 public class ProductDetailServlet extends HttpServlet {
 
     ProductDAO productDAO = DAOFactory.getInstance().getProductDAO();

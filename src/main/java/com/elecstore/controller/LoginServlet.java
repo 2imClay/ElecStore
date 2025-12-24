@@ -21,14 +21,12 @@ public class LoginServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        // Nếu user đã đăng nhập, redirect tới trang chủ
         HttpSession session = request.getSession();
         if (session.getAttribute("user") != null) {
             response.sendRedirect("home");
             return;
         }
 
-        // Lấy email từ query parameter (nếu có - từ register)
         String email = request.getParameter("email");
         if (email != null && !email.isEmpty()) {
             request.setAttribute("email", email);

@@ -18,20 +18,15 @@ public class LogoutServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        // Get session
         HttpSession session = request.getSession();
 
-        // Get user info before invalidate (for logging)
         Object userEmail = session.getAttribute("userEmail");
         System.out.println("[LOGOUT] ✓ User logged out: " + (userEmail != null ? userEmail : "Unknown"));
 
-        // Invalidate session (xóa tất cả attributes)
         session.invalidate();
 
-        // Set message để hiển thị ở login page
         request.getSession().setAttribute("logoutSuccess", "✓ Đã đăng xuất thành công");
 
-        // Redirect to login
         response.sendRedirect("login");
     }
 
