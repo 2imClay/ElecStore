@@ -7,4 +7,74 @@
 
 
 
+    <display-name>ElecStore</display-name>
+
+    <!-- ============================================ -->
+    <!-- REGISTER SYSTEM SERVLETS                    -->
+    <!-- ============================================ -->
+
+    <!-- Register Servlet -->
+    <servlet>
+        <servlet-name>RegisterServlet</servlet-name>
+        <servlet-class>com.elecstore.controller.RegisterServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+
+    <!-- Check Email Servlet (AJAX validation) -->
+    <servlet>
+        <servlet-name>CheckEmailServlet</servlet-name>
+        <servlet-class>com.elecstore.controller.CheckEmailServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CheckEmailServlet</servlet-name>
+        <url-pattern>/check-email</url-pattern>
+    </servlet-mapping>
+
+    <!-- ============================================ -->
+    <!-- LOGIN SYSTEM SERVLETS                       -->
+    <!-- ============================================ -->
+
+    <!-- Login Servlet -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.elecstore.controller.LoginServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <!-- Logout Servlet -->
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>com.elecstore.controller.LogoutServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <!-- ============================================ -->
+    <!-- USER INFORMATION SERVLETS                   -->
+    <!-- ============================================ -->
+
+    <!-- User Information Servlet -->
+    <servlet>
+        <servlet-name>UserInfoServlet</servlet-name>
+        <servlet-class>com.elecstore.controller.UserInformationServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UserInfoServlet</servlet-name>
+        <url-pattern>/user-information</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>

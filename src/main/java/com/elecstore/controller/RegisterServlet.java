@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     private  static final long serialVersionUID = 1L;
     private UserDAO userDAO = DAOFactory.getInstance().getUserDAO();
@@ -23,12 +22,14 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        // Nếu user đã đăng nhập, redirect tới trang chủ
         if (req.getSession().getAttribute("user") != null) {
-            resp.sendRedirect(req.getContextPath() + "/home");
+            resp.sendRedirect("home");
             return;
         }
 
-        req.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req,resp);
+        // Forward tới register.jsp
+        req.getRequestDispatcher("WEB-INF/views/register.jsp").forward(req, resp);
 
     }
 
@@ -148,18 +149,37 @@ public class RegisterServlet extends HttpServlet {
             newUser.setIsActive((byte) 1);
 
             // ===== SAVE TO DATABASE =====
+            System.out.println("[REGISTER] Đang lưu user vào database...");
             boolean isRegistered = userDAO.save(newUser);
 
             if (isRegistered) {
-                json.addProperty("success", true);
-                json.addProperty("message", "Đăng ký thành công! Vui lòng đăng nhập");
-                json.addProperty("redirectUrl", "login?email=" + email);
+                System.out.println("[REGISTER] ✓ User đăng ký thành công: " + email);
+                req.getSession().setAttribute("registerSuccess",
+                        "✓ Đăng ký thành công! Vui lòng đăng nhập.");
+                resp.sendRedirect("login?email=" + email);
             } else {
-                json.addProperty("success", false);
-                json.addProperty("message", "Đăng ký thất bại. Vui lòng thử lại");
+                System.out.println("[REGISTER] ✗ Lỗi: insertRow trả về false");
+                req.setAttribute("error", "❌ Đăng ký thất bại. Vui lòng thử lại");
+                req.getRequestDispatcher("WEB-INF/views/register.jsp").forward(req, resp);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("[REGISTER] ❌ SQLException: " + e.getMessage());
+            e.printStackTrace();
+            req.setAttribute("error", "❌ Lỗi cơ sở dữ liệu: " + e.getMessage());
+            try {
+                req.getRequestDispatcher("WEB-INF/views/register.jsp").forward(req, resp);
+            } catch (ServletException | IOException e1) {
+                e1.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.err.println("[REGISTER] ❌ Exception: " + e.getMessage());
+            e.printStackTrace();
+            req.setAttribute("error", "❌ Đã xảy ra lỗi: " + e.getMessage());
+            try {
+                req.getRequestDispatcher("WEB-INF/views/register.jsp").forward(req, resp);
+            } catch (ServletException | IOException e1) {
+                e1.printStackTrace();
+            }
         }
 
     }

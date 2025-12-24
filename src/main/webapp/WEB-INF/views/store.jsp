@@ -41,6 +41,7 @@
 <body>
 <!-- HEADER -->
 <header>
+
     <!-- MAIN HEADER -->
     <div id="header">
         <!-- container -->
@@ -61,12 +62,6 @@
                 <div class="col-md-6">
                     <div class="header-search">
                         <form id="searchForm" method="get" action="${pageContext.request.contextPath}/store" style="display: flex":>
-                            <%--                                <select class="input-select">--%>
-                            <%--                                    <option value="0">Danh mục</option>--%>
-                            <%--                                    &lt;%&ndash;                Categories                    &ndash;%&gt;--%>
-                            <%--                                    <option value="1">Category 01</option>--%>
-                            <%--                                    <option value="1">Category 02</option>--%>
-                            <%--                                </select>--%>
                             <div style="position: relative; flex: 1; width: 100%">
                                 <input class="input" id="searchInput" name="keyword"
                                        placeholder="Nhập từ khóa để tìm sản phẩm"
@@ -158,29 +153,41 @@
                                 <i class="fa fa-user-o"></i>
                                 <span>Account</span>
                             </a>
-                            <div class="acc-dropdown cart-dropdown" style="width: 100px; height: 100px">
+                            <div class="acc-dropdown cart-dropdown" style="width: 200%; display: flex; flex-direction: column">
 
+                                <c:if test="${not empty sessionScope.user}">
+                                    <button style="background-color: transparent; width: 100%; border: none; border-bottom: 1px solid black; padding-bottom: 10px">
+                                        <a href="${pageContext.request.contextPath}/user-information">${sessionScope.userName}</a>
+                                        <small style="color: orangered;">${sessionScope.userEmail}</small>
+                                    </button>
+                                    <button style="background-color: transparent; width: 100%; border: none; border-bottom: 1px solid black; padding: 10px 0 10px 0">
+                                        <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
+                                    </button>
+                                </c:if>
+                                <c:if test="${empty sessionScope.user}">
+                                    <button style="background-color: transparent; width: 100%; border: none;">
+                                        <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
+                                    </button>
+                                </c:if>
                             </div>
                         </div>
-                        <!-- /Account -->
-
-                        <!-- Menu Toogle -->
-                        <div class="menu-toggle">
-                            <a href="#">
-                                <i class="fa fa-bars"></i>
-                                <span>Menu</span>
-                            </a>
-                        </div>
-                        <!-- /Menu Toogle -->
                     </div>
+                    <!-- /Account -->
+
+                    <!-- Menu Toogle -->
+                    <%--                        <div class="menu-toggle">--%>
+                    <%--                            <a href="#">--%>
+                    <%--                                <i class="fa fa-bars"></i>--%>
+                    <%--                                <span>Menu</span>--%>
+                    <%--                            </a>--%>
+                    <%--                        </div>--%>
+                    <!-- /Menu Toogle -->
                 </div>
-                <!-- /ACCOUNT -->
             </div>
-            <!-- row -->
+            <!-- /ACCOUNT -->
         </div>
-        <!-- container -->
+        <!-- row -->
     </div>
-    <!-- /MAIN HEADER -->
 </header>
 <!-- /HEADER -->
 

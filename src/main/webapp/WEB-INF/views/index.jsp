@@ -156,12 +156,21 @@
                                 <span>Account</span>
                             </a>
                             <div class="acc-dropdown cart-dropdown" style="width: 200%; display: flex; flex-direction: column">
-                                <button style="background-color: transparent; width: 100%; border: none; border-bottom: 1px solid black">
-                                    <a href="${pageContext.request.contextPath}/user-information">USERNAME</a>
-                                </button>
-                                <button style="background-color: transparent; width: 100%; border: none;">
-                                    <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
-                                </button>
+
+                                <c:if test="${not empty sessionScope.user}">
+                                    <button style="background-color: transparent; width: 100%; border: none; border-bottom: 1px solid black; padding-bottom: 10px">
+                                        <a href="${pageContext.request.contextPath}/user-information">${sessionScope.userName}</a>
+                                        <small style="color: orangered;">${sessionScope.userEmail}</small>
+                                    </button>
+                                    <button style="background-color: transparent; width: 100%; border: none; border-bottom: 1px solid black; padding: 10px 0 10px 0">
+                                        <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
+                                    </button>
+                                </c:if>
+                                <c:if test="${empty sessionScope.user}">
+                                    <button style="background-color: transparent; width: 100%; border: none;">
+                                        <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
+                                    </button>
+                                </c:if>
                             </div>
                             </div>
                         </div>
@@ -175,15 +184,12 @@
 <%--                            </a>--%>
 <%--                        </div>--%>
                         <!-- /Menu Toogle -->
-                    </div>
                 </div>
-                <!-- /ACCOUNT -->
             </div>
-            <!-- row -->
+            <!-- /ACCOUNT -->
         </div>
-        <!-- container -->
+        <!-- row -->
     </div>
-    <!-- /MAIN HEADER -->
 </header>
 <!-- /HEADER -->
 

@@ -1,43 +1,282 @@
 package com.elecstore.dao;
 
 import com.elecstore.model.User;
+import com.elecstore.utils.DatabaseConnection;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
     @Override
     public boolean save(User user) throws SQLException {
-        return false;
+        String sql = "INSERT INTO users (email, password, first_name, last_name, phone, address, city, country, is_active, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            System.out.println("[UserDAOImpl] Connection: " + (conn != null ? "✓ OK" : "✗ NULL"));
+
+            pstmt = conn.prepareStatement(sql);
+
+            // Set parameters
+            pstmt.setString(1, user.getEmail());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getFirstName());
+            pstmt.setString(4, user.getLastName());
+            pstmt.setString(5, user.getPhone());
+            pstmt.setString(6, user.getAddress());
+            pstmt.setString(7, user.getCity());
+            pstmt.setString(8, user.getCountry());
+            pstmt.setByte(9, user.getIsActive());
+
+            System.out.println("[UserDAOImpl] SQL: " + sql);
+            System.out.println("[UserDAOImpl] Email: " + user.getEmail());
+            System.out.println("[UserDAOImpl] FirstName: " + user.getFirstName());
+            System.out.println("[UserDAOImpl] LastName: " + user.getLastName());
+
+            // Execute UPDATE
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("[UserDAOImpl] Rows affected: " + rowsAffected);
+
+            if (rowsAffected > 0) {
+                System.out.println("[UserDAOImpl] ✓ Save successful!");
+                return true;
+            } else {
+                System.out.println("[UserDAOImpl] ✗ Save failed - no rows affected");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("[UserDAOImpl] ❌ SQLException in save(): " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+
+        } finally {
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
-    public User getById(int id) throws SQLException {
-        return null;
+    public User getById(int userId) throws SQLException {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+            return null;
+
+        } catch (SQLException e) {
+            System.err.println("[UserDAOImpl] ❌ SQLException in getById(): " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+
+        } finally {
+            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
     }
 
     @Override
     public User findByEmail(String email) throws SQLException {
-        return null;
+        String sql = "SELECT * FROM users WHERE email = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+            return null;
+
+        } catch (SQLException e) {
+            System.err.println("[UserDAOImpl] ❌ SQLException in findByEmail(): " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+
+        } finally {
+            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
     }
 
     @Override
     public boolean update(User user) throws SQLException {
-        return false;
+        String sql = "UPDATE users SET email=?, password=?, first_name=?, last_name=?, phone=?, address=?, city=?, country=?, is_active=?, updated_at=NOW() WHERE id=?";
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, user.getEmail());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getFirstName());
+            pstmt.setString(4, user.getLastName());
+            pstmt.setString(5, user.getPhone());
+            pstmt.setString(6, user.getAddress());
+            pstmt.setString(7, user.getCity());
+            pstmt.setString(8, user.getCountry());
+            pstmt.setByte(9, user.getIsActive());
+            pstmt.setInt(10, user.getId());
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("[UserDAOImpl] ❌ SQLException in update(): " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+
+        } finally {
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
     }
 
     @Override
-    public boolean delete(int id) throws SQLException {
-        return false;
+    public boolean delete(int userId) throws SQLException {
+        String sql = "DELETE FROM users WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("[UserDAOImpl] ❌ SQLException in delete(): " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+
+        } finally {
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
     }
 
     @Override
     public List<User> getAll() throws SQLException {
-        return List.of();
+        String sql = "SELECT * FROM users ORDER BY created_at DESC";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<User> users = new ArrayList<>();
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+            return users;
+
+        } catch (SQLException e) {
+            System.err.println("[UserDAOImpl] ❌ SQLException in getAll(): " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+
+        } finally {
+            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
     }
 
     @Override
     public boolean isEmailExists(String email) throws SQLException {
-        return false;
+        String sql = "SELECT COUNT(*) as count FROM users WHERE email = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                System.out.println("[UserDAOImpl] Email exists check - " + email + ": " + (count > 0 ? "YES" : "NO"));
+                return count > 0;
+            }
+            return false;
+
+        } catch (SQLException e) {
+            System.err.println("[UserDAOImpl] ❌ SQLException in isEmailExists(): " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+
+        } finally {
+            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setEmail(rs.getString("email"));
+        user.setPassword(rs.getString("password"));
+        user.setFirstName(rs.getString("first_name"));
+        user.setLastName(rs.getString("last_name"));
+        user.setPhone(rs.getString("phone"));
+        user.setAddress(rs.getString("address"));
+        user.setCity(rs.getString("city"));
+        user.setCountry(rs.getString("country"));
+        user.setIsActive(rs.getByte("is_active"));
+        user.setCreatedAt(rs.getTimestamp("created_at"));
+        user.setUpdatedAt(rs.getTimestamp("updated_at"));
+        return user;
     }
 }
