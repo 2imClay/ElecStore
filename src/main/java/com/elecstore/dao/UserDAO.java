@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface UserDAO {
 
+    public User login(String email, String password) throws SQLException;
+
     boolean save(User user) throws SQLException;
 
     User getById(int id) throws SQLException;

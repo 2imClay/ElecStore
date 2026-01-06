@@ -16,7 +16,8 @@ public class User {
     private String country;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private byte isActive;
+    private String role;   // "admin" hoặc "user"
+    private String status; // "active" hoặc "inactive"
 
     // ===== CONSTRUCTORS =====
     public User() {
@@ -27,7 +28,7 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.isActive = 1;
+        this.status = "active";
     }
 
     public User(int id, String email, String password, String firstName, String lastName, String phone) {
@@ -140,17 +141,20 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    public byte getIsActive() {
-        return isActive;
+    public String getRole() {
+        return role;
     }
 
-    public void setIsActive(byte isActive) {
-        this.isActive = isActive;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    // ===== HELPER METHODS =====
-    public boolean isActive() {
-        return isActive == 1;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -163,7 +167,7 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", city='" + city + '\'' +
                 ", country='" + country + '\'' +
-                ", isActive=" + isActive +
+                ", status=" + status +
                 '}';
     }
 

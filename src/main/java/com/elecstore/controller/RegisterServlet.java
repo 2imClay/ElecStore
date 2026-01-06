@@ -146,7 +146,8 @@ public class RegisterServlet extends HttpServlet {
             newUser.setAddress(address != null ? address.trim() : null);
             newUser.setCity(city != null ? city.trim() : null);
             newUser.setCountry(country != null ? country.trim() : "Việt Nam");
-            newUser.setIsActive((byte) 1);
+            newUser.setRole("user");
+            newUser.setStatus("active");
 
             // ===== SAVE TO DATABASE =====
             System.out.println("[REGISTER] Đang lưu user vào database...");

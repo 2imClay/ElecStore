@@ -11,13 +11,14 @@ public class Product {
     private int categoryId;
     private String brand;
     private float price;
+    private String status;
 
     public Product() {
     }
 
     public Product(int id, String name, String imageUrl,
                    String description, int categoryId,
-                   String brand, float price) {
+                   String brand, float price, String status) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -25,6 +26,7 @@ public class Product {
         this.categoryId = categoryId;
         this.brand = brand;
         this.price = price;
+        this.status = status;
     }
 
     public int getId() {
@@ -81,6 +83,14 @@ public class Product {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getCategoryName() {

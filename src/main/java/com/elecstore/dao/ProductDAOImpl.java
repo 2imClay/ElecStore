@@ -104,7 +104,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public void insert(Product p) {
         String sql = "INSERT INTO products(name, image_url, description, "
-                + "category_id, brand, price) VALUES (?, ?, ?, ?, ?, ?)";
+                + "category_id, brand, price, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -114,6 +114,7 @@ public class ProductDAOImpl implements ProductDAO {
             ps.setInt(4, p.getCategoryId());
             ps.setString(5, p.getBrand());
             ps.setFloat(6, p.getPrice());
+            ps.setString(5, p.getStatus());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -139,6 +140,16 @@ public class ProductDAOImpl implements ProductDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void updateStatus(int id, String status) {
+        String sql = "UPDATE products SET status = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     @Override

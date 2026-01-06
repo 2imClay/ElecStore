@@ -85,7 +85,7 @@ public class LoginServlet extends HttpServlet {
             }
 
             // ===== CHECK IF ACCOUNT ACTIVE =====
-            if (user.getIsActive() == 0) {
+            if (user.getStatus().equals("inactive")) {
                 System.out.println("[LOGIN] Account not active: " + email);
                 request.setAttribute("error", "❌ Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.");
                 request.setAttribute("email", email);
@@ -104,16 +104,18 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            // ===== LOGIN SUCCESS =====
-            System.out.println("[LOGIN] ✓ Login successful for: " + email);
-
             // Set session
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
             session.setAttribute("userName", user.getFirstName() + " " + user.getLastName());
             session.setAttribute("userEmail", user.getEmail());
+            session.setAttribute("userRole", user.getRole());
             session.setMaxInactiveInterval(30 * 60); // 30 minutes
+
+            // ===== LOGIN SUCCESS =====
+            System.out.println("[LOGIN] ✓ Success for " + email + " (Role: " + user.getRole() + ")");
+
 
             // Remember me (optional - tạo cookie)
             if ("on".equals(rememberMe) || "true".equals(rememberMe)) {
@@ -124,12 +126,19 @@ public class LoginServlet extends HttpServlet {
                 // response.addCookie(emailCookie);
             }
 
-            // Redirect to home or dashboard
-            String redirectURL = "home";
-            if (request.getParameter("next") != null) {
-                redirectURL = request.getParameter("next");
+
+            // ✅ ROLE-BASED REDIRECT
+            if ("admin".equalsIgnoreCase(user.getRole())) {
+                response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/home");
             }
-            response.sendRedirect(redirectURL);
+            // Redirect to home or dashboard
+//            String redirectURL = "home";
+//            if (request.getParameter("next") != null) {
+//                redirectURL = request.getParameter("next");
+//            }
+//            response.sendRedirect(redirectURL);
 
         } catch (SQLException e) {
             System.err.println("[LOGIN] ❌ SQLException: " + e.getMessage());

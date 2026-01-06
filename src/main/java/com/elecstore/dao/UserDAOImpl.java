@@ -12,9 +12,39 @@ import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
     @Override
+    public User login(String email, String password) throws SQLException {
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            pstmt.setString(2, password); // Lưu ý: Nên dùng PasswordUtil.verify() thay vì raw password
+
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+            return null;
+        } catch (SQLException e) {
+            System.err.println("[UserDAOImpl] ❌ Login error: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        } finally {
+            // Cleanup code...
+            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    @Override
     public boolean save(User user) throws SQLException {
-        String sql = "INSERT INTO users (email, password, first_name, last_name, phone, address, city, country, is_active, created_at) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+        String sql = "INSERT INTO users (email, password, first_name, last_name, phone, address, city, country, created_at, role, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?,NOW(), ?, ?)";
 
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -34,7 +64,8 @@ public class UserDAOImpl implements UserDAO {
             pstmt.setString(6, user.getAddress());
             pstmt.setString(7, user.getCity());
             pstmt.setString(8, user.getCountry());
-            pstmt.setByte(9, user.getIsActive());
+            pstmt.setString(9, user.getRole());
+            pstmt.setString(10, user.getStatus());
 
             System.out.println("[UserDAOImpl] SQL: " + sql);
             System.out.println("[UserDAOImpl] Email: " + user.getEmail());
@@ -140,7 +171,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean update(User user) throws SQLException {
-        String sql = "UPDATE users SET email=?, password=?, first_name=?, last_name=?, phone=?, address=?, city=?, country=?, is_active=?, updated_at=NOW() WHERE id=?";
+        String sql = "UPDATE users SET email=?, password=?, first_name=?, last_name=?, phone=?, address=?, city=?, country=?, role=?, status=?, updated_at=NOW() WHERE id=?";
 
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -157,8 +188,9 @@ public class UserDAOImpl implements UserDAO {
             pstmt.setString(6, user.getAddress());
             pstmt.setString(7, user.getCity());
             pstmt.setString(8, user.getCountry());
-            pstmt.setByte(9, user.getIsActive());
-            pstmt.setInt(10, user.getId());
+            pstmt.setString(9, user.getRole());
+            pstmt.setString(10, user.getStatus());
+            pstmt.setInt(11, user.getId());
 
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
@@ -274,9 +306,33 @@ public class UserDAOImpl implements UserDAO {
         user.setAddress(rs.getString("address"));
         user.setCity(rs.getString("city"));
         user.setCountry(rs.getString("country"));
-        user.setIsActive(rs.getByte("is_active"));
+        user.setRole(rs.getString("role"));
+        user.setStatus(rs.getString("status"));
         user.setCreatedAt(rs.getTimestamp("created_at"));
         user.setUpdatedAt(rs.getTimestamp("updated_at"));
         return user;
     }
+
+    // Cập nhật trạng thái active/inactive
+    public void updateUserStatus(int id, String status) {
+        String sql = "UPDATE users SET status = ? WHERE id = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    // Cập nhật quyền role (admin/user)
+    public void updateUserRole(int id, String role) {
+        String sql = "UPDATE users SET role = ? WHERE id = ?";
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, role);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
 }
