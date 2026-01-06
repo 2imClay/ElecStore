@@ -43,14 +43,9 @@
 <body>
 <!-- HEADER -->
 <header>
-
-    <!-- MAIN HEADER -->
     <div id="header">
-        <!-- container -->
         <div class="container">
-            <!-- row -->
             <div class="row">
-                <!-- LOGO -->
                 <div class="col-md-3">
                     <div class="header-logo">
                         <a href="${pageContext.request.contextPath}/home" class="logo">
@@ -58,126 +53,79 @@
                         </a>
                     </div>
                 </div>
-                <!-- /LOGO -->
 
-                <!-- SEARCH BAR -->
                 <div class="col-md-6">
                     <div class="header-search">
                         <form id="searchForm" method="get" action="${pageContext.request.contextPath}/store" style="display: flex":>
-                                <div style="position: relative; flex: 1; width: 100%">
-                                    <input class="input" id="searchInput" name="keyword"
-                                           placeholder="Nhập từ khóa để tìm sản phẩm"
-                                           autocomplete="off"
-                                           style="width: 100%; border-radius: 40px 0 0 40px;"
-                                    >
-
-                                    <!-- Dropdown gợi ý -->
-                                    <div id="suggestDropdown" style="
-                                        display: none;
-                                        position: absolute;
-                                        top: 100%;
-                                        left: 0;
-                                        right: 0;
-                                        background: white;
-                                        border: 1px solid #ddd;
-                                        border-top: none;
-                                        max-height: 300px;
-                                        overflow-y: auto;
-                                        z-index: 999;
-                                    ">
-                                    </div>
+                            <div style="position: relative; flex: 1; width: 100%">
+                                <input class="input" id="searchInput" name="keyword"
+                                       placeholder="Nhập từ khóa để tìm sản phẩm"
+                                       autocomplete="off"
+                                       style="width: 100%; border-radius: 40px 0 0 40px;"
+                                >
+                                <div id="suggestDropdown" style="
+                                    display: none;
+                                    position: absolute;
+                                    top: 100%;
+                                    left: 0;
+                                    right: 0;
+                                    background: white;
+                                    border: 1px solid #ddd;
+                                    border-top: none;
+                                    max-height: 300px;
+                                    overflow-y: auto;
+                                    z-index: 999;
+                                ">
                                 </div>
+                            </div>
                             <button class="search-btn" type="submit">Tìm kiếm</button>
                         </form>
                     </div>
                 </div>
-                <!-- /SEARCH BAR -->
 
-                <!-- ACCOUNT -->
                 <div class="col-md-3 clearfix" style="display: flex">
                     <div class="header-ctn" style="display: flex">
-                        <!-- Wishlist -->
                         <div>
                             <a href="#">
                                 <i class="fa fa-heart-o"></i>
                                 <span>Yêu thích</span>
-                                <div class="qty">0</div>
                             </a>
                         </div>
-                        <!-- /Wishlist -->
 
-                        <!-- Cart -->
                         <div class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                            <a href="${pageContext.request.contextPath}/cart" class="dropdown-toggle">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>Giỏ hàng</span>
-                                <div class="qty">0</div>
                             </a>
-                            <div class="cart-dropdown">
-                                <div class="cart-list">
-                                    <div class="product-widget">
-                                        <div class="product-img">
-                                            <img src="${pageContext.request.contextPath}/images/product01.png" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-                                        </div>
-                                        <button class="delete"><i class="fa fa-close"></i></button>
-                                    </div>
-
-                                    <div class="product-widget">
-                                        <div class="product-img">
-                                            <img src="${pageContext.request.contextPath}/images/product02.png" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-                                        </div>
-                                        <button class="delete"><i class="fa fa-close"></i></button>
-                                    </div>
-                                </div>
-                                <div class="cart-summary">
-                                    <small>3 Item(s) selected</small>
-                                    <h5>SUBTOTAL: $2940.00</h5>
-                                </div>
-                                <div class="cart-btns">
-                                    <a href="#">View Cart</a>
-                                    <a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-                            </div>
                         </div>
-                        <!-- /Cart -->
 
-                        <!-- Account -->
                         <div class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-user-o"></i>
                                 <span>Account</span>
                             </a>
-                            <div class="acc-dropdown cart-dropdown" style="width: 100px; height: 100px">
-
+                            <div class="acc-dropdown cart-dropdown" style="width: 200%; display: flex; flex-direction: column">
+                                <c:if test="${not empty sessionScope.user}">
+                                    <button style="background-color: transparent; width: 100%; border: none; border-bottom: 1px solid black; padding-bottom: 10px">
+                                        <a href="${pageContext.request.contextPath}/user-information">${sessionScope.userName}</a>
+                                        <small style="color: orangered;">${sessionScope.userEmail}</small>
+                                    </button>
+                                    <button style="background-color: transparent; width: 100%; border: none; padding: 10px 0 10px 0">
+                                        <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
+                                    </button>
+                                </c:if>
+                                <c:if test="${empty sessionScope.user}">
+                                    <button style="background-color: transparent; width: 100%; border: none;">
+                                        <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
+                                    </button>
+                                </c:if>
                             </div>
                         </div>
-                        <!-- /Account -->
-
-                        <!-- Menu Toogle -->
-                        <div class="menu-toggle">
-                            <a href="#">
-                                <i class="fa fa-bars"></i>
-                                <span>Menu</span>
-                            </a>
-                        </div>
-                        <!-- /Menu Toogle -->
                     </div>
                 </div>
-                <!-- /ACCOUNT -->
             </div>
-            <!-- row -->
         </div>
-        <!-- container -->
     </div>
-    <!-- /MAIN HEADER -->
 </header>
 <!-- /HEADER -->
 
@@ -191,7 +139,7 @@
             <ul class="main-nav nav navbar-nav">
                 <li class="active"><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
                 <li><a href="${pageContext.request.contextPath}/store">Cửa hàng</a></li>
-                <li><a href="#">Ưu đãi</a></li>
+                <li><a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a></li>
             </ul>
             <!-- /NAV -->
         </div>
@@ -314,11 +262,11 @@
                                         <div class="product-btns">
 <%--                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>--%>
 <%--                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>--%>
-                                            <button href="${pageContext.request.contextPath}/product-detail?id=${p.id}" class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Chi tiết sản phẩm</span></button>
+                                            <button onclick="window.location.href='${pageContext.request.contextPath}/product-detail?id=${p.id}'" class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Chi tiết sản phẩm</span></button>
                                         </div>
                                     </div>
                                     <div class="add-to-cart" style="z-index: -20">
-                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Giỏ hàng</button>
+                                        <button class="add-to-cart-btn" onclick="addToCart(${p.id}, 1)"><i class="fa fa-shopping-cart"></i>Giỏ hàng</button>
                                     </div>
                                 </div>
                                 <!-- /product -->
@@ -442,11 +390,11 @@
                                             <div class="product-btns">
 <%--                                                <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>--%>
 <%--                                                <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>--%>
-                                                <button href="${pageContext.request.contextPath}/product-detail?id=${p.id}" class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Chi tiết sản phẩm</span></button>
+                                                <button onclick="window.location.href='${pageContext.request.contextPath}/product-detail?id=${p.id}'" class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">Chi tiết sản phẩm</span></button>
                                             </div>
                                         </div>
                                         <div class="add-to-cart" style="z-index: -20">
-                                            <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Giỏ hàng</button>
+                                            <button class="add-to-cart-btn" onclick="addToCart(${p.id}, 1)"><i class="fa fa-shopping-cart"></i>Giỏ hàng</button>
                                         </div>
                                     </div>
                                     <!-- /product -->
@@ -567,6 +515,94 @@
 <script src="${pageContext.request.contextPath}/js/nouislider.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery.zoom.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+<!-- Add to Cart Script -->
+<script>
+    function addToCart(productId, quantity) {
+        // Check if user is logged in
+        <c:if test="${empty sessionScope.user}">
+        alert('Vui lòng đăng nhập để thêm vào giỏ hàng');
+        window.location.href = '${pageContext.request.contextPath}/login';
+        return;
+        </c:if>
+
+        // Show loading indicator
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Đang thêm...';
+        btn.disabled = true;
+
+        // AJAX request to add to cart
+        $.ajax({
+            url: '${pageContext.request.contextPath}/add-to-cart',
+            method: 'POST',
+            data: {
+                productId: productId,
+                quantity: quantity
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    // Show success toast
+                    showCartToast(response.message, true);
+
+                    // Restore button
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+
+                    // Update cart count in header
+                    updateCartCountInHeader();
+
+                } else {
+                    alert('Lỗi: ' + response.message);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            },
+            error: function(xhr) {
+                if (xhr.status === 401) {
+                    alert('Vui lòng đăng nhập');
+                    window.location.href = '${pageContext.request.contextPath}/login';
+                } else {
+                    alert('Lỗi thêm vào giỏ hàng');
+                }
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+    }
+
+    // Toast notification for cart
+    function showCartToast(message, success = true) {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 5px;
+        color: white;
+        background-color: ${success ? '#27ae60' : '#e74c3c'};
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        z-index: 9999;
+        font-size: 14px;
+    `;
+
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+
+    // Update cart count in header
+    function updateCartCountInHeader() {
+        // Optionally fetch and update cart count
+        // For now, you can leave empty or implement AJAX to get count
+    }
+</script>
+
 
 <script>
     $(document).ready(function() {

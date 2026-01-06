@@ -1,0 +1,348 @@
+/* Cart Page Styles */
+.cart-section {
+    padding: 40px 0;
+    background-color: #f8f9fa;
+    min-height: 600px;
+}
+
+.cart-table {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.cart-table table {
+    margin-bottom: 0;
+}
+
+.cart-table th {
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #ddd;
+    font-weight: 600;
+    color: #333;
+    padding: 15px;
+    text-align: left;
+}
+
+.cart-table td {
+    padding: 20px 15px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.cart-table tr:last-child td {
+    border-bottom: none;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.product-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+}
+
+.product-name {
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+}
+
+.product-name a {
+    color: #d32f2f;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.product-name a:hover {
+    color: #c62828;
+    text-decoration: underline;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    width: fit-content;
+}
+
+.quantity-control button {
+    background: none;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: #333;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.quantity-control button:hover {
+    color: #d32f2f;
+}
+
+.quantity-control input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.price-col {
+    font-weight: 600;
+    color: #d32f2f;
+    font-size: 16px;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.3s;
+    padding: 0;
+}
+
+.remove-btn:hover {
+    color: #d32f2f;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.empty-cart i {
+    font-size: 80px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.empty-cart h2 {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.empty-cart p {
+    color: #999;
+    margin-bottom: 30px;
+}
+
+.empty-cart a {
+    display: inline-block;
+    background-color: #d32f2f;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.empty-cart a:hover {
+    background-color: #c62828;
+}
+
+.cart-summary {
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 400px;
+    margin-left: auto;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-row.total {
+    padding: 20px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #d32f2f;
+    border-top: 2px solid #ddd;
+    border-bottom: 2px solid #ddd;
+    margin: 20px 0;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+}
+
+.checkout-btn:hover {
+    background-color: #c62828;
+}
+
+.continue-shopping-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    color: #d32f2f;
+    border: 2px solid #d32f2f;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.continue-shopping-btn:hover {
+    background-color: #d32f2f;
+    color: white;
+}
+
+.promo-section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.promo-section label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.promo-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.promo-input-group input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.promo-input-group button {
+    padding: 12px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.promo-input-group button:hover {
+    background-color: #555;
+}
+
+.breadcrumb-section {
+    background: white;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 30px;
+}
+
+.breadcrumb-section ol {
+    margin: 0;
+    padding: 0;
+}
+
+.breadcrumb-section li {
+    display: inline-block;
+}
+
+.breadcrumb-section li a {
+    color: #d32f2f;
+    text-decoration: none;
+}
+
+.breadcrumb-section li a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-section li.active a {
+    color: #666;
+    cursor: default;
+}
+
+.toast-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #27ae60;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 9999;
+    display: none;
+}
+
+.toast-message.error {
+    background-color: #e74c3c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cart-table {
+        font-size: 12px;
+    }
+
+    .cart-table th,
+    .cart-table td {
+        padding: 10px;
+    }
+
+    .product-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .product-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .cart-summary {
+        margin-left: 0;
+        margin-top: 20px;
+    }
+
+    .hidden-mobile {
+        display: none;
+    }
+}
