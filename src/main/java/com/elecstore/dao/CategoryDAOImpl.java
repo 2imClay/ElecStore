@@ -61,6 +61,7 @@ public class CategoryDAOImpl implements CategoryDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, c.getName());
+            ps.setString(2, c.getStatus());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -79,6 +80,16 @@ public class CategoryDAOImpl implements CategoryDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void updateStatus(int id, String status) {
+        String sql = "UPDATE categories SET status = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     @Override

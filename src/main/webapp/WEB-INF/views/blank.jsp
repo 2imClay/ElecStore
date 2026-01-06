@@ -43,14 +43,9 @@
 <body>
 <!-- HEADER -->
 <header>
-
-    <!-- MAIN HEADER -->
     <div id="header">
-        <!-- container -->
         <div class="container">
-            <!-- row -->
             <div class="row">
-                <!-- LOGO -->
                 <div class="col-md-3">
                     <div class="header-logo">
                         <a href="${pageContext.request.contextPath}/home" class="logo">
@@ -58,9 +53,7 @@
                         </a>
                     </div>
                 </div>
-                <!-- /LOGO -->
 
-                <!-- SEARCH BAR -->
                 <div class="col-md-6">
                     <div class="header-search">
                         <form id="searchForm" method="get" action="${pageContext.request.contextPath}/store" style="display: flex":>
@@ -70,114 +63,69 @@
                                        autocomplete="off"
                                        style="width: 100%; border-radius: 40px 0 0 40px;"
                                 >
-
-                                <!-- Dropdown gợi ý -->
                                 <div id="suggestDropdown" style="
-                                        display: none;
-                                        position: absolute;
-                                        top: 100%;
-                                        left: 0;
-                                        right: 0;
-                                        background: white;
-                                        border: 1px solid #ddd;
-                                        border-top: none;
-                                        max-height: 300px;
-                                        overflow-y: auto;
-                                        z-index: 999;
-                                    ">
+                                    display: none;
+                                    position: absolute;
+                                    top: 100%;
+                                    left: 0;
+                                    right: 0;
+                                    background: white;
+                                    border: 1px solid #ddd;
+                                    border-top: none;
+                                    max-height: 300px;
+                                    overflow-y: auto;
+                                    z-index: 999;
+                                ">
                                 </div>
                             </div>
                             <button class="search-btn" type="submit">Tìm kiếm</button>
                         </form>
                     </div>
                 </div>
-                <!-- /SEARCH BAR -->
 
-                <!-- ACCOUNT -->
                 <div class="col-md-3 clearfix" style="display: flex">
                     <div class="header-ctn" style="display: flex">
-                        <!-- Wishlist -->
                         <div>
                             <a href="#">
                                 <i class="fa fa-heart-o"></i>
                                 <span>Yêu thích</span>
-                                <div class="qty">0</div>
                             </a>
                         </div>
-                        <!-- /Wishlist -->
 
-                        <!-- Cart -->
                         <div class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                            <a href="${pageContext.request.contextPath}/cart" class="dropdown-toggle">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>Giỏ hàng</span>
-                                <div class="qty">0</div>
                             </a>
-                            <div class="cart-dropdown">
-                                <div class="cart-list">
-                                    <div class="product-widget">
-                                        <div class="product-img">
-                                            <img src="${pageContext.request.contextPath}/images/product01.png" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-                                        </div>
-                                        <button class="delete"><i class="fa fa-close"></i></button>
-                                    </div>
-
-                                    <div class="product-widget">
-                                        <div class="product-img">
-                                            <img src="${pageContext.request.contextPath}/images/product02.png" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                            <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-                                        </div>
-                                        <button class="delete"><i class="fa fa-close"></i></button>
-                                    </div>
-                                </div>
-                                <div class="cart-summary">
-                                    <small>3 Item(s) selected</small>
-                                    <h5>SUBTOTAL: $2940.00</h5>
-                                </div>
-                                <div class="cart-btns">
-                                    <a href="#">View Cart</a>
-                                    <a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-                            </div>
                         </div>
-                        <!-- /Cart -->
 
-                        <!-- Account -->
                         <div class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 <i class="fa fa-user-o"></i>
                                 <span>Account</span>
                             </a>
-                            <div class="acc-dropdown cart-dropdown" style="width: 100px; height: 100px">
-
+                            <div class="acc-dropdown cart-dropdown" style="width: 200%; display: flex; flex-direction: column">
+                                <c:if test="${not empty sessionScope.user}">
+                                    <button style="background-color: transparent; width: 100%; border: none; border-bottom: 1px solid black; padding-bottom: 10px">
+                                        <a href="${pageContext.request.contextPath}/user-information">${sessionScope.userName}</a>
+                                        <small style="color: orangered;">${sessionScope.userEmail}</small>
+                                    </button>
+                                    <button style="background-color: transparent; width: 100%; border: none; padding: 10px 0 10px 0">
+                                        <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
+                                    </button>
+                                </c:if>
+                                <c:if test="${empty sessionScope.user}">
+                                    <button style="background-color: transparent; width: 100%; border: none;">
+                                        <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
+                                    </button>
+                                </c:if>
                             </div>
                         </div>
-                        <!-- /Account -->
-
-                        <!-- Menu Toogle -->
-                        <div class="menu-toggle">
-                            <a href="#">
-                                <i class="fa fa-bars"></i>
-                                <span>Menu</span>
-                            </a>
-                        </div>
-                        <!-- /Menu Toogle -->
                     </div>
                 </div>
-                <!-- /ACCOUNT -->
             </div>
-            <!-- row -->
         </div>
-        <!-- container -->
     </div>
-    <!-- /MAIN HEADER -->
 </header>
 <!-- /HEADER -->
 
@@ -191,7 +139,7 @@
             <ul class="main-nav nav navbar-nav">
                 <li class="active"><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
                 <li><a href="${pageContext.request.contextPath}/store">Cửa hàng</a></li>
-                <li><a href="#">Ưu đãi</a></li>
+                <li><a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a></li>
             </ul>
             <!-- /NAV -->
         </div>

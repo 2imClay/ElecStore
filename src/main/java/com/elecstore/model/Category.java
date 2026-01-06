@@ -3,6 +3,7 @@ package com.elecstore.model;
 public class Category {
     private int id;
     private String name;
+    private String status;
 
     public Category() {
     }
@@ -26,5 +27,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
