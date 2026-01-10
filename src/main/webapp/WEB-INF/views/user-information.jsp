@@ -240,7 +240,7 @@
                     <div class="profile-card" id="orders">
                         <div class="card-header">
                             <h3>Lịch Sử Đơn Hàng</h3>
-                            <a href="${pageContext.request.contextPath}/orders" class="btn-edit" style="cursor: pointer;">Xem tất cả</a>
+                            <a href="${pageContext.request.contextPath}/order-history" class="btn-edit" style="cursor: pointer;">Xem tất cả</a>
                         </div>
                         <div class="form-grid">
                             <div class="form-group">

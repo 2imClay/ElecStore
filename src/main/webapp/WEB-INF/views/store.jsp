@@ -161,45 +161,42 @@
                 </h5>
                 <c:forEach items="${categories}" var="c">
                     <div class="filter-item">
-                        <input type="radio" id="cat-${c.id}" name="category" value="${c.id}" onclick="window.location.href='${pageContext.request.contextPath}/store?categoryId=${c.id}'">
+<%--                        <input type="radio" id="cat-${c.id}" name="category" value="${c.id}" onclick="window.location.href='${pageContext.request.contextPath}/store?categoryId=${c.id}'">--%>
                         <label for="cat-${c.id}">
-                                ${c.name}
+                                 <a href="${pageContext.request.contextPath}/store?categoryId=${c.id}">${c.name}</a>
                         </label>
                     </div>
                 </c:forEach>
             </div>
 
             <!-- Khoảng giá -->
-            <div class="filter-group">
-                <h5 class="sidebar-title">
-                    <i class="fas fa-tag"></i> Giá
-                </h5>
-                <div class="price-range">
-                    <input type="number" id="priceMin" class="price-input" placeholder="Từ">
-                    <span>-</span>
-                    <input type="number" id="priceMax" class="price-input" placeholder="Đến">
-                </div>
-                <button style="margin-top: 20px; background-color: #d32f2f; color: white; padding: 5px; border-radius: 5px; border: none">Lọc</button>
-            </div>
+<%--            <div class="filter-group">--%>
+<%--                <h5 class="sidebar-title">--%>
+<%--                    <i class="fas fa-tag"></i> Giá--%>
+<%--                </h5>--%>
+<%--                <div class="price-range">--%>
+<%--                    <input type="number" id="priceMin" class="price-input" placeholder="Từ">--%>
+<%--                    <span>-</span>--%>
+<%--                    <input type="number" id="priceMax" class="price-input" placeholder="Đến">--%>
+<%--                </div>--%>
+<%--                <button style="margin-top: 20px; background-color: #d32f2f; color: white; padding: 5px; border-radius: 5px; border: none">Lọc</button>--%>
+<%--            </div>--%>
 
             <!-- Thương hiệu -->
-            <div class="filter-group">
-                <h5 class="sidebar-title">
-                    <i class="fas fa-trademark"></i> Thương hiệu
-                </h5>
-                <div class="filter-item">
-                    <input type="checkbox" id="brand-samsung">
-                    <label for="brand-samsung">Samsung (578)</label>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="brand-apple">
-                    <label for="brand-apple">Apple (342)</label>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="brand-lenovo">
-                    <label for="brand-lenovo">Lenovo (295)</label>
-                </div>
-            </div>
+<%--            <div class="filter-group">--%>
+<%--                <h5 class="sidebar-title">--%>
+<%--                    <i class="fas fa-trademark"></i> Thương hiệu--%>
+<%--                </h5>--%>
+<%--                <div class="filter-item">--%>
+<%--                    <label for="brand-samsung">Samsung (578)</label>--%>
+<%--                </div>--%>
+<%--                <div class="filter-item">--%>
+<%--                    <label for="brand-apple">Apple (342)</label>--%>
+<%--                </div>--%>
+<%--                <div class="filter-item">--%>
+<%--                    <label for="brand-lenovo">Lenovo (295)</label>--%>
+<%--                </div>--%>
+<%--            </div>--%>
         </aside>
 
         <!-- ==================== PRODUCTS ==================== -->
@@ -209,27 +206,23 @@
                 <h2 class="products-title">
                     <i class="fas fa-box"></i> Sản phẩm
                 </h2>
-                <div class="products-toolbar">
-                    <select class="toolbar-select">
-                        <option value="">Sắp xếp: Phổ biến</option>
-                        <option value="">Giá: Thấp đến cao</option>
-                        <option value="">Giá: Cao đến thấp</option>
-                        <option value="">Mới nhất</option>
-                    </select>
-                    <div class="view-toggle">
-                        <button class="active" title="Lưới">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button title="Danh sách">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                </div>
+<%--                <div class="products-toolbar">--%>
+<%--                    <form method="GET" class="d-flex gap-2">--%>
+<%--                        <select class="toolbar-select" name="sort">--%>
+<%--                            <option value="">--%>
+<%--                                Sắp xếp: Phổ biến</option>--%>
+<%--                            <option value="price-asc" ${param.sort == 'price-asc' ? 'selected' : ''}>--%>
+<%--                                Giá: Thấp đến cao</option>--%>
+<%--                            <option value="price-desc" ${param.sort == 'price-desc' ? 'selected' : ''}>--%>
+<%--                                Giá: Cao đến thấp</option>--%>
+<%--                        </select>--%>
+<%--                    </form>--%>
+<%--                </div>--%>
             </div>
 
             <!-- Products Grid -->
             <div class="products-grid">
-                <c:forEach items="${products}" var="p" begin="0" end="11">
+                <c:forEach items="${products}" var="p" >
                     <div class="product-card">
                         <!-- Image -->
                         <div class="product-image">
@@ -249,13 +242,13 @@
                                 </a>
                             </h3>
 
-                            <div class="product-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
+<%--                            <div class="product-rating">--%>
+<%--                                <i class="fas fa-star"></i>--%>
+<%--                                <i class="fas fa-star"></i>--%>
+<%--                                <i class="fas fa-star"></i>--%>
+<%--                                <i class="fas fa-star"></i>--%>
+<%--                                <i class="fas fa-star-half-alt"></i>--%>
+<%--                            </div>--%>
 
                             <div class="product-price">
                                 $<fmt:formatNumber value="${p.price}" pattern="0.00"/>
@@ -264,10 +257,10 @@
                             <div class="product-actions">
                                 <button class="btn-action btn-view"
                                         onclick="window.location.href='${pageContext.request.contextPath}/product-detail?id=${p.id}'">
-                                    <i class="fas fa-eye"></i> Chi tiết
+                                    <i class="fa fa-eye"></i> Xem
                                 </button>
                                 <button class="btn-action btn-cart" onclick="addToCart(${p.id}, 1)">
-                                    <i class="fas fa-shopping-cart"></i> Thêm
+                                    <i class="fa fa-shopping-cart"></i> Giỏ hàng
                                 </button>
                             </div>
                         </div>
@@ -276,15 +269,15 @@
             </div>
 
             <!-- Pagination -->
-            <div class="pagination-section">
-                <span>Hiển thị 12 sản phẩm</span>
-                <ul class="pagination">
-                    <li><span class="active">1</span></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i></a></li>
-                </ul>
-            </div>
+<%--            <div class="pagination-section">--%>
+<%--                <span>Hiển thị 12 sản phẩm</span>--%>
+<%--                <ul class="pagination">--%>
+<%--                    <li><span class="active">1</span></li>--%>
+<%--                    <li><a href="#">2</a></li>--%>
+<%--                    <li><a href="#">3</a></li>--%>
+<%--                    <li><a href="#"><i class="fas fa-chevron-right"></i></a></li>--%>
+<%--                </ul>--%>
+<%--            </div>--%>
         </section>
     </div>
 </div>

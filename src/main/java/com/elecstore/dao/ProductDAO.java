@@ -12,4 +12,6 @@ public interface ProductDAO {
     void insert(Product p);
     void update(Product p);
     void delete(int id);
+    public List<Product> getProductsByPriceAsc();
+    public List<Product> getProductsByPriceDesc();
 }

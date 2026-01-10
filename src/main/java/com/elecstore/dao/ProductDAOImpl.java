@@ -165,5 +165,37 @@ public class ProductDAOImpl implements ProductDAO {
         }
     }
 
+    private List<Product> executeQuery(String sql) {
+        List<Product> list = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setPrice(rs.getFloat("price"));
+                p.setDescription(rs.getString("description"));
+                p.setImageUrl(rs.getString("image_url"));
+                p.setStatus(rs.getString("status"));
+                // Join category nếu cần
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Product> getProductsByPriceAsc() {
+        String sql = "SELECT * FROM products WHERE status = 'active' ORDER BY price ASC";
+        return executeQuery(sql);
+    }
+
+    public List<Product> getProductsByPriceDesc() {
+        String sql = "SELECT * FROM products WHERE status = 'active' ORDER BY price DESC";
+        return executeQuery(sql);
+    }
 
 }
