@@ -22,5 +22,7 @@ public interface UserDAO {
     List<User> getAll() throws SQLException;
 
     boolean isEmailExists(String email) throws SQLException;
+    public void updateUserStatus(int id, String status);
+    public double totalSpent(int userId);
 
 }

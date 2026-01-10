@@ -54,8 +54,8 @@ public class UserInformationServlet extends HttpServlet {
 
                 // Stats (có thể lấy từ database sau - tạm thời hardcode)
                 request.setAttribute("orderCount", 5);
-                request.setAttribute("totalSpent", "15,500,000");
-                request.setAttribute("points", 450);
+                request.setAttribute("totalSpent", userDAO.totalSpent(user.getId()));
+                request.setAttribute("points", userDAO.totalSpent(user.getId())/100);
 
                 // Forward to JSP
                 request.getRequestDispatcher("WEB-INF/views/user-information.jsp").forward(request, response);

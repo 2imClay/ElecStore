@@ -10,4 +10,5 @@ public interface CategoryDAO {
     void insert(Category c);
     void update(Category c);
     void delete(int id);
+    public void updateStatus(int id, String status);
 }

@@ -251,7 +251,7 @@
                                     <div class="product-body">
                                         <p class="product-category">Category</p>
                                         <h3 class="product-name"><a href="${pageContext.request.contextPath}/product-detail?id=${p.id}" >${p.name}</a></h3>
-                                        <h4 class="product-price">${p.price}<del class="product-old-price">${p.price}</del></h4>
+                                        <h4 class="product-price"><fmt:formatNumber value="${p.price}"/> VNĐ<del class="product-old-price"><fmt:formatNumber value="${p.price}"/> VNĐ</del></h4>
                                         <div class="product-rating">
                                             <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>
@@ -379,7 +379,7 @@
                                         <div class="product-body">
                                             <p class="product-category">Category</p>
                                             <h3 class="product-name"><a href="${pageContext.request.contextPath}/product-detail?id=${p.id}" >${p.name}</a></h3>
-                                            <h4 class="product-price">${p.price}<del class="product-old-price">${p.price}</del></h4>
+                                            <h4 class="product-price"><fmt:formatNumber value="${p.price}"/> VNĐ<del class="product-old-price"><fmt:formatNumber value="${p.price}"/> VNĐ</del></h4>
                                             <div class="product-rating">
                                                 <i class="fa fa-star"></i>
                                                 <i class="fa fa-star"></i>
