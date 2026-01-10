@@ -192,7 +192,7 @@
                         <a class="review-link" href="#">Thêm đánh giá</a>
                     </div>
                     <div>
-                        <h3 class="product-price">${product.price}<del class="product-old-price">${product.price}</del></h3>
+                        <h3 class="product-price"><fmt:formatNumber value="${product.price}"/> VNĐ<del class="product-old-price"><fmt:formatNumber value="${product.price}"/> VNĐ</del></h3>
                         <span class="product-available">Còn hàng</span>
                     </div>
                     <p></p>

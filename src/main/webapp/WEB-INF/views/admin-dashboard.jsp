@@ -127,7 +127,7 @@
                             <i class="fas fa-dollar-sign"></i>
                         </div>
                         <div class="stat-content">
-                            <h3>$${totalRevenue != null ? totalRevenue : '0'}</h3>
+                            <h3><fmt:formatNumber value="${totalRevenue != null ? totalRevenue : '0'}"/> VNĐ</h3>
                             <p>Doanh thu</p>
                         </div>
                     </div>
@@ -155,7 +155,7 @@
                                             <td>#${order.id}</td>
                                             <td>${order.customerName}</td>
                                             <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
-                                            <td>$<fmt:formatNumber value="${order.totalAmount}" pattern="0.00"/></td>
+                                            <td><fmt:formatNumber value="${order.totalAmount}"/> VNĐ</td>
                                             <td>
                                                 <span class="badge-status ${order.status == 'completed' ? 'badge-completed' : order.status == 'processing' ? 'badge-processing' : order.status == 'cancelled' ? 'badge-cancelled' : 'badge-pending'}">
                                                     ${order.status == 'completed' ? 'Hoàn thành' : order.status == 'processing' ? 'Đang xử lý' : order.status == 'cancelled' ? 'Đã hủy' : 'Chờ xử lý'}
@@ -220,7 +220,7 @@
                                             </td>
                                             <td>
                                                 <label class="toggle-switch">
-                                                    <input type="checkbox" ${user.status == 'active' ? 'checked' : ''} 
+                                                    <input type="checkbox" ${user.status == 'active' ? 'checked' : ''}
                                                            onchange="toggleUserStatus(${user.id}, this.checked)">
                                                     <span class="toggle-slider"></span>
                                                 </label>
@@ -287,11 +287,11 @@
                                             </td>
                                             <td>${product.name}</td>
                                             <td>${product.categoryName}</td>
-                                            <td>$<fmt:formatNumber value="${product.price}" pattern="0.00"/></td>
+                                            <td><fmt:formatNumber value="${product.price}"/> VNĐ</td>
 <%--                                            <td>${product.stock}</td>--%>
                                             <td>
                                                 <label class="toggle-switch">
-                                                    <input type="checkbox" ${product.status == 'active' ? 'checked' : ''} 
+                                                    <input type="checkbox" ${product.status == 'active' ? 'checked' : ''}
                                                            onchange="toggleProductStatus(${product.id}, this.checked)">
                                                     <span class="toggle-slider"></span>
                                                 </label>
@@ -344,7 +344,7 @@
 <%--                                            <td>${category.productCount}</td>--%>
                                             <td>
                                                 <label class="toggle-switch">
-                                                    <input type="checkbox" ${category.status == 'active' ? 'checked' : ''} 
+                                                    <input type="checkbox" ${category.status == 'active' ? 'checked' : ''}
                                                            onchange="toggleCategoryStatus(${category.id}, this.checked)">
                                                     <span class="toggle-slider"></span>
                                                 </label>
@@ -405,7 +405,7 @@
                                             <td>#${order.id}</td>
                                             <td>${order.customerName}</td>
                                             <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
-                                            <td>$<fmt:formatNumber value="${order.totalAmount}" pattern="0.00"/></td>
+                                            <td><fmt:formatNumber value="${order.totalAmount}"/> VNĐ</td>
                                             <td>
                                                 <select class="form-select form-select-sm" 
                                                         onchange="updateOrderStatus(${order.id}, this.value)"
@@ -594,16 +594,25 @@
         function toggleUserStatus(userId, isActive) {
             const status = isActive ? 'active' : 'inactive';
             $.ajax({
-                url: '${pageContext.request.contextPath}/admin/user/toggle-status',
+                url: '${pageContext.request.contextPath}/admin/dashboard',
                 method: 'POST',
-                data: { userId: userId, status: status },
+                dataType: 'json',
+                data: {
+                    action: 'toggleUserStatus',
+                    userId: userId,
+                    status: status
+                },
                 success: function(response) {
+                    console.log('Response:', response);
                     if (response.success) {
-                        alert('Cập nhật trạng thái thành công!');
+                        alert('Cập nhật thành công!');
+                    } else {
+                        alert('Lỗi' + response.message);
                     }
                 },
-                error: function() {
-                    alert('Có lỗi xảy ra!');
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', xhr.responseText, error);
+                    alert('Lỗi: ' + error);
                 }
             });
         }
@@ -685,14 +694,20 @@
         function toggleProductStatus(productId, isActive) {
             const status = isActive ? 'active' : 'inactive';
             $.ajax({
-                url: '${pageContext.request.contextPath}/admin/product/toggle-status',
+                url: '${pageContext.request.contextPath}/admin/dashboard',
                 method: 'POST',
-                data: { productId: productId, status: status },
+                dataType: 'json',
+                data: {
+                    action: 'toggleProductStatus',
+                    productId: productId, status: status },
                 success: function(response) {
+                    console.log('Response:', response);
                     if (response.success) {
-                        alert('Cập nhật trạng thái thành công!');
+                        alert('Cập nhật thành công!');
+                    } else {
+                        alert('Lỗi' + response.message);
                     }
-                }
+                },
             });
         }
 
@@ -762,14 +777,20 @@
         function toggleCategoryStatus(categoryId, isActive) {
             const status = isActive ? 'active' : 'inactive';
             $.ajax({
-                url: '${pageContext.request.contextPath}/admin/category/toggle-status',
+                url: '${pageContext.request.contextPath}/admin/dashboard',
                 method: 'POST',
-                data: { categoryId: categoryId, status: status },
+                dataType: 'json',
+                data: {
+                    action: 'toggleCategoryStatus',
+                    categoryId: categoryId, status: status },
                 success: function(response) {
+                    console.log('Response:', response);
                     if (response.success) {
-                        alert('Cập nhật trạng thái thành công!');
+                        alert('Cập nhật thành công!');
+                    } else {
+                        alert('Lỗi' + response.message);
                     }
-                }
+                },
             });
         }
 
@@ -797,14 +818,20 @@
         // ==================== ORDER FUNCTIONS ====================
         function updateOrderStatus(orderId, status) {
             $.ajax({
-                url: '${pageContext.request.contextPath}/admin/order/update-status',
+                url: '${pageContext.request.contextPath}/admin/dashboard',
                 method: 'POST',
-                data: { orderId: orderId, status: status },
+                dataType: 'json',
+                data: {
+                    action: 'updateOrderStatus',
+                    orderId: orderId, status: status },
                 success: function(response) {
+                    console.log('Response:', response);
                     if (response.success) {
-                        alert('Cập nhật trạng thái đơn hàng thành công!');
+                        alert('Cập nhật thành công!');
+                    } else {
+                        alert('Lỗi' + response.message);
                     }
-                }
+                },
             });
         }
 

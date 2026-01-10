@@ -44,8 +44,17 @@ public class StoreServlet extends HttpServlet {
             products = productDAO.findAll();
         }
 
+        String sort = req.getParameter("sort");
+
+        if ("price-asc".equals(sort)) {
+            products = productDAO.getProductsByPriceAsc();
+        } else if ("price-desc".equals(sort)) {
+            products = productDAO.getProductsByPriceDesc();
+        }
+
         req.setAttribute("products",products);
         req.setAttribute("categories",categories);
+        req.setAttribute("selectedSort", sort);
 
         req.getRequestDispatcher("/WEB-INF/views/store.jsp").forward(req,resp);
     }

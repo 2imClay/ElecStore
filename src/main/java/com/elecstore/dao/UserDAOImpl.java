@@ -335,4 +335,27 @@ public class UserDAOImpl implements UserDAO {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
+    public double totalSpent(int userId) {
+        String sql = """
+        SELECT COALESCE(SUM(total_amount), 0) as total_spent
+        FROM orders 
+        WHERE user_id = ? AND status = 'completed'
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("total_spent");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error calculating totalSpent for user " + userId + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }

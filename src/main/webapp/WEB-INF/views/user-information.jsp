@@ -151,11 +151,11 @@
                         </div>
                         <div class="stat-row">
                             <span class="stat-label">💰 Đã chi</span>
-                            <span class="stat-value">${totalSpent} ₫</span>
+                            <span class="stat-value"><fmt:formatNumber value="${totalSpent}"/> VNĐ</span>
                         </div>
                         <div class="stat-row">
                             <span class="stat-label">⭐ Điểm</span>
-                            <span class="stat-value">${points}</span>
+                            <span class="stat-value"><fmt:formatNumber value="${points}"/></span>
                         </div>
                         <div class="stat-row">
                             <span class="stat-label">📅 Tham gia</span>
@@ -240,7 +240,7 @@
                     <div class="profile-card" id="orders">
                         <div class="card-header">
                             <h3>Lịch Sử Đơn Hàng</h3>
-                            <a href="${pageContext.request.contextPath}/orders" class="btn-edit" style="cursor: pointer;">Xem tất cả</a>
+                            <a href="${pageContext.request.contextPath}/order-history" class="btn-edit" style="cursor: pointer;">Xem tất cả</a>
                         </div>
                         <div class="form-grid">
                             <div class="form-group">

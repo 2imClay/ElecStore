@@ -173,7 +173,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="price-col">$<fmt:formatNumber value="${item.price}" pattern="0.00"/></td>
+                                    <td class="price-col"><fmt:formatNumber value="${item.price}"/> VNĐ</td>
                                     <td>
                                         <div class="quantity-control">
                                             <button type="button" onclick="decreaseQty(${item.id}, ${item.quantity})">-</button>
@@ -181,7 +181,7 @@
                                             <button type="button" onclick="increaseQty(${item.id}, ${item.quantity})">+</button>
                                         </div>
                                     </td>
-                                    <td class="price-col">$<fmt:formatNumber value="${itemTotal}" pattern="0.00"/></td>
+                                    <td class="price-col"><fmt:formatNumber value="${itemTotal}"/> VNĐ</td>
                                     <td>
                                         <button class="remove-btn" onclick="removeItem(${item.id})">
                                             <i class="fa fa-trash-o"></i>
@@ -210,22 +210,22 @@
                 <div class="cart-summary">
                     <div class="summary-row">
                         <span>Tạm tính:</span>
-                        <span id="subtotal">$<fmt:formatNumber value="${subtotal}" pattern="0.00"/></span>
+                        <span id="subtotal"><fmt:formatNumber value="${subtotal}"/> VNĐ</span>
                     </div>
 
                     <div class="summary-row">
                         <span>Giảm giá:</span>
-                        <span id="discount" style="color: #27ae60;">-$0.00</span>
+                        <span id="discount" style="color: #27ae60;">0 VNĐ</span>
                     </div>
 
                     <div class="summary-row">
                         <span>Phí vận chuyển:</span>
-                        <span id="shipping">$<c:if test="${subtotal >= 500}">0.00</c:if><c:if test="${subtotal < 500}">50.00</c:if></span>
+                        <span id="shipping"><c:if test="${subtotal >= 500}">0</c:if><c:if test="${subtotal < 500}">30000</c:if> VNĐ</span>
                     </div>
 
                     <div class="summary-row total">
                         <span>Tổng cộng:</span>
-                        <span id="total">$<fmt:formatNumber value="${subtotal + (subtotal >= 500 ? 0 : 50)}" pattern="0.00"/></span>
+                        <span id="total"><fmt:formatNumber value="${subtotal + (subtotal >= 500 ? 0 : 50)}"/> VNĐ</span>
                     </div>
 
                     <button class="checkout-btn" onclick="checkout()">

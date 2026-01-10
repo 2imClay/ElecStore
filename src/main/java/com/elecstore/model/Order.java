@@ -14,6 +14,7 @@ public class Order {
     private String phone;
     private String note;
     private List<OrderDetail> items; // Danh sách sản phẩm trong đơn
+    private String paymentMethod;
 
     // Getters and Setters
     public int getId() { return id; }
@@ -36,4 +37,12 @@ public class Order {
     public void setNote(String note) { this.note = note; }
     public List<OrderDetail> getItems() { return items; }
     public void setItems(List<OrderDetail> items) { this.items = items; }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 }
