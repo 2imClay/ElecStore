@@ -251,7 +251,7 @@
 <%--                            </div>--%>
 
                             <div class="product-price">
-                                $<fmt:formatNumber value="${p.price}" pattern="0.00"/>
+                                <fmt:formatNumber value="${p.price}"/> VNĐ
                             </div>
 
                             <div class="product-actions">

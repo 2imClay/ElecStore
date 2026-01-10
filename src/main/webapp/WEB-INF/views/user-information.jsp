@@ -151,11 +151,11 @@
                         </div>
                         <div class="stat-row">
                             <span class="stat-label">💰 Đã chi</span>
-                            <span class="stat-value">${totalSpent} ₫</span>
+                            <span class="stat-value"><fmt:formatNumber value="${totalSpent}"/> VNĐ</span>
                         </div>
                         <div class="stat-row">
                             <span class="stat-label">⭐ Điểm</span>
-                            <span class="stat-value">${points}</span>
+                            <span class="stat-value"><fmt:formatNumber value="${points}"/></span>
                         </div>
                         <div class="stat-row">
                             <span class="stat-label">📅 Tham gia</span>

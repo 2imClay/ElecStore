@@ -164,11 +164,11 @@
                     <div class="item-details">
                         <div class="item-name">${item.product.name}</div>
                         <div class="item-meta">
-                            <span><strong>Giá:</strong> <fmt:formatNumber value="${item.price}" groupingUsed="false"/> VNĐ</span>
+                            <span><strong>Giá:</strong> <fmt:formatNumber value="${item.price}"/> VNĐ</span>
                             <span><strong>Số lượng:</strong> ${item.quantity}</span>
                         </div>
                         <div class="item-price">
-                            <fmt:formatNumber value="${item.price * item.quantity}" groupingUsed="false"/> VNĐ
+                            <fmt:formatNumber value="${item.price * item.quantity}"/> VNĐ
                         </div>
                     </div>
                     <button class="remove-btn" onclick="removeItem(${item.id})">
@@ -297,7 +297,7 @@
             <div class="order-summary">
                 <div class="summary-row label">
                     <span>Tạm tính:</span>
-                    <span><fmt:formatNumber value="${subtotal}" groupingUsed="false"/> VNĐ</span>
+                    <span><fmt:formatNumber value="${subtotal}"/> VNĐ</span>
                 </div>
                 <div class="summary-row label">
                     <span>Phí vận chuyển:</span>
@@ -310,7 +310,7 @@
                 <div class="summary-row total">
                     <span>Tổng cộng:</span>
                     <span id="totalPrice">
-                            <fmt:formatNumber value="${subtotal + 30000}" groupingUsed="false"/> VNĐ
+                            <fmt:formatNumber value="${subtotal + 30000}"/> VNĐ
                         </span>
                 </div>
             </div>

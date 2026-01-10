@@ -2,6 +2,7 @@ package com.elecstore.controller;
 
 import com.elecstore.dao.*;
 import com.elecstore.model.*;
+import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class AdminDashboardServlet extends HttpServlet {
@@ -54,5 +56,97 @@ public class AdminDashboardServlet extends HttpServlet {
             System.err.println("[AdminServlet] Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JsonObject result = new JsonObject();
+
+        String action = req.getParameter("action");
+
+        switch (action) {
+            case "toggleUserStatus": {
+                try {
+                    int userId = Integer.parseInt(req.getParameter("userId"));
+                    String status = req.getParameter("status");
+
+                    User user = userDAO.getById(userId);
+
+                    if (user == null) {
+                        result.addProperty("success", false);
+                        result.addProperty("message", "Không tìm thấy user!");
+                    } else if ("admin".equals(user.getRole())) {
+                        result.addProperty("success", false);
+                        result.addProperty("message", "Không thể thay đổi trạng thái của admin!");
+                    } else {
+                        userDAO.updateUserStatus(userId, status);
+                        result.addProperty("success", true);
+                        result.addProperty("message", "Cập nhật thành công!");
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    result.addProperty("success", false);
+                    result.addProperty("message", "Lỗi hệ thống: " + e.getMessage());
+                }
+                break;
+            }
+            case "toggleProductStatus": {
+                try {
+                    int productId = Integer.parseInt(req.getParameter("productId"));
+                    String status = req.getParameter("status");
+
+                    productDAO.updateStatus(productId, status);
+
+                    result.addProperty("success", true);
+                    result.addProperty("message", "Cập nhật thành công!");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    result.addProperty("success", false);
+                    result.addProperty("message", "Lỗi hệ thống: " + e.getMessage());
+                }
+                break;
+            }
+            case "toggleCategoryStatus": {
+                try {
+                    int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+                    String status = req.getParameter("status");
+
+                    categoryDAO.updateStatus(categoryId, status);
+
+                    result.addProperty("success", true);
+                    result.addProperty("message", "Cập nhật thành công!");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    result.addProperty("success", false);
+                    result.addProperty("message", "Lỗi hệ thống: " + e.getMessage());
+                }
+                break;
+            }
+            case "updateOrderStatus": {
+                try {
+                    int orderId = Integer.parseInt(req.getParameter("orderId"));
+                    String status = req.getParameter("status");
+
+                    orderDAO.updateStatus(orderId, status);
+
+                    result.addProperty("success", true);
+                    result.addProperty("message", "Cập nhật thành công!");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    result.addProperty("success", false);
+                    result.addProperty("message", "Lỗi hệ thống: " + e.getMessage());
+                }
+                break;
+            }
+        }
+
+        out.print(result.toString());
+        out.flush();
     }
 }

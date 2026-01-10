@@ -202,7 +202,7 @@
                                 <img src="${item.productImage}" style="width: 30px; height: 30px; border-radius: 4px; margin-right: 8px;">
                                 ${item.productName} <span style="color: #9ca3af;">x${item.quantity}</span>
                             </span>
-                            <span><fmt:formatNumber value="${item.price * item.quantity}" groupingUsed="false"/> VNĐ</span>
+                            <span><fmt:formatNumber value="${item.price * item.quantity}"/> VNĐ</span>
                         </div>
                     </c:forEach>
                 </div>
@@ -213,7 +213,7 @@
                         <strong>Phương thức:</strong> ${order.paymentMethod}
                     </div>
                     <div class="order-total">
-                        Tổng: <fmt:formatNumber value="${order.totalAmount}" groupingUsed="false"/> VNĐ
+                        Tổng: <fmt:formatNumber value="${order.totalAmount}" /> VNĐ
                     </div>
                     <div class="order-actions">
                             <%--                    <a href="${pageContext.request.contextPath}/order-detail?id=${order.id}" class="btn-detail">--%>

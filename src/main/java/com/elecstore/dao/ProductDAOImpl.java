@@ -21,6 +21,7 @@ public class ProductDAOImpl implements ProductDAO {
         p.setCategoryId(rs.getInt("category_id"));
         p.setBrand(rs.getString("brand"));
         p.setPrice(rs.getFloat("price"));
+        p.setStatus(rs.getString("status"));
         return p;
     }
 
