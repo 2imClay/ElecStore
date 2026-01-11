@@ -325,3 +325,23 @@
     background: #fff3e0;
     color: #e65100;
 }
+
+
+.bg-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.modal-content {
+    border-radius: 12px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background-color: #667eea;
+    border-color: #667eea;
+    color: white;
+}
