@@ -22,7 +22,12 @@ public interface UserDAO {
     List<User> getAll() throws SQLException;
 
     boolean isEmailExists(String email) throws SQLException;
-    public void updateUserStatus(int id, String status);
-    public double totalSpent(int userId);
+    void updateUserStatus(int id, String status);
+    double totalSpent(int userId);
+    int getTotalOrdersCount(int userId);
+    User getByEmail(String email);
+    // UserDAO.java
+    void updatePassword(int userId, String newPassword);
+
 
 }

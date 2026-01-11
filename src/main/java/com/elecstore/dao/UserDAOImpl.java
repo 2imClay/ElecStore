@@ -2,6 +2,7 @@ package com.elecstore.dao;
 
 import com.elecstore.model.User;
 import com.elecstore.utils.DatabaseConnection;
+import com.elecstore.utils.PasswordUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -314,6 +315,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     // Cập nhật trạng thái active/inactive
+    @Override
     public void updateUserStatus(int id, String status) {
         String sql = "UPDATE users SET status = ? WHERE id = ?";
         try (Connection conn = new DatabaseConnection().getConnection();
@@ -356,6 +358,72 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public int getTotalOrdersCount(int userId) {
+        String sql = "SELECT COUNT(*) as total_orders FROM orders WHERE user_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total_orders");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void updatePassword(int userId, String newPassword) {
+        String sql = """
+        UPDATE users 
+        SET password = ?, updated_at = NOW() 
+        WHERE id = ?
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, PasswordUtil.hashPassword(newPassword));
+            ps.setInt(2, userId);
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Updated password for userId: " + userId);
+            } else {
+                System.err.println("⚠No user found with ID: " + userId);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error updating password for userId " + userId + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }
