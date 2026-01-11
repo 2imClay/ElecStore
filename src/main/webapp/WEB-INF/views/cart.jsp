@@ -123,7 +123,6 @@
                 <li><a href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
                 <li><a href="${pageContext.request.contextPath}/store">Cửa hàng</a></li>
                 <li class="active"><a href="${pageContext.request.contextPath}/cart">Giỏ hàng</a></li>
-                <li><a href="#">Ưu đãi</a></li>
             </ul>
         </div>
     </div>
@@ -215,17 +214,17 @@
 
                     <div class="summary-row">
                         <span>Giảm giá:</span>
-                        <span id="discount" style="color: #27ae60;">0 VNĐ</span>
+                        <span id="discount" style="color: #27ae60;"><fmt:formatNumber value="${discount}"/> VNĐ</span>
                     </div>
 
                     <div class="summary-row">
                         <span>Phí vận chuyển:</span>
-                        <span id="shipping"><c:if test="${subtotal >= 500}">0</c:if><c:if test="${subtotal < 500}">30000</c:if> VNĐ</span>
+                        <span id="shipping"><fmt:formatNumber value="${((subtotal < 500000 && subtotal > 0) ? 30000 : 0)}"/> VNĐ</span>
                     </div>
 
                     <div class="summary-row total">
                         <span>Tổng cộng:</span>
-                        <span id="total"><fmt:formatNumber value="${subtotal + (subtotal >= 500 ? 0 : 50)}"/> VNĐ</span>
+                        <span id="total"><fmt:formatNumber value="${subtotal + ((subtotal < 500000 && subtotal > 0) ? 30000 : 0) - discount}"/> VNĐ</span>
                     </div>
 
                     <button class="checkout-btn" onclick="checkout()">

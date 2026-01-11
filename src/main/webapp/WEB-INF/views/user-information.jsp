@@ -15,8 +15,12 @@
 
     <!-- Google font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css"/>
+<%--    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css"/>--%>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Slick -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css"/>
     <!-- Font Awesome Icon -->
@@ -29,7 +33,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 </head>
 <body>
-<!-- HEADER -->
+<!-- HEADER from index-->
 <header>
     <div id="header">
         <div class="container">
@@ -81,14 +85,14 @@
                         </div>
 
                         <div class="dropdown">
-                            <a href="${pageContext.request.contextPath}/cart" class="dropdown-toggle">
+                            <a href="${pageContext.request.contextPath}/cart" >
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>Giỏ hàng</span>
                             </a>
                         </div>
 
                         <div class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                            <a data-toggle="dropdown" data-toggle="dropdown" style="color: white">
                                 <i class="fa fa-user-o"></i>
                                 <span>Account</span>
                             </a>
@@ -244,8 +248,8 @@
                         </div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label>Không có đơn hàng</label>
-                                <p style="color: #999;">Bạn chưa có đơn hàng nào. <a href="${pageContext.request.contextPath}/store">Mua sắm ngay</a></p>
+                                <label>Bạn có ${orderCount} đơn hàng</label>
+                                <p><a href="${pageContext.request.contextPath}/store">Mua sắm ngay</a></p>
                             </div>
                         </div>
                     </div>
@@ -261,7 +265,71 @@
                                     <span class="security-item-label">🔐 Mật khẩu</span>
                                     <span class="security-item-desc">Thay đổi mật khẩu tài khoản</span>
                                 </div>
-                                <button class="btn-edit" onclick="changePassword()">Đổi</button>
+                                <button class="btn-edit" data-bs-toggle="modal"
+                                        data-bs-target="#changePasswordModal"
+                                        >
+                                    Đổi
+                                </button>
+
+                                <!-- Modal Form -->
+                                <div class="modal fade" id="changePasswordModal" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow-lg">
+                                            <div class="modal-header bg-gradient text-white border-0">
+                                                <h5 class="modal-title">
+                                                    <i class="fas fa-lock"></i> Đổi Mật Khẩu
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body p-4">
+                                                <form id="changePasswordForm">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Mật khẩu cũ *</label>
+                                                        <div class="input-group">
+                                                            <input type="password" class="form-control" id="oldPassword"
+                                                                   placeholder="Nhập mật khẩu cũ" required>
+                                                            <button class="btn btn-outline-secondary toggle-password" type="button"
+                                                                    data-bs-target="#oldPassword">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Mật khẩu mới *</label>
+                                                        <div class="input-group">
+                                                            <input type="password" class="form-control" id="newPassword"
+                                                                   placeholder="Nhập mật khẩu mới (min 6 ký tự)" required>
+                                                            <button class="btn btn-outline-secondary toggle-password" type="button"
+                                                                    data-bs-target="#newPassword">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                        </div>
+                                                        <small class="text-muted">Mật khẩu phải từ 6 ký tự trở lên</small>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Xác nhận mật khẩu *</label>
+                                                        <div class="input-group">
+                                                            <input type="password" class="form-control" id="confirmPassword"
+                                                                   placeholder="Nhập lại mật khẩu mới" required>
+                                                            <button class="btn btn-outline-secondary toggle-password" type="button"
+                                                                    data-bs-target="#confirmPassword">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer border-0 bg-light">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                <button type="button" class="btn btn-primary" onclick="submitChangePassword()">
+                                                    <i class="fas fa-check"></i> Đổi Mật Khẩu
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="security-item">
                                 <div class="security-item-left">
@@ -382,37 +450,72 @@
 
 <!-- jQuery Plugins -->
 <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+<%--<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>--%>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
 <script>
-    // Menu navigation
-    document.querySelectorAll('.profile-menu a').forEach(link => {
-        link.addEventListener('click', function(e) {
+    $(document).ready(function() {
+        // Menu navigation
+        $('.profile-menu a').click(function(e) {
             e.preventDefault();
-            document.querySelectorAll('.profile-menu a').forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
+            $('.profile-menu a').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // Toggle password visibility
+        $(document).on('click', '.toggle-password', function() {
+            var input = $($(this).data('bs-target'));
+            input.attr('type', input.attr('type') === 'password' ? 'text' : 'password');
         });
     });
 
-    function editPersonal() {
-        alert('Sẽ mở trang chỉnh sửa thông tin cá nhân');
-    }
+    // ✅ Submit Change Password
+    function submitChangePassword() {
+        const oldPassword = $('#oldPassword').val();
+        const newPassword = $('#newPassword').val();
+        const confirmPassword = $('#confirmPassword').val();
 
-    function editAddress() {
-        alert('Sẽ mở trang chỉnh sửa địa chỉ');
-    }
-
-    function changePassword() {
-        alert('Sẽ mở trang đổi mật khẩu');
-    }
-
-    function deleteAccount() {
-        if (confirm('⚠️ Bạn chắc chắn muốn xóa tài khoản? Điều này không thể hoàn tác!')) {
-            alert('Tài khoản sẽ được xóa');
+        if (!oldPassword || !newPassword || !confirmPassword) {
+            alert('❌ Vui lòng điền đầy đủ thông tin!');
+            return;
         }
+
+        if (newPassword.length < 6) {
+            alert('❌ Mật khẩu mới phải từ 6 ký tự!');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert('❌ Mật khẩu xác nhận không khớp!');
+            return;
+        }
+
+        $.ajax({
+            url: '${pageContext.request.contextPath}/change-password',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                oldPassword: oldPassword,
+                newPassword: newPassword,
+                confirmPassword: confirmPassword
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert('✅ ' + response.message);
+                    $('#changePasswordModal').modal('hide');
+                    $('#changePasswordForm')[0].reset();
+                } else {
+                    alert('❌ ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('❌ Lỗi kết nối: ' + error);
+            }
+        });
     }
+
 </script>
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>

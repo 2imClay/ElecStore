@@ -44,7 +44,7 @@ public class UserInformationServlet extends HttpServlet {
                 System.out.println("[USER-INFO] ✓ Fresh user data loaded");
                 // Set request attributes
                 request.setAttribute("user", updatedUser);
-                request.setAttribute("userName", updatedUser.getFirstName() + " " + updatedUser.getLastName());
+                request.setAttribute("userName", updatedUser.getLastName() + " " + updatedUser.getFirstName());
                 request.setAttribute("userEmail", updatedUser.getEmail());
                 request.setAttribute("userPhone", updatedUser.getPhone() != null ? updatedUser.getPhone() : "Chưa cập nhật");
                 request.setAttribute("userCity", updatedUser.getCity() != null ? updatedUser.getCity() : "Chưa cập nhật");
@@ -52,8 +52,7 @@ public class UserInformationServlet extends HttpServlet {
                 request.setAttribute("userCountry", updatedUser.getCountry() != null ? updatedUser.getCountry() : "Việt Nam");
                 request.setAttribute("createdAt", updatedUser.getCreatedAt() != null ? updatedUser.getCreatedAt() : "");
 
-                // Stats (có thể lấy từ database sau - tạm thời hardcode)
-                request.setAttribute("orderCount", 5);
+                request.setAttribute("orderCount", userDAO.getTotalOrdersCount(user.getId()));
                 request.setAttribute("totalSpent", userDAO.totalSpent(user.getId()));
                 request.setAttribute("points", userDAO.totalSpent(user.getId())/100);
 

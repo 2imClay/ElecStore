@@ -1,9 +1,6 @@
 package com.elecstore.controller;
 
-import com.elecstore.dao.CartDAO;
-import com.elecstore.dao.CartItemDAO;
-import com.elecstore.dao.CartDAOImpl;
-import com.elecstore.dao.CartItemDAOImpl;
+import com.elecstore.dao.*;
 import com.elecstore.model.Cart;
 import com.elecstore.model.CartItem;
 import com.elecstore.model.User;
@@ -20,6 +17,7 @@ public class CartServlet extends HttpServlet {
 
     private CartDAO cartDAO = new CartDAOImpl();
     private CartItemDAO cartItemDAO = new CartItemDAOImpl();
+    private UserDAO userDAO = new UserDAOImpl();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -46,10 +44,13 @@ public class CartServlet extends HttpServlet {
             // 3. Get cart items
             List<CartItem> cartItems = cartItemDAO.getCartItems(cart.getId());
 
+            double discount = userDAO.totalSpent(user.getId())/100;
+
             // 4. Set request attributes
             request.setAttribute("cart", cart);
             request.setAttribute("cartItems", cartItems);
             request.setAttribute("cartItemCount", cartItems.size());
+            request.setAttribute("discount", discount);
 
             // 5. Calculate totals
             double subtotal = 0;

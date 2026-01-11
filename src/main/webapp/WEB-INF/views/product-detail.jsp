@@ -221,7 +221,9 @@
                                 <span class="qty-down">-</span>
                             </div>
                         </div>
-                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</button>
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id}, 1)">
+                                <i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng
+                        </button>
                     </div>
 
 <%--                    <ul class="product-btns">--%>
@@ -557,6 +559,85 @@
     <script src="${pageContext.request.contextPath}/js/nouislider.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/jquery.zoom.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+    <script>
+        function addToCart(productId, quantity) {
+            // Check if user is logged in
+            <c:if test="${empty sessionScope.user}">
+            alert('Vui lòng đăng nhập để thêm vào giỏ hàng');
+            window.location.href = '${pageContext.request.contextPath}/login';
+            return;
+            </c:if>
+
+            // Show loading indicator
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Đang thêm...';
+            btn.disabled = true;
+
+            // AJAX request to add to cart
+            $.ajax({
+                url: '${pageContext.request.contextPath}/add-to-cart',
+                method: 'POST',
+                data: {
+                    productId: productId,
+                    quantity: quantity
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Show success toast
+                        showCartToast(response.message, true);
+
+                        // Restore button
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+
+                        // Update cart count in header
+                        updateCartCountInHeader();
+
+                    } else {
+                        alert('Lỗi: ' + response.message);
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401) {
+                        alert('Vui lòng đăng nhập');
+                        window.location.href = '${pageContext.request.contextPath}/login';
+                    } else {
+                        alert('Lỗi thêm vào giỏ hàng');
+                    }
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        function showCartToast(message, success = true) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 5px;
+        color: white;
+        background-color: ${success ? '#27ae60' : '#e74c3c'};
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        z-index: 9999;
+        font-size: 14px;
+    `;
+
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
 
 </body>
 </html>
