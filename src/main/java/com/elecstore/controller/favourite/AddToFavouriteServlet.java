@@ -1,28 +1,20 @@
-package com.elecstore.controller;
+package com.elecstore.controller.favourite;
 
-import com.elecstore.dao.CartDAO;
-import com.elecstore.dao.CartItemDAO;
-import com.elecstore.dao.ProductDAO;
-import com.elecstore.dao.CartDAOImpl;
-import com.elecstore.dao.CartItemDAOImpl;
-import com.elecstore.dao.ProductDAOImpl;
-import com.elecstore.model.Cart;
-import com.elecstore.model.CartItem;
-import com.elecstore.model.Product;
-import com.elecstore.model.User;
-
+import com.elecstore.dao.*;
+import com.elecstore.model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class AddToCartServlet extends HttpServlet {
+public class AddToFavouriteServlet extends HttpServlet {
 
-    private CartDAO cartDAO = new CartDAOImpl();
-    private CartItemDAO cartItemDAO = new CartItemDAOImpl();
+    private FavouriteDAO favouriteDAO = new FavouriteDAOImpl();
+    private FavouriteItemDAO favouriteItemDAO = new FavouriteItemDAOImpl();
     private ProductDAO productDAO = new ProductDAOImpl();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -48,10 +40,10 @@ public class AddToCartServlet extends HttpServlet {
                     request.getParameter("quantity") : "1");
 
             // 3. Get or create cart for user
-            Cart cart = cartDAO.findByUserId(userId);
-            if (cart == null) {
-                cart = cartDAO.createCart(userId);
-                System.out.println("[AddToCart] Created new cart for user " + userId);
+            Favourite favourite = favouriteDAO.findByUserId(userId);
+            if (favourite == null) {
+                favourite = favouriteDAO.createFavourite(userId);
+                System.out.println("Created new favourite for user " + userId);
             }
 
             // 4. Get product info
@@ -63,45 +55,46 @@ public class AddToCartServlet extends HttpServlet {
             }
 
             // 5. Check if product already in cart
-            CartItem existingItem = cartItemDAO.findByCartAndProduct(cart.getId(), productId);
+            FavouriteItem existingItem = favouriteItemDAO.findByFavouriteAndProduct(favourite.getId(), productId);
 
             if (existingItem != null) {
                 // Update quantity if product already in cart
                 int newQuantity = existingItem.getQuantity() + quantity;
-                boolean updated = cartItemDAO.updateQuantity(existingItem.getId(), newQuantity);
+                boolean updated = favouriteItemDAO.updateQuantity(existingItem.getId(), newQuantity);
 
                 if (updated) {
-                    out.println("{\"success\": true, \"message\": \"Đã cập nhật sản phẩm trong giỏ\"}");
-                    System.out.println("[AddToCart] Updated quantity for product " + productId +
-                            " in cart " + cart.getId());
+                    out.println("{\"success\": true, \"message\": \"Đã cập nhật sản phẩm trong yêu thích\"}");
+                    System.out.println("Updated quantity for product " + productId +
+                            " in favourite " + favourite.getId());
                 } else {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    out.println("{\"success\": false, \"message\": \"Lỗi cập nhật giỏ hàng\"}");
+                    out.println("{\"success\": false, \"message\": \"Lỗi cập nhật yêu thích\"}");
                 }
             } else {
                 // Add new item to cart
-                CartItem newItem = new CartItem(cart.getId(), productId, quantity, product.getPrice());
-                CartItem savedItem = cartItemDAO.addItem(newItem);
+                FavouriteItem newItem = new FavouriteItem(favourite.getId(), productId, quantity, product.getPrice());
+                FavouriteItem savedItem = favouriteItemDAO.addItem(newItem);
 
                 if (savedItem != null) {
-                    out.println("{\"success\": true, \"message\": \"Đã thêm vào giỏ hàng\", " +
-                            "\"cartItemId\": " + savedItem.getId() + "}");
-                    System.out.println("[AddToCart] Added new item to cart " + cart.getId());
+                    out.println("{\"success\": true, \"message\": \"Đã thêm vào yêu thích\", " +
+                            "\"favouriteItemId\": " + savedItem.getId() + "}");
+                    System.out.println("Added new item to favourite " + favourite.getId());
                 } else {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    out.println("{\"success\": false, \"message\": \"Lỗi thêm vào giỏ hàng\"}");
+                    out.println("{\"success\": false, \"message\": \"Lỗi thêm vào yêu thích\"}");
                 }
             }
 
         } catch (NumberFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.println("{\"success\": false, \"message\": \"Tham số không hợp lệ\"}");
-            System.err.println("[AddToCart] Invalid parameters: " + e.getMessage());
+            System.err.println("Invalid parameters: " + e.getMessage());
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             out.println("{\"success\": false, \"message\": \"Lỗi server\"}");
-            System.err.println("[AddToCart] Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 }
