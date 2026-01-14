@@ -72,7 +72,7 @@
                 <div class="col-md-3 clearfix" style="display: flex">
                     <div class="header-ctn" style="display: flex">
                         <div>
-                            <a href="#">
+                            <a href="${pageContext.request.contextPath}/favourite">
                                 <i class="fa fa-heart-o"></i>
                                 <span>Yêu thích</span>
                             </a>
@@ -261,85 +261,6 @@
 <!-- Toast Message -->
 <div id="toastMessage" class="toast-message"></div>
 
-<!-- FOOTER (từ index) -->
-<footer id="footer" style="margin-top: 50px">
-    <div class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Về chúng tôi</h3>
-                        <p>ElecStore - Cửa hàng điện tử trực tuyến hàng đầu với đa dạng sản phẩm chất lượng cao.</p>
-                        <ul class="footer-links">
-                            <li><a href="#"><i class="fa fa-map-marker"></i>TP. Hồ Chí Minh, VN</a></li>
-                            <li><a href="#"><i class="fa fa-phone"></i>+84-28-XXXX-XXXX</a></li>
-                            <li><a href="#"><i class="fa fa-envelope-o"></i>support@elecstore.com</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Danh mục</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">Khuyến mãi</a></li>
-                            <li><a href="#">Laptop</a></li>
-                            <li><a href="#">Điện thoại</a></li>
-                            <li><a href="#">Camera</a></li>
-                            <li><a href="#">Phụ kiện</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="clearfix visible-xs"></div>
-
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Thông tin</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">Về chúng tôi</a></li>
-                            <li><a href="#">Liên hệ</a></li>
-                            <li><a href="#">Chính sách bảo mật</a></li>
-                            <li><a href="#">Điều khoản sử dụng</a></li>
-                            <li><a href="#">Hoàn trả hàng</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Dịch vụ</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">Tài khoản của tôi</a></li>
-                            <li><a href="#">Xem giỏ hàng</a></li>
-                            <li><a href="#">Danh sách yêu thích</a></li>
-                            <li><a href="#">Theo dõi đơn hàng</a></li>
-                            <li><a href="#">Trợ giúp</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="bottom-footer" class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <ul class="footer-payments">
-                        <li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
-                        <li><a href="#"><i class="fa fa-credit-card"></i></a></li>
-                        <li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
-                        <li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
-                        <li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
-                        <li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
-                    </ul>
-                    <span class="copyright">&copy; 2025 ElecStore. All Rights Reserved.</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
 
 <!-- jQuery Plugins -->
 <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>

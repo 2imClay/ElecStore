@@ -272,7 +272,7 @@
                                         <th>Tên sản phẩm</th>
                                         <th>Danh mục</th>
                                         <th>Giá</th>
-<%--                                        <th>Tồn kho</th>--%>
+                                        <th>Tồn kho</th>
                                         <th>Trạng thái</th>
                                         <th>Hành động</th>
                                     </tr>
@@ -288,7 +288,7 @@
                                             <td>${product.name}</td>
                                             <td>${product.categoryName}</td>
                                             <td><fmt:formatNumber value="${product.price}"/> VNĐ</td>
-<%--                                            <td>${product.stock}</td>--%>
+                                            <td>${product.stock}</td>
                                             <td>
                                                 <label class="toggle-switch">
                                                     <input type="checkbox" ${product.status == 'active' ? 'checked' : ''}

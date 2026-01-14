@@ -16,7 +16,7 @@
     <!-- Register Servlet -->
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.RegisterServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.auth.RegisterServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -27,7 +27,7 @@
     <!-- Check Email Servlet (AJAX validation) -->
     <servlet>
         <servlet-name>CheckEmailServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.CheckEmailServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.auth.CheckEmailServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -42,7 +42,7 @@
     <!-- Login Servlet -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.LoginServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.auth.LoginServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -53,7 +53,7 @@
     <!-- Logout Servlet -->
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.LogoutServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.auth.LogoutServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -79,7 +79,7 @@
     <!-- Add To Cart Servlet -->
     <servlet>
         <servlet-name>AddToCartServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.AddToCartServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.cart.AddToCartServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AddToCartServlet</servlet-name>
@@ -89,7 +89,7 @@
     <!-- Cart Servlet -->
     <servlet>
         <servlet-name>CartServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.CartServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.cart.CartServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>CartServlet</servlet-name>
@@ -99,7 +99,7 @@
     <!-- Update Cart Servlet -->
     <servlet>
         <servlet-name>UpdateCartServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.UpdateCartServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.cart.UpdateCartServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UpdateCartServlet</servlet-name>
@@ -109,7 +109,7 @@
     <!-- Remove From Cart Servlet -->
     <servlet>
         <servlet-name>RemoveFromCartServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.RemoveFromCartServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.cart.RemoveFromCartServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RemoveFromCartServlet</servlet-name>
@@ -129,7 +129,7 @@
     <!-- Admin Dashboard -->
     <servlet>
         <servlet-name>AdminDashboardServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.AdminDashboardServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.admin.AdminDashboardServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AdminDashboardServlet</servlet-name>
@@ -139,7 +139,7 @@
     <!-- Order History -->
     <servlet>
         <servlet-name>OrderHistoryServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.OrderHistoryServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.order.OrderHistoryServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>OrderHistoryServlet</servlet-name>
@@ -167,7 +167,7 @@
     <!-- Change Password -->
     <servlet>
         <servlet-name>ChangePasswordServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.ChangePasswordServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.auth.ChangePasswordServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ChangePasswordServlet</servlet-name>
@@ -177,11 +177,41 @@
     <!-- Forgot Password -->
     <servlet>
         <servlet-name>ForgotPasswordServlet</servlet-name>
-        <servlet-class>com.elecstore.controller.ForgotPasswordServlet</servlet-class>
+        <servlet-class>com.elecstore.controller.auth.ForgotPasswordServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ForgotPasswordServlet</servlet-name>
         <url-pattern>/forgot-password</url-pattern>
+    </servlet-mapping>
+
+    <!-- Favourite -->
+    <servlet>
+        <servlet-name>FavouriteServlet</servlet-name>
+        <servlet-class>com.elecstore.controller.favourite.FavouriteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FavouriteServlet</servlet-name>
+        <url-pattern>/favourite</url-pattern>
+    </servlet-mapping>
+
+    <!-- Add To Favourite Servlet -->
+    <servlet>
+        <servlet-name>AddToFavouriteServlet</servlet-name>
+        <servlet-class>com.elecstore.controller.favourite.AddToFavouriteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddToFavouriteServlet</servlet-name>
+        <url-pattern>/add-to-favourite</url-pattern>
+    </servlet-mapping>
+
+    <!-- Remove From Cart Servlet -->
+    <servlet>
+        <servlet-name>RemoveFromFavouriteServlet</servlet-name>
+        <servlet-class>com.elecstore.controller.favourite.RemoveFromFavouriteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RemoveFromFavouriteServlet</servlet-name>
+        <url-pattern>/remove-from-favourite</url-pattern>
     </servlet-mapping>
 
 </web-app>

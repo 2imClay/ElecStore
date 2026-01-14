@@ -4,11 +4,9 @@ import com.elecstore.dao.*;
 import com.elecstore.model.*;
 import com.google.gson.JsonObject;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.*;
 
 public class CheckoutServlet extends HttpServlet {
