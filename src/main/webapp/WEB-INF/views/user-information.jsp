@@ -187,7 +187,7 @@
                     <div class="profile-card" id="personal">
                         <div class="card-header">
                             <h3>Thông Tin Cá Nhân</h3>
-                            <button class="btn-edit" onclick="editPersonal()">Chỉnh sửa</button>
+<%--                            <button class="btn-edit" onclick="editPersonal()">Chỉnh sửa</button>--%>
                         </div>
                         <div class="form-grid">
                             <div class="form-group">
@@ -219,7 +219,7 @@
                     <div class="profile-card" id="address">
                         <div class="card-header">
                             <h3>Địa Chỉ Giao Hàng</h3>
-                            <button class="btn-edit" onclick="editAddress()">Thay đổi</button>
+<%--                            <button class="btn-edit" onclick="editAddress()">Thay đổi</button>--%>
                         </div>
                         <div class="form-grid">
                             <div class="form-group full">
@@ -457,6 +457,70 @@
             }
         });
     }
+
+    $(document).ready(function() {
+        // AJAX gợi ý tìm kiếm
+        $('#searchInput').on('keyup', function() {
+            let keyword = $(this).val().trim();
+            let dropdown = $('#suggestDropdown');
+
+            if (keyword.length < 2) {
+                dropdown.hide();
+                return;
+            }
+
+            $.ajax({
+                url: '${pageContext.request.contextPath}/search',
+                method: 'GET',
+                data: { keyword: keyword },
+                dataType: 'json',
+                success: function(data) {
+                    dropdown.empty();
+
+                    if (data.length === 0) {
+                        dropdown.html('<div style="padding: 10px; color: #999;">No results</div>');
+                        dropdown.show();
+                        return;
+                    }
+
+                    data.forEach(function(product) {
+                        let html = `
+                        <a href="${pageContext.request.contextPath}/product-detail?id=` + product.id + `"
+                           style="
+                               display: block;
+                               padding: 10px 15px;
+                               color: #333;
+                               text-decoration: none;
+                               border-bottom: 1px solid #eee;
+                           "
+                           onmouseover="this.style.backgroundColor='#f5f5f5'"
+                           onmouseout="this.style.backgroundColor='white'"
+                        >
+                            <strong>` + product.name + `</strong>
+                            <br>
+                            <small style="color: #999;">$` + product.price + `</small>
+                        </a>
+                    `;
+                        dropdown.append(html);
+                    });
+
+                    dropdown.show();
+                }
+            });
+        });
+
+        // Đóng dropdown khi click bên ngoài
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.header-search').length) {
+                $('#suggestDropdown').hide();
+            }
+        });
+
+        // Đóng dropdown khi submit form
+        $('#searchForm').on('submit', function() {
+            $('#suggestDropdown').hide();
+        });
+    });
 
 </script>
 

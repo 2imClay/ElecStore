@@ -34,7 +34,6 @@ public class ForgotPasswordServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("sendCode".equals(action)) {
-            // Step 1: Gửi code
             try {
                 String email = request.getParameter("email");
                 User user = userDAO.getByEmail(email);
@@ -43,19 +42,15 @@ public class ForgotPasswordServlet extends HttpServlet {
                     result.addProperty("success", false);
                     result.addProperty("message", "Email không tồn tại trong hệ thống!");
                 } else {
-                    // Tạo code 6 số
                     String otp = String.format("%06d", (int)(Math.random() * 1000000));
 
-                    // Lưu code vào session
                     HttpSession session = request.getSession();
                     session.setAttribute("resetEmail", email);
                     session.setAttribute("resetCode", otp);
                     session.setAttribute("resetCodeExpiry", System.currentTimeMillis() + 5*60*1000); // 5 phút
 
-                    // Gửi email (giả định hàm sendEmail có sẵn)
                     sendResetCodeEmail(email, otp);
 
-                    // ✅ GỬI EMAIL THỰC TẾ
                     boolean emailSent = EmailService.sendOtpEmail(email, otp, user.getUserName());
 
                     if (emailSent) {
@@ -92,7 +87,7 @@ public class ForgotPasswordServlet extends HttpServlet {
                     result.addProperty("message", "Mã xác thực không chính xác!");
                 } else {
                     result.addProperty("success", true);
-                    result.addProperty("message", "✅ Mã xác thực chính xác!");
+                    result.addProperty("message", "Mã xác thực chính xác!");
                     session.setAttribute("codeVerified", true);
                 }
             } catch (Exception e) {

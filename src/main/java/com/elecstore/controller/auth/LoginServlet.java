@@ -56,13 +56,13 @@ public class LoginServlet extends HttpServlet {
 
             // ===== VALIDATION =====
             if (email == null || email.trim().isEmpty()) {
-                request.setAttribute("error", "❌ Email không được để trống");
+                request.setAttribute("error", "Email không được để trống");
                 request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
                 return;
             }
 
             if (password == null || password.isEmpty()) {
-                request.setAttribute("error", "❌ Mật khẩu không được để trống");
+                request.setAttribute("error", "Mật khẩu không được để trống");
                 request.setAttribute("email", email);
                 request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
                 return;
@@ -77,7 +77,7 @@ public class LoginServlet extends HttpServlet {
             System.out.println("[LOGIN] Find user by email: " + (user != null ? "✓ FOUND" : "✗ NOT FOUND"));
 
             if (user == null) {
-                request.setAttribute("error", "❌ Email hoặc mật khẩu không đúng");
+                request.setAttribute("error", "Email hoặc mật khẩu không đúng");
                 request.setAttribute("email", email);
                 request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
                 return;
@@ -86,7 +86,7 @@ public class LoginServlet extends HttpServlet {
             // ===== CHECK IF ACCOUNT ACTIVE =====
             if (user.getStatus().equals("inactive")) {
                 System.out.println("[LOGIN] Account not active: " + email);
-                request.setAttribute("error", "❌ Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.");
+                request.setAttribute("error", "Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.");
                 request.setAttribute("email", email);
                 request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
                 return;
@@ -97,7 +97,7 @@ public class LoginServlet extends HttpServlet {
             System.out.println("[LOGIN] Password verification: " + (isPasswordCorrect ? "✓ CORRECT" : "✗ WRONG"));
 
             if (!isPasswordCorrect) {
-                request.setAttribute("error", "❌ Email hoặc mật khẩu không đúng");
+                request.setAttribute("error", "Email hoặc mật khẩu không đúng");
                 request.setAttribute("email", email);
                 request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
                 return;
@@ -110,7 +110,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("userName", user.getFirstName() + " " + user.getLastName());
             session.setAttribute("userEmail", user.getEmail());
             session.setAttribute("userRole", user.getRole());
-            session.setMaxInactiveInterval(30 * 60); // 30 minutes
+            session.setMaxInactiveInterval(30 * 60);
 
             // ===== LOGIN SUCCESS =====
             System.out.println("[LOGIN] ✓ Success for " + email + " (Role: " + user.getRole() + ")");

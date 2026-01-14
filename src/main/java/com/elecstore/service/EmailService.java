@@ -9,8 +9,8 @@ public class EmailService {
 
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
-    private static final String EMAIL_USERNAME = "nnthanh1209@gmail.com";  // Gmail app của bạn
-    private static final String EMAIL_PASSWORD = "iyje crza gmhn gsua";   // App Password Gmail
+    private static final String EMAIL_USERNAME = "nnthanh1209@gmail.com";
+    private static final String EMAIL_PASSWORD = "iyje crza gmhn gsua";
 
     public static boolean sendOtpEmail(String toEmail, String otpCode, String userName) {
         Properties props = new Properties();

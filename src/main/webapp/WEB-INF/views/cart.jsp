@@ -212,9 +212,14 @@
                         <span id="subtotal"><fmt:formatNumber value="${subtotal}"/> VNĐ</span>
                     </div>
 
+<%--                    <div class="summary-row">--%>
+<%--                        <span>Giảm giá:</span>--%>
+<%--                        <span id="discount" style="color: #27ae60;"><fmt:formatNumber value="${discount}"/> VNĐ</span>--%>
+<%--                    </div>--%>
+
                     <div class="summary-row">
                         <span>Giảm giá:</span>
-                        <span id="discount" style="color: #27ae60;"><fmt:formatNumber value="${discount}"/> VNĐ</span>
+                        <span id="discount" style="color: #27ae60;"><fmt:formatNumber value="0"/> VNĐ</span>
                     </div>
 
                     <div class="summary-row">
@@ -224,7 +229,7 @@
 
                     <div class="summary-row total">
                         <span>Tổng cộng:</span>
-                        <span id="total"><fmt:formatNumber value="${subtotal + ((subtotal < 500000 && subtotal > 0) ? 30000 : 0) - discount}"/> VNĐ</span>
+                        <span id="total"><fmt:formatNumber value="${subtotal + ((subtotal < 500000 && subtotal > 0) ? 30000 : 0) - 0}"/> VNĐ</span>
                     </div>
 
                     <button class="checkout-btn" onclick="checkout()">
