@@ -1,4 +1,4 @@
-package com.elecstore.controller;
+package com.elecstore.controller.auth;
 
 import com.elecstore.dao.DAOFactory;
 import com.elecstore.dao.UserDAO;
@@ -7,7 +7,6 @@ import com.elecstore.utils.PasswordUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

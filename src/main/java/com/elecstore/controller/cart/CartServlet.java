@@ -1,4 +1,4 @@
-package com.elecstore.controller;
+package com.elecstore.controller.cart;
 
 import com.elecstore.dao.*;
 import com.elecstore.model.Cart;

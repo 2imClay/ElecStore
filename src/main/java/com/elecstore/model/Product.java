@@ -11,6 +11,7 @@ public class Product {
     private int categoryId;
     private String brand;
     private float price;
+    private int stock;
     private String status;
 
     public Product() {
@@ -18,7 +19,7 @@ public class Product {
 
     public Product(int id, String name, String imageUrl,
                    String description, int categoryId,
-                   String brand, float price, String status) {
+                   String brand, float price,int stock, String status) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -26,6 +27,7 @@ public class Product {
         this.categoryId = categoryId;
         this.brand = brand;
         this.price = price;
+        this.stock = stock;
         this.status = status;
     }
 
@@ -83,6 +85,14 @@ public class Product {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public String getStatus() {

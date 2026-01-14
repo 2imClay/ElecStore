@@ -78,7 +78,7 @@
                 <div class="col-md-3 clearfix" style="display: flex">
                     <div class="header-ctn" style="display: flex">
                         <div>
-                            <a href="#">
+                            <a href="${pageContext.request.contextPath}/favourite">
                                 <i class="fa fa-heart-o"></i>
                                 <span>Yêu thích</span>
                             </a>
@@ -390,67 +390,9 @@
     </c:if>
 </div>
 
-<!-- FOOTER -->
-<footer id="footer" style="margin-top: 30px">
-    <!-- top footer -->
-    <div class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">About Us</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
-                        <ul class="footer-links">
-                            <li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
-                            <li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-                            <li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Categories</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">Hot deals</a></li>
-                            <li><a href="#">Laptops</a></li>
-                            <li><a href="#">Smartphones</a></li>
-                            <li><a href="#">Cameras</a></li>
-                            <li><a href="#">Accessories</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Information</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Orders and Returns</a></li>
-                            <li><a href="#">Terms & Conditions</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Service</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">My Account</a></li>
-                            <li><a href="#">View Cart</a></li>
-                            <li><a href="#">Wishlist</a></li>
-                            <li><a href="#">Track My Order</a></li>
-                            <li><a href="#">Help</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
 
 <!-- jQuery Plugins -->
 <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-<%--<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>--%>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/slick.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>

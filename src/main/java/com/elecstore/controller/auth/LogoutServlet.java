@@ -1,9 +1,8 @@
 // ===== LogoutServlet.java - ĐĂNG XUẤT =====
-package com.elecstore.controller;
+package com.elecstore.controller.auth;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

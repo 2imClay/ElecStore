@@ -88,7 +88,7 @@
                 <div class="col-md-3 clearfix" style="display: flex">
                     <div class="header-ctn" style="display: flex">
                         <div>
-                            <a href="#">
+                            <a href="${pageContext.request.contextPath}/favourite">
                                 <i class="fa fa-heart-o"></i>
                                 <span>Yêu thích</span>
                             </a>
@@ -225,10 +225,12 @@
                                 <i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng
                         </button>
                     </div>
+                    <button class="btn btn-lg btn-danger" onclick="addToFavourite(${product.id}, 1)" style="color: white; background-color: #ef233c; border-radius: 50%">
+                        <i class="fa fa-heart-o"></i>
+                    </button>
 
 <%--                    <ul class="product-btns">--%>
-<%--                        <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>--%>
-<%--                        <li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li>--%>
+<%--                        <li><a href="#"><i class="fa fa-heart-o"></i> Thêm vào yêu thích</a></li>--%>
 <%--                    </ul>--%>
 
 <%--                    <ul class="product-links">--%>
@@ -459,97 +461,6 @@
 </div>
 <!-- /SECTION -->
 
-<!-- FOOTER -->
-<footer id="footer">
-    <!-- top footer -->
-    <div class="section">
-        <!-- container -->
-        <div class="container">
-            <!-- row -->
-            <div class="row">
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">About Us</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
-                        <ul class="footer-links">
-                            <li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
-                            <li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-                            <li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Categories</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">Hot deals</a></li>
-                            <li><a href="#">Laptops</a></li>
-                            <li><a href="#">Smartphones</a></li>
-                            <li><a href="#">Cameras</a></li>
-                            <li><a href="#">Accessories</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="clearfix visible-xs"></div>
-
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Information</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Orders and Returns</a></li>
-                            <li><a href="#">Terms & Conditions</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-xs-6">
-                    <div class="footer">
-                        <h3 class="footer-title">Service</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">My Account</a></li>
-                            <li><a href="#">View Cart</a></li>
-                            <li><a href="#">Wishlist</a></li>
-                            <li><a href="#">Track My Order</a></li>
-                            <li><a href="#">Help</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- /row -->
-        </div>
-        <!-- /container -->
-    </div>
-    <!-- /top footer -->
-
-    <!-- bottom footer -->
-    <div id="bottom-footer" class="section">
-        <div class="container">
-            <!-- row -->
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <ul class="footer-payments">
-                        <li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
-                        <li><a href="#"><i class="fa fa-credit-card"></i></a></li>
-                        <li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
-                        <li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
-                        <li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
-                        <li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
-                    </ul>
-                    <span class="copyright"></span>
-                </div>
-            </div>
-            <!-- /row -->
-        </div>
-        <!-- /container -->
-    </div>
-    <!-- /bottom footer -->
-</footer>
-<!-- /FOOTER -->
 
 
     <!-- jQuery Plugins -->
@@ -561,6 +472,58 @@
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
     <script>
+
+        function addToFavourite(productId, quantity) {
+            // Check if user is logged in
+            <c:if test="${empty sessionScope.user}">
+            alert('Vui lòng đăng nhập để thêm vào yêu thích');
+            window.location.href = '${pageContext.request.contextPath}/login';
+            return;
+            </c:if>
+
+            // Show loading indicator
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Đang thêm...';
+            btn.disabled = true;
+
+            // AJAX request to add to cart
+            $.ajax({
+                url: '${pageContext.request.contextPath}/add-to-favourite',
+                method: 'POST',
+                data: {
+                    productId: productId,
+                    quantity: quantity
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Show success toast
+                        showCartToast(response.message, true);
+
+                        // Restore button
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+
+                    } else {
+                        alert('Lỗi: ' + response.message);
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401) {
+                        alert('Vui lòng đăng nhập');
+                        window.location.href = '${pageContext.request.contextPath}/login';
+                    } else {
+                        alert('Lỗi thêm vào yêu thích');
+                    }
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            });
+        }
+
         function addToCart(productId, quantity) {
             // Check if user is logged in
             <c:if test="${empty sessionScope.user}">

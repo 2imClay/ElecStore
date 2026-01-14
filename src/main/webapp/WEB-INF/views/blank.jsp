@@ -151,35 +151,32 @@
 
 <%--ADD SECTION HERE--%>
 
-<!-- FOOTER -->
-<footer id="footer" style="margin-top: 30px">
-    <!-- top footer -->
+<!-- FOOTER (từ index) -->
+<footer id="footer" style="margin-top: 50px">
     <div class="section">
-        <!-- container -->
         <div class="container">
-            <!-- row -->
             <div class="row">
                 <div class="col-md-3 col-xs-6">
                     <div class="footer">
-                        <h3 class="footer-title">About Us</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
+                        <h3 class="footer-title">Về chúng tôi</h3>
+                        <p>ElecStore - Cửa hàng điện tử trực tuyến hàng đầu với đa dạng sản phẩm chất lượng cao.</p>
                         <ul class="footer-links">
-                            <li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
-                            <li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-                            <li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
+                            <li><a href="#"><i class="fa fa-map-marker"></i>TP. Hồ Chí Minh, VN</a></li>
+                            <li><a href="#"><i class="fa fa-phone"></i>+84-28-XXXX-XXXX</a></li>
+                            <li><a href="#"><i class="fa fa-envelope-o"></i>support@elecstore.com</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="col-md-3 col-xs-6">
                     <div class="footer">
-                        <h3 class="footer-title">Categories</h3>
+                        <h3 class="footer-title">Danh mục</h3>
                         <ul class="footer-links">
-                            <li><a href="#">Hot deals</a></li>
-                            <li><a href="#">Laptops</a></li>
-                            <li><a href="#">Smartphones</a></li>
-                            <li><a href="#">Cameras</a></li>
-                            <li><a href="#">Accessories</a></li>
+                            <li><a href="#">Khuyến mãi</a></li>
+                            <li><a href="#">Laptop</a></li>
+                            <li><a href="#">Điện thoại</a></li>
+                            <li><a href="#">Camera</a></li>
+                            <li><a href="#">Phụ kiện</a></li>
                         </ul>
                     </div>
                 </div>
@@ -188,40 +185,35 @@
 
                 <div class="col-md-3 col-xs-6">
                     <div class="footer">
-                        <h3 class="footer-title">Information</h3>
+                        <h3 class="footer-title">Thông tin</h3>
                         <ul class="footer-links">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Orders and Returns</a></li>
-                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Về chúng tôi</a></li>
+                            <li><a href="#">Liên hệ</a></li>
+                            <li><a href="#">Chính sách bảo mật</a></li>
+                            <li><a href="#">Điều khoản sử dụng</a></li>
+                            <li><a href="#">Hoàn trả hàng</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="col-md-3 col-xs-6">
                     <div class="footer">
-                        <h3 class="footer-title">Service</h3>
+                        <h3 class="footer-title">Dịch vụ</h3>
                         <ul class="footer-links">
-                            <li><a href="#">My Account</a></li>
-                            <li><a href="#">View Cart</a></li>
-                            <li><a href="#">Wishlist</a></li>
-                            <li><a href="#">Track My Order</a></li>
-                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Tài khoản của tôi</a></li>
+                            <li><a href="#">Xem giỏ hàng</a></li>
+                            <li><a href="#">Danh sách yêu thích</a></li>
+                            <li><a href="#">Theo dõi đơn hàng</a></li>
+                            <li><a href="#">Trợ giúp</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <!-- /row -->
         </div>
-        <!-- /container -->
     </div>
-    <!-- /top footer -->
 
-    <!-- bottom footer -->
     <div id="bottom-footer" class="section">
         <div class="container">
-            <!-- row -->
             <div class="row">
                 <div class="col-md-12 text-center">
                     <ul class="footer-payments">
@@ -232,16 +224,12 @@
                         <li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
                         <li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
                     </ul>
-                    <span class="copyright"></span>
+                    <span class="copyright">&copy; 2025 ElecStore. All Rights Reserved.</span>
                 </div>
             </div>
-            <!-- /row -->
         </div>
-        <!-- /container -->
     </div>
-    <!-- /bottom footer -->
 </footer>
-<!-- /FOOTER -->
 
 <!-- jQuery Plugins -->
 <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
