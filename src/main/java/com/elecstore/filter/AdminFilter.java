@@ -30,7 +30,6 @@ public class AdminFilter implements Filter {
         if (user != null && "admin".equalsIgnoreCase(userRole)) {
             chain.doFilter(request, response);
         } else {
-            // User thường hoặc chưa login -> Về login
             resp.sendRedirect(req.getContextPath() + "/login?message=access_denied");
         }
     }
