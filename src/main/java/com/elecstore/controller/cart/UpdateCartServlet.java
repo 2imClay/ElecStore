@@ -22,7 +22,6 @@ public class UpdateCartServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            // 1. Check login
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("user") == null) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -30,18 +29,15 @@ public class UpdateCartServlet extends HttpServlet {
                 return;
             }
 
-            // 2. Get parameters
             int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
             int newQuantity = Integer.parseInt(request.getParameter("quantity"));
 
-            // 3. Validate quantity
             if (newQuantity < 1) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 out.println("{\"success\": false, \"message\": \"Số lượng phải >= 1\"}");
                 return;
             }
 
-            // 4. Update quantity
             boolean updated = cartItemDAO.updateQuantity(cartItemId, newQuantity);
 
             if (updated) {

@@ -71,7 +71,6 @@ public class ForgotPasswordServlet extends HttpServlet {
             }
         }
         else if ("verifyCode".equals(action)) {
-            // Step 2: Xác thực code
             try {
                 String code = request.getParameter("code");
                 HttpSession session = request.getSession();
@@ -96,7 +95,6 @@ public class ForgotPasswordServlet extends HttpServlet {
             }
         }
         else if ("resetPassword".equals(action)) {
-            // Step 3: Đặt lại mật khẩu
             try {
                 HttpSession session = request.getSession();
                 Boolean verified = (Boolean) session.getAttribute("codeVerified");
@@ -111,7 +109,6 @@ public class ForgotPasswordServlet extends HttpServlet {
                     User user = userDAO.getByEmail(email);
                     userDAO.updatePassword(user.getId(), newPassword);
 
-                    // Clear session
                     session.removeAttribute("resetEmail");
                     session.removeAttribute("resetCode");
                     session.removeAttribute("codeVerified");
