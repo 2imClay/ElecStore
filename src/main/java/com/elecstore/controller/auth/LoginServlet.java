@@ -32,7 +32,6 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("success", "✓ Đăng ký thành công! Vui lòng đăng nhập.");
         }
 
-        // Forward tới login.jsp
         request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
     }
 
@@ -44,7 +43,6 @@ public class LoginServlet extends HttpServlet {
         UserDAO userDAO = null;
 
         try {
-            // Lấy dữ liệu từ form
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             String rememberMe = request.getParameter("remember");
@@ -54,7 +52,6 @@ public class LoginServlet extends HttpServlet {
             System.out.println("Password: " + (password != null ? "✓ có" : "✗ không"));
             System.out.println("RememberMe: " + rememberMe);
 
-            // ===== VALIDATION =====
             if (email == null || email.trim().isEmpty()) {
                 request.setAttribute("error", "Email không được để trống");
                 request.getRequestDispatcher("WEB-INF/views/login.jsp").forward(request, response);
@@ -70,7 +67,6 @@ public class LoginServlet extends HttpServlet {
 
             email = email.trim().toLowerCase();
 
-            // ===== FIND USER BY EMAIL =====
             userDAO = new UserDAOImpl();
             User user = userDAO.findByEmail(email);
 
@@ -83,7 +79,6 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            // ===== CHECK IF ACCOUNT ACTIVE =====
             if (user.getStatus().equals("inactive")) {
                 System.out.println("[LOGIN] Account not active: " + email);
                 request.setAttribute("error", "Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.");
@@ -92,7 +87,6 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            // ===== VERIFY PASSWORD =====
             boolean isPasswordCorrect = PasswordUtil.validatePassword(password, user.getPassword());
             System.out.println("[LOGIN] Password verification: " + (isPasswordCorrect ? "✓ CORRECT" : "✗ WRONG"));
 
@@ -103,7 +97,6 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            // Set session
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
@@ -112,32 +105,21 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("userRole", user.getRole());
             session.setMaxInactiveInterval(30 * 60);
 
-            // ===== LOGIN SUCCESS =====
             System.out.println("[LOGIN] ✓ Success for " + email + " (Role: " + user.getRole() + ")");
 
 
-            // Remember me (optional - tạo cookie)
             if ("on".equals(rememberMe) || "true".equals(rememberMe)) {
                 System.out.println("[LOGIN] RememberMe enabled");
-                // Có thể tạo cookie để nhớ email
-                // Cookie emailCookie = new Cookie("rememberedEmail", email);
-                // emailCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
-                // response.addCookie(emailCookie);
+
             }
 
 
-            // ✅ ROLE-BASED REDIRECT
             if ("admin".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
             } else {
                 response.sendRedirect(request.getContextPath() + "/home");
             }
-            // Redirect to home or dashboard
-//            String redirectURL = "home";
-//            if (request.getParameter("next") != null) {
-//                redirectURL = request.getParameter("next");
-//            }
-//            response.sendRedirect(redirectURL);
+
 
         } catch (SQLException e) {
             System.err.println("[LOGIN] ❌ SQLException: " + e.getMessage());

@@ -411,7 +411,7 @@
                         >
                             <strong>` + product.name + `</strong>
                             <br>
-                            <small style="color: #999;">$` + product.price + `</small>
+                            <small style="color: #999;">` + product.price + `</small>
                         </a>
                     `;
                         dropdown.append(html);

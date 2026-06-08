@@ -30,7 +30,6 @@ public class CheckEmailServlet extends HttpServlet {
 
             email = email.trim().toLowerCase();
 
-            // Check email in database
             UserDAO userDAO = DAOFactory.getInstance().getUserDAO();
             boolean exists = userDAO.isEmailExists(email);
 

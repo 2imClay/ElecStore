@@ -24,29 +24,24 @@ public class AddToFavouriteServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            // 1. Check login
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("user") == null) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 out.println("{\"success\": false, \"message\": \"Vui lòng đăng nhập\"}");
                 return;
             }
-
-            // 2. Get user info
             User user = (User) session.getAttribute("user");
             int userId = user.getId();
             int productId = Integer.parseInt(request.getParameter("productId"));
             int quantity = Integer.parseInt(request.getParameter("quantity") != null ?
                     request.getParameter("quantity") : "1");
 
-            // 3. Get or create cart for user
             Favourite favourite = favouriteDAO.findByUserId(userId);
             if (favourite == null) {
                 favourite = favouriteDAO.createFavourite(userId);
                 System.out.println("Created new favourite for user " + userId);
             }
 
-            // 4. Get product info
             Product product = productDAO.findById(productId);
             if (product == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -54,11 +49,9 @@ public class AddToFavouriteServlet extends HttpServlet {
                 return;
             }
 
-            // 5. Check if product already in cart
             FavouriteItem existingItem = favouriteItemDAO.findByFavouriteAndProduct(favourite.getId(), productId);
 
             if (existingItem != null) {
-                // Update quantity if product already in cart
                 int newQuantity = existingItem.getQuantity() + quantity;
                 boolean updated = favouriteItemDAO.updateQuantity(existingItem.getId(), newQuantity);
 
@@ -71,7 +64,6 @@ public class AddToFavouriteServlet extends HttpServlet {
                     out.println("{\"success\": false, \"message\": \"Lỗi cập nhật yêu thích\"}");
                 }
             } else {
-                // Add new item to cart
                 FavouriteItem newItem = new FavouriteItem(favourite.getId(), productId, quantity, product.getPrice());
                 FavouriteItem savedItem = favouriteItemDAO.addItem(newItem);
 
