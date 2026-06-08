@@ -21,13 +21,10 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        // Nếu user đã đăng nhập, redirect tới trang chủ
         if (req.getSession().getAttribute("user") != null) {
             resp.sendRedirect("home");
             return;
         }
-
-        // Forward tới register.jsp
         req.getRequestDispatcher("WEB-INF/views/register.jsp").forward(req, resp);
 
     }
@@ -135,7 +132,6 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
-            // ===== CREATE NEW USER =====
             User newUser = new User();
             newUser.setFirstName(firstName.trim());
             newUser.setLastName(lastName.trim());
@@ -148,7 +144,6 @@ public class RegisterServlet extends HttpServlet {
             newUser.setRole("user");
             newUser.setStatus("active");
 
-            // ===== SAVE TO DATABASE =====
             System.out.println("[REGISTER] Đang lưu user vào database...");
             boolean isRegistered = userDAO.save(newUser);
 

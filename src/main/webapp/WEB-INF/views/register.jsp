@@ -193,10 +193,10 @@
             strengthBar.className = 'password-strength-bar';
             if (strength <= 1) {
                 strengthBar.classList.add('weak');
-                strengthText.textContent = '⚠️ Mật khẩu yếu';
+                strengthText.textContent = 'Mật khẩu yếu';
             } else if (strength === 2) {
                 strengthBar.classList.add('medium');
-                strengthText.textContent = '⚠️ Mật khẩu trung bình';
+                strengthText.textContent = 'Mật khẩu trung bình';
             } else {
                 strengthBar.classList.add('strong');
                 strengthText.textContent = '✓ Mật khẩu mạnh';

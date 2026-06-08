@@ -29,17 +29,14 @@ public class CheckoutServlet extends HttpServlet {
         String path = request.getServletPath();
 
         if ("/checkout".equals(path)) {
-            // Lấy giỏ hàng từ session hoặc DB
             int userId = user.getId();
 
             Cart cart = cartDAO.findByUserId(userId);
 
-            // If no cart exists, create one
             if (cart == null) {
                 cart = cartDAO.createCart(userId);
             }
 
-            // 3. Get cart items
             List<CartItem> cartItems = cartItemDAO.getCartItems(cart.getId());
             if (cartItems == null) cartItems = new ArrayList<>();
 
@@ -75,7 +72,6 @@ public class CheckoutServlet extends HttpServlet {
 
         if ("/checkout/create-order".equals(path)) {
             try {
-                // Lấy dữ liệu từ form
                 String fullName = request.getParameter("fullName");
                 String phone = request.getParameter("phone");
                 String email = request.getParameter("email");
@@ -85,17 +81,14 @@ public class CheckoutServlet extends HttpServlet {
                 String paymentMethod = request.getParameter("paymentMethod");
                 String note = request.getParameter("note");
 
-                // Lấy giỏ hàng
                 int userId = user.getId();
 
                 Cart cart = cartDAO.findByUserId(userId);
 
-                // If no cart exists, create one
                 if (cart == null) {
                     cart = cartDAO.createCart(userId);
                 }
 
-                // 3. Get cart items
                 List<CartItem> cartItems = cartItemDAO.getCartItems(cart.getId());
                 if (cartItems == null || cartItems.isEmpty()) {
                     result.addProperty("success", false);
@@ -104,14 +97,12 @@ public class CheckoutServlet extends HttpServlet {
                     return;
                 }
 
-                // Tính tổng tiền
                 double subtotal = cartItems.stream()
                         .mapToDouble(item -> item.getPrice() * item.getQuantity())
                         .sum();
                 double shippingFee = 30000;
                 double totalAmount = subtotal + shippingFee;
 
-                // TẠO ĐƠN HÀNG
                 Order order = new Order();
                 order.setUserId(user.getId());
                 order.setCustomerName(fullName);
@@ -127,7 +118,6 @@ public class CheckoutServlet extends HttpServlet {
                 int orderId = orderDAO.createOrder(order);
 
                 if (orderId > 0) {
-                    // TẠO CHI TIẾT ĐƠN HÀNG
                     for (CartItem item : cartItems) {
                         OrderDetail detail = new OrderDetail();
                         detail.setOrderId(orderId);
@@ -137,7 +127,6 @@ public class CheckoutServlet extends HttpServlet {
                         orderDAO.addOrderDetail(detail);
                     }
 
-                    // XÓA GIỎ HÀNG
                     session.removeAttribute("cart");
 
                     result.addProperty("success", true);

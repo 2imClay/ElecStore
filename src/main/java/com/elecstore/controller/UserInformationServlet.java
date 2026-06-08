@@ -24,7 +24,6 @@ public class UserInformationServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        // ===== CHECK USER LOGGED IN =====
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
@@ -35,14 +34,12 @@ public class UserInformationServlet extends HttpServlet {
 
         System.out.println("[USER-INFO] ✓ User logged in: " + user.getEmail());
 
-        // ===== GET FRESH USER DATA FROM DATABASE =====
         try {
             UserDAO userDAO = new UserDAOImpl();
             User updatedUser = userDAO.getById(user.getId());
 
             if (updatedUser != null) {
                 System.out.println("[USER-INFO] ✓ Fresh user data loaded");
-                // Set request attributes
                 request.setAttribute("user", updatedUser);
                 request.setAttribute("userName", updatedUser.getLastName() + " " + updatedUser.getFirstName());
                 request.setAttribute("userEmail", updatedUser.getEmail());
@@ -56,7 +53,6 @@ public class UserInformationServlet extends HttpServlet {
                 request.setAttribute("totalSpent", userDAO.totalSpent(user.getId()));
                 request.setAttribute("points", userDAO.totalSpent(user.getId())/100);
 
-                // Forward to JSP
                 request.getRequestDispatcher("WEB-INF/views/user-information.jsp").forward(request, response);
             } else {
                 System.out.println("[USER-INFO] ❌ User not found in DB");

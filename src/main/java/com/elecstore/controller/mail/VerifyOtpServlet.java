@@ -31,7 +31,6 @@ public class VerifyOtpServlet extends HttpServlet {
             String storedOtp = (String) session.getAttribute("forgotOtp_" + email);
 
             if (storedOtp != null && storedOtp.equals(otpInput)) {
-                // ✅ OTP đúng → Chuyển sang reset password
                 session.setAttribute("resetEmail", email);
                 result.addProperty("success", true);
                 result.addProperty("message", "Xác thực thành công! Vui lòng tạo mật khẩu mới.");

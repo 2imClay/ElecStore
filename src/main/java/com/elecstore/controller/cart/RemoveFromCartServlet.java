@@ -22,7 +22,6 @@ public class RemoveFromCartServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            // 1. Check login
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("user") == null) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -30,10 +29,8 @@ public class RemoveFromCartServlet extends HttpServlet {
                 return;
             }
 
-            // 2. Get parameter
             int cartItemId = Integer.parseInt(request.getParameter("cartItemId"));
 
-            // 3. Remove item
             boolean removed = cartItemDAO.removeItem(cartItemId);
 
             if (removed) {

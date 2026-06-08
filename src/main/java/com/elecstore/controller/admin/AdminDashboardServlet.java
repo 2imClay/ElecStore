@@ -25,26 +25,22 @@ public class AdminDashboardServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
-        // 1. Check Admin Role
         if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        // 2. Get Data Lists
         try {
             List<User> users = userDAO.getAll();
             List<Product> products = productDAO.findAll();
             List<Category> categories = categoryDAO.findAll();
             List<Order> orders = orderDAO.getAllOrders();
 
-            // 3. Set Attributes for JSP
             request.setAttribute("users", users);
             request.setAttribute("products", products);
             request.setAttribute("categories", categories);
             request.setAttribute("orders", orders);
 
-            // 4. Calculate Stats (Optional - if you want real numbers in cards)
             request.setAttribute("totalRevenue", orderDAO.calculateTotalRevenue());
             request.setAttribute("totalOrders", orders.size());
             request.setAttribute("totalProducts", products.size());

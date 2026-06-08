@@ -64,7 +64,6 @@ public class ChangePasswordServlet extends HttpServlet {
                 return;
             }
 
-            // Kiểm tra confirm password
             if (!newPassword.equals(confirmPassword)) {
                 result.addProperty("success", false);
                 result.addProperty("message", "Mật khẩu xác nhận không khớp!");
@@ -72,7 +71,6 @@ public class ChangePasswordServlet extends HttpServlet {
                 return;
             }
 
-            // Kiểm tra độ dài
             if (newPassword.length() < 6) {
                 result.addProperty("success", false);
                 result.addProperty("message", "Mật khẩu phải từ 6 ký tự trở lên!");
@@ -80,7 +78,6 @@ public class ChangePasswordServlet extends HttpServlet {
                 return;
             }
 
-            // Update password
             userDAO.updatePassword(user.getId(), newPassword);
 
             result.addProperty("success", true);
