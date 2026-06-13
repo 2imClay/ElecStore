@@ -238,6 +238,21 @@
                     <button class="continue-shopping-btn" onclick="continueShopping()">
                         <i class="fa fa-arrow-left"></i> Tiếp tục mua
                     </button>
+                    <button class="generate-key-btn" onclick="openKeyModal()" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-top: 10px;
+                        background-color: #1565c0;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background 0.3s;
+                    ">
+                        <i class="fa fa-key"></i> Tạo khóa xác thực
+                    </button>
                 </div>
 
                 <!-- Features -->
@@ -265,6 +280,128 @@
 
 <!-- Toast Message -->
 <div id="toastMessage" class="toast-message"></div>
+
+<!-- Modal Tạo Khóa Xác Thực -->
+<div id="keyModal" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+">
+    <div style="
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        width: 440px;
+        max-width: 90%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        text-align: center;
+    ">
+
+        <!-- ===== BƯỚC 1: Xác nhận ===== -->
+        <div id="stepConfirm">
+            <div style="margin-bottom: 15px;">
+                <i class="fa fa-key" style="font-size: 48px; color: #1565c0;"></i>
+            </div>
+            <h3 style="margin: 0 0 10px; color: #333; font-size: 20px;">Tạo khóa xác thực</h3>
+            <p style="color: #666; font-size: 14px; margin-bottom: 25px;">
+                Hệ thống sẽ tạo một mã khóa bảo mật cho đơn hàng của bạn.<br>
+                Bạn có chắc chắn muốn tiếp tục?
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="closeKeyModal()" style="
+                    padding: 10px 25px;
+                    border: 1px solid #ccc;
+                    background: white;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    color: #555;
+                ">
+                    <i class="fa fa-times"></i> Hủy
+                </button>
+                <button onclick="generateKey()" style="
+                    padding: 10px 25px;
+                    background: #1565c0;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    font-weight: 600;
+                ">
+                    <i class="fa fa-check"></i> Xác nhận tạo
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== BƯỚC 2: Thành công + Khóa ===== -->
+        <div id="stepSuccess" style="display: none;">
+            <!-- Icon thành công -->
+            <div style="margin-bottom: 15px;">
+                <i class="fa fa-check-circle" style="font-size: 52px; color: #27ae60;"></i>
+            </div>
+            <h3 style="margin: 0 0 5px; color: #27ae60; font-size: 20px;">Tạo khóa thành công!</h3>
+            <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+                Mã khóa xác thực của bạn đã được tạo.<br>Vui lòng lưu lại trước khi đóng.
+            </p>
+
+            <!-- Hiển thị khóa -->
+            <div style="
+                background: #f0f7ff;
+                border: 2px dashed #1565c0;
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 10px;
+            ">
+                <small style="color: #999; font-size: 11px; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">Mã khóa xác thực</small>
+                <span id="generatedKey" style="
+                    font-family: monospace;
+                    font-size: 20px;
+                    color: #1565c0;
+                    font-weight: 700;
+                    letter-spacing: 3px;
+                "></span>
+                <div style="margin-top: 10px;">
+                    <button onclick="copyKey()" style="
+                        background: none;
+                        border: 1px solid #1565c0;
+                        color: #1565c0;
+                        border-radius: 4px;
+                        padding: 4px 12px;
+                        font-size: 12px;
+                        cursor: pointer;
+                    ">
+                        <i class="fa fa-copy"></i> Sao chép
+                    </button>
+                </div>
+            </div>
+            <small style="color: #e53935; font-size: 12px; display: block; margin-bottom: 20px;">
+                <i class="fa fa-exclamation-triangle"></i> Mã này chỉ hiển thị một lần, hãy lưu lại ngay!
+            </small>
+
+            <!-- Nút lưu khóa -->
+            <button onclick="saveAndClose()" style="
+                width: 100%;
+                padding: 12px;
+                background: #27ae60;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 15px;
+                font-weight: 600;
+            ">
+                <i class="fa fa-save"></i> Xác nhận và lưu khóa
+            </button>
+        </div>
+
+    </div>
+</div>
 
 
 <!-- jQuery Plugins -->
@@ -360,6 +497,50 @@
         // TODO: Implement promo code validation
         showToast('Đã áp dụng mã: ' + promoCode);
     }
+
+    // Mở modal - reset về bước 1
+    function openKeyModal() {
+        document.getElementById('stepConfirm').style.display = 'block';
+        document.getElementById('stepSuccess').style.display = 'none';
+        document.getElementById('keyModal').style.display = 'flex';
+    }
+
+    // Đóng modal
+    function closeKeyModal() {
+        document.getElementById('keyModal').style.display = 'none';
+    }
+
+    // Bước 1 → Bước 2: Tạo khóa và chuyển sang màn thành công
+    function generateKey() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let key = '';
+        for (let i = 0; i < 16; i++) {
+            if (i > 0 && i % 4 === 0) key += '-';
+            key += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById('generatedKey').textContent = key;
+        document.getElementById('stepConfirm').style.display = 'none';
+        document.getElementById('stepSuccess').style.display = 'block';
+    }
+
+    // Sao chép khóa vào clipboard
+    function copyKey() {
+        const key = document.getElementById('generatedKey').textContent;
+        navigator.clipboard.writeText(key).then(() => {
+            showToast('Đã sao chép khóa!');
+        });
+    }
+
+    // Xác nhận lưu và đóng modal
+    function saveAndClose() {
+        closeKeyModal();
+        showToast('Khóa xác thực đã được lưu thành công!');
+    }
+
+    // Đóng modal khi click ra ngoài
+    document.getElementById('keyModal').addEventListener('click', function(e) {
+        if (e.target === this) closeKeyModal();
+    });
 
     // Checkout
     function checkout() {
