@@ -304,100 +304,181 @@
 
         <!-- ===== BƯỚC 1: Xác nhận ===== -->
         <div id="stepConfirm">
-            <div style="margin-bottom: 15px;">
-                <i class="fa fa-key" style="font-size: 48px; color: #1565c0;"></i>
+            <div style="margin-bottom:15px;">
+                <i class="fa fa-key" style="font-size:48px;color:#1565c0;"></i>
             </div>
-            <h3 style="margin: 0 0 10px; color: #333; font-size: 20px;">Tạo khóa xác thực</h3>
-            <p style="color: #666; font-size: 14px; margin-bottom: 25px;">
-                Hệ thống sẽ tạo một mã khóa bảo mật cho đơn hàng của bạn.<br>
-                Bạn có chắc chắn muốn tiếp tục?
+
+            <h3>Tạo khóa RSA</h3>
+
+            <p style="margin-bottom:20px;">
+                Chọn kích thước khóa RSA muốn tạo
             </p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <button onclick="closeKeyModal()" style="
-                    padding: 10px 25px;
-                    border: 1px solid #ccc;
-                    background: white;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    font-size: 14px;
-                    color: #555;
-                ">
-                    <i class="fa fa-times"></i> Hủy
+
+            <div style="text-align:left;margin-bottom:20px;">
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="1024">
+                    RSA 1024 bit
+                </label>
+
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="2048" checked>
+                    RSA 2048 bit (Khuyến nghị)
+                </label>
+
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="3072">
+                    RSA 3072 bit
+                </label>
+
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="4096">
+                    RSA 4096 bit
+                </label>
+            </div>
+
+            <div style="display:flex;gap:10px;justify-content:center;">
+                <button onclick="closeKeyModal()">
+                    Hủy
                 </button>
-                <button onclick="generateKey()" style="
-                    padding: 10px 25px;
-                    background: #1565c0;
-                    color: white;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    font-size: 14px;
-                    font-weight: 600;
-                ">
-                    <i class="fa fa-check"></i> Xác nhận tạo
+
+                <button onclick="generateRSAKey()">
+                    Tạo khóa
                 </button>
             </div>
         </div>
 
         <!-- ===== BƯỚC 2: Thành công + Khóa ===== -->
-        <div id="stepSuccess" style="display: none;">
-            <!-- Icon thành công -->
-            <div style="margin-bottom: 15px;">
-                <i class="fa fa-check-circle" style="font-size: 52px; color: #27ae60;"></i>
+        <div id="stepSuccess" style="display:none;">
+
+            <div style="margin-bottom:15px;">
+                <i class="fa fa-shield-alt"
+                   style="font-size:60px;color:#27ae60;"></i>
             </div>
-            <h3 style="margin: 0 0 5px; color: #27ae60; font-size: 20px;">Tạo khóa thành công!</h3>
-            <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
-                Mã khóa xác thực của bạn đã được tạo.<br>Vui lòng lưu lại trước khi đóng.
+
+            <h3 style="
+        color:#27ae60;
+        margin-bottom:8px;
+        font-size:22px;
+        font-weight:700;
+    ">
+                Tạo khóa RSA thành công
+            </h3>
+
+            <p style="
+        color:#666;
+        font-size:14px;
+        margin-bottom:20px;
+        line-height:1.6;
+    ">
+                Cặp khóa RSA đã được tạo thành công.<br>
+                Vui lòng lưu Public Key để sử dụng xác thực đơn hàng.
             </p>
 
-            <!-- Hiển thị khóa -->
             <div style="
-                background: #f0f7ff;
-                border: 2px dashed #1565c0;
-                border-radius: 8px;
-                padding: 16px;
-                margin-bottom: 10px;
-            ">
-                <small style="color: #999; font-size: 11px; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">Mã khóa xác thực</small>
-                <span id="generatedKey" style="
-                    font-family: monospace;
-                    font-size: 20px;
-                    color: #1565c0;
-                    font-weight: 700;
-                    letter-spacing: 3px;
-                "></span>
-                <div style="margin-top: 10px;">
-                    <button onclick="copyKey()" style="
-                        background: none;
-                        border: 1px solid #1565c0;
-                        color: #1565c0;
-                        border-radius: 4px;
-                        padding: 4px 12px;
-                        font-size: 12px;
-                        cursor: pointer;
-                    ">
-                        <i class="fa fa-copy"></i> Sao chép
-                    </button>
-                </div>
-            </div>
-            <small style="color: #e53935; font-size: 12px; display: block; margin-bottom: 20px;">
-                <i class="fa fa-exclamation-triangle"></i> Mã này chỉ hiển thị một lần, hãy lưu lại ngay!
-            </small>
+        background:#f8fafc;
+        border:1px solid #dbeafe;
+        border-radius:12px;
+        padding:15px;
+        margin-bottom:15px;
+        text-align:left;
+    ">
 
-            <!-- Nút lưu khóa -->
-            <button onclick="saveAndClose()" style="
-                width: 100%;
-                padding: 12px;
-                background: #27ae60;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 15px;
-                font-weight: 600;
+                <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:10px;
+        ">
+            <span style="
+                font-weight:600;
+                color:#1565c0;
             ">
-                <i class="fa fa-save"></i> Xác nhận và lưu khóa
-            </button>
+                Public Key
+            </span>
+
+                    <span style="
+                background:#e3f2fd;
+                color:#1565c0;
+                padding:4px 10px;
+                border-radius:20px;
+                font-size:12px;
+                font-weight:600;
+            ">
+                RSA
+            </span>
+                </div>
+
+                <textarea
+                        id="generatedKey"
+                        readonly
+                        style="
+                width:100%;
+                height:140px;
+                resize:none;
+                border:1px solid #d1d5db;
+                border-radius:8px;
+                padding:12px;
+                font-family:Consolas,monospace;
+                font-size:12px;
+                line-height:1.5;
+                background:white;
+                color:#333;
+            "
+                ></textarea>
+            </div>
+
+            <div style="
+        display:flex;
+        gap:10px;
+        justify-content:center;
+        flex-wrap:wrap;
+        margin-bottom:15px;
+    ">
+
+                <button onclick="copyKey()"
+                        style="
+                    background:#1565c0;
+                    color:white;
+                    border:none;
+                    padding:10px 18px;
+                    border-radius:8px;
+                    cursor:pointer;
+                    font-weight:600;
+                ">
+                    <i class="fa fa-copy"></i>
+                    Sao chép khóa
+                </button>
+
+                <button onclick="downloadPublicKey()"
+                        style="
+                    background:#27ae60;
+                    color:white;
+                    border:none;
+                    padding:10px 18px;
+                    border-radius:8px;
+                    cursor:pointer;
+                    font-weight:600;
+                ">
+                    <i class="fa fa-download"></i>
+                    Tải Public Key
+                </button>
+
+            </div>
+
+            <div style="
+        background:#fff8e1;
+        border-left:4px solid #ffc107;
+        padding:12px;
+        border-radius:6px;
+        text-align:left;
+        font-size:13px;
+        color:#856404;
+    ">
+                <strong>Lưu ý:</strong>
+                Public Key có thể chia sẻ để xác thực chữ ký.
+                Private Key phải được bảo mật tuyệt đối và không chia sẻ cho bất kỳ ai.
+            </div>
+
         </div>
 
     </div>
@@ -511,17 +592,65 @@
     }
 
     // Bước 1 → Bước 2: Tạo khóa và chuyển sang màn thành công
-    function generateKey() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let key = '';
-        for (let i = 0; i < 16; i++) {
-            if (i > 0 && i % 4 === 0) key += '-';
-            key += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        document.getElementById('generatedKey').textContent = key;
-        document.getElementById('stepConfirm').style.display = 'none';
-        document.getElementById('stepSuccess').style.display = 'block';
+    function generateRSAKey() {
+
+        const keySize =
+            document.querySelector(
+                'input[name="keySize"]:checked'
+            ).value;
+
+        $.ajax({
+            url: '${pageContext.request.contextPath}/generate-rsa-key',
+            type: 'POST',
+            data: {
+                keySize: keySize
+            },
+
+            success: function(response) {
+
+                document.getElementById(
+                    'generatedKey'
+                ).textContent =
+                    response.publicKey;
+
+                document.getElementById(
+                    'stepConfirm'
+                ).style.display = 'none';
+
+                document.getElementById(
+                    'stepSuccess'
+                ).style.display = 'block';
+            },
+
+            error: function() {
+                showToast(
+                    'Tạo khóa RSA thất bại',
+                    true
+                );
+            }
+        });
     }
+    function downloadPublicKey() {
+
+        const key =
+            document.getElementById("generatedKey").value;
+
+        const blob = new Blob(
+            [key],
+            {type:"text/plain"}
+        );
+
+        const link =
+            document.createElement("a");
+
+        link.href =
+            URL.createObjectURL(blob);
+
+        link.download = "public-key.pem";
+
+        link.click();
+    }
+    
 
     // Sao chép khóa vào clipboard
     function copyKey() {
