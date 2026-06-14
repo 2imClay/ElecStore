@@ -8,7 +8,6 @@ public class RSAKey {
     private int userId;
     private int keySize;
     private String publicKey;
-    private String privateKey;
     private Timestamp createdAt;
 
     public RSAKey() {
@@ -46,13 +45,6 @@ public class RSAKey {
         this.publicKey = publicKey;
     }
 
-    public String getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
 
     public Timestamp getCreatedAt() {
         return createdAt;

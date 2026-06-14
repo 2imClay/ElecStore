@@ -1,6 +1,7 @@
 package com.elecstore.controller;
 
 import com.elecstore.model.RSAKey;
+import com.elecstore.model.RSAKeyResponse;
 import com.elecstore.model.User;
 import com.elecstore.service.RSAService;
 
@@ -32,7 +33,7 @@ public class GenerateRSAKeyServlet extends HttpServlet {
                     Integer.parseInt(
                             request.getParameter("keySize"));
 
-            RSAKey rsaKey =
+            RSAKeyResponse rsaKey =
                     rsaService.generateKey(
                             user.getId(),
                             keySize);
@@ -45,6 +46,9 @@ public class GenerateRSAKeyServlet extends HttpServlet {
                             + "\"success\":true,"
                             + "\"publicKey\":\""
                             + rsaKey.getPublicKey()
+                            + "\","
+                            + "\"privateKey\":\""
+                            + rsaKey.getPrivateKey()
                             + "\""
                             + "}"
             );

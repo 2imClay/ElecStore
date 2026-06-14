@@ -351,132 +351,58 @@
         <div id="stepSuccess" style="display:none;">
 
             <div style="margin-bottom:15px;">
-                <i class="fa fa-shield-alt"
-                   style="font-size:60px;color:#27ae60;"></i>
+                <i class="fa fa-check-circle"
+                   style="font-size:60px;color:#28a745;"></i>
             </div>
 
-            <h3 style="
-        color:#27ae60;
-        margin-bottom:8px;
-        font-size:22px;
-        font-weight:700;
-    ">
-                Tạo khóa RSA thành công
-            </h3>
+            <h3>Tạo khóa RSA thành công</h3>
 
-            <p style="
-        color:#666;
-        font-size:14px;
-        margin-bottom:20px;
-        line-height:1.6;
-    ">
-                Cặp khóa RSA đã được tạo thành công.<br>
-                Vui lòng lưu Public Key để sử dụng xác thực đơn hàng.
+            <p>
+                Public Key đã được lưu trên hệ thống.
             </p>
 
-            <div style="
-        background:#f8fafc;
-        border:1px solid #dbeafe;
-        border-radius:12px;
-        padding:15px;
-        margin-bottom:15px;
-        text-align:left;
-    ">
+            <div style="margin-top:15px;text-align:left;">
+                <label><strong>Public Key</strong></label>
 
-                <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:10px;
-        ">
-            <span style="
-                font-weight:600;
-                color:#1565c0;
-            ">
-                Public Key
-            </span>
-
-                    <span style="
-                background:#e3f2fd;
-                color:#1565c0;
-                padding:4px 10px;
-                border-radius:20px;
-                font-size:12px;
-                font-weight:600;
-            ">
-                RSA
-            </span>
-                </div>
-
-                <textarea
-                        id="generatedKey"
-                        readonly
-                        style="
-                width:100%;
-                height:140px;
-                resize:none;
-                border:1px solid #d1d5db;
-                border-radius:8px;
-                padding:12px;
-                font-family:Consolas,monospace;
-                font-size:12px;
-                line-height:1.5;
-                background:white;
-                color:#333;
-            "
-                ></textarea>
+                <textarea id="publicKeyDisplay"
+                          readonly
+                          style="width:100%;
+                         height:120px;
+                         margin-top:5px;"></textarea>
             </div>
 
-            <div style="
-        display:flex;
-        gap:10px;
-        justify-content:center;
-        flex-wrap:wrap;
-        margin-bottom:15px;
-    ">
+            <div style="margin-top:15px;text-align:left;">
+                <label><strong>Private Key</strong></label>
 
-                <button onclick="copyKey()"
-                        style="
-                    background:#1565c0;
-                    color:white;
-                    border:none;
-                    padding:10px 18px;
-                    border-radius:8px;
-                    cursor:pointer;
-                    font-weight:600;
-                ">
-                    <i class="fa fa-copy"></i>
-                    Sao chép khóa
-                </button>
+                <textarea id="privateKeyDisplay"
+                          readonly
+                          style="width:100%;
+                         height:120px;
+                         margin-top:5px;"></textarea>
+            </div>
 
-                <button onclick="downloadPublicKey()"
-                        style="
-                    background:#27ae60;
-                    color:white;
-                    border:none;
-                    padding:10px 18px;
-                    border-radius:8px;
-                    cursor:pointer;
-                    font-weight:600;
-                ">
-                    <i class="fa fa-download"></i>
+            <div style="margin-top:15px;">
+                <button onclick="downloadPublicKey()">
                     Tải Public Key
                 </button>
 
+                <button onclick="downloadPrivateKey()">
+                    Tải Private Key
+                </button>
             </div>
 
             <div style="
-        background:#fff8e1;
-        border-left:4px solid #ffc107;
-        padding:12px;
-        border-radius:6px;
-        text-align:left;
-        font-size:13px;
+        margin-top:15px;
+        padding:10px;
+        background:#fff3cd;
+        border:1px solid #ffeeba;
+        border-radius:5px;
         color:#856404;
     ">
                 <strong>Lưu ý:</strong>
-                Public Key có thể chia sẻ để xác thực chữ ký.
-                Private Key phải được bảo mật tuyệt đối và không chia sẻ cho bất kỳ ai.
+                Private Key chỉ xuất hiện một lần.
+                Hãy tải và lưu trữ cẩn thận.
+                Hệ thống không lưu Private Key.
             </div>
 
         </div>
@@ -609,9 +535,12 @@
             success: function(response) {
 
                 document.getElementById(
-                    'generatedKey'
-                ).textContent =
-                    response.publicKey;
+                    "publicKeyDisplay"
+                ).value = response.publicKey;
+
+                document.getElementById(
+                    "privateKeyDisplay"
+                ).value = response.privateKey;
 
                 document.getElementById(
                     'stepConfirm'
@@ -632,13 +561,16 @@
     }
     function downloadPublicKey() {
 
-        const key =
-            document.getElementById("generatedKey").value;
+        const content =
+            document.getElementById(
+                "publicKeyDisplay"
+            ).value;
 
-        const blob = new Blob(
-            [key],
-            {type:"text/plain"}
-        );
+        const blob =
+            new Blob(
+                [content],
+                {type:"text/plain"}
+            );
 
         const link =
             document.createElement("a");
@@ -646,11 +578,37 @@
         link.href =
             URL.createObjectURL(blob);
 
-        link.download = "public-key.pem";
+        link.download =
+            "public-key.pem";
 
         link.click();
     }
-    
+
+    function downloadPrivateKey() {
+
+        const content =
+            document.getElementById(
+                "privateKeyDisplay"
+            ).value;
+
+        const blob =
+            new Blob(
+                [content],
+                {type:"text/plain"}
+            );
+
+        const link =
+            document.createElement("a");
+
+        link.href =
+            URL.createObjectURL(blob);
+
+        link.download =
+            "private-key.pem";
+
+        link.click();
+    }
+
 
     // Sao chép khóa vào clipboard
     function copyKey() {
