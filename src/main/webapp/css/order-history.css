@@ -269,4 +269,48 @@ body {
     .filter-select {
         width: 100%;
     }
+
+    .order-footer{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-top:15px;
+        padding-top:15px;
+        border-top:1px solid #eee;
+    }
+
+    .order-actions{
+        display:flex;
+        gap:10px;
+    }
+
+    .btn-download-order{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+
+        padding:10px 16px;
+
+        background:#0d6efd;
+        color:white;
+
+        border-radius:8px;
+
+        text-decoration:none;
+
+        font-size:14px;
+        font-weight:600;
+
+        transition:0.3s;
+    }
+
+    .btn-download-order:hover{
+        background:#0b5ed7;
+        color:white;
+        text-decoration:none;
+    }
+
+    .btn-download-order i{
+        font-size:13px;
+    }
 }

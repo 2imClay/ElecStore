@@ -212,8 +212,27 @@
                     <div>
                         <strong>Phương thức:</strong> ${order.paymentMethod}
                     </div>
-                    <div class="order-total">
-                        Tổng: <fmt:formatNumber value="${order.totalAmount}" /> VNĐ
+                    <div class="order-footer">
+
+                        <div class="order-total">
+                            Tổng:
+                            <fmt:formatNumber
+                                    value="${order.totalAmount}" />
+                            VNĐ
+                        </div>
+
+                        <div class="order-actions">
+
+                            <a href="${pageContext.request.contextPath}/download-order?id=${order.id}"
+                               class="btn-download-order">
+
+                                <i class="fas fa-download"></i>
+                                Tải đơn hàng
+
+                            </a>
+
+                        </div>
+
                     </div>
 <%--                    <div class="order-actions">--%>
 <%--                            &lt;%&ndash;                    <a href="${pageContext.request.contextPath}/order-detail?id=${order.id}" class="btn-detail">&ndash;%&gt;--%>
