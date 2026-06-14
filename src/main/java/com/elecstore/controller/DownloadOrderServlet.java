@@ -76,94 +76,64 @@ public class DownloadOrderServlet extends HttpServlet {
                     new SimpleDateFormat(
                             "yyyy-MM-dd HH:mm:ss");
 
-            StringBuilder json =
-                    new StringBuilder();
+            StringBuilder txt = new StringBuilder();
 
-            json.append("{\n");
+            txt.append("===== THONG TIN DON HANG =====\n\n");
 
-            json.append("\"orderId\":")
+            txt.append("Ma don hang: ")
                     .append(order.getId())
-                    .append(",\n");
+                    .append("\n");
 
-            json.append("\"userId\":")
-                    .append(order.getUserId())
-                    .append(",\n");
-
-            json.append("\"customerName\":\"")
+            txt.append("Khach hang: ")
                     .append(order.getCustomerName())
-                    .append("\",\n");
+                    .append("\n");
 
-            json.append("\"orderDate\":\"")
-                    .append(
-                            sdf.format(
-                                    order.getOrderDate()))
-                    .append("\",\n");
+            txt.append("Ngay dat: ")
+                    .append(sdf.format(order.getOrderDate()))
+                    .append("\n");
 
-            json.append("\"totalAmount\":")
-                    .append(order.getTotalAmount())
-                    .append(",\n");
-
-            json.append("\"status\":\"")
+            txt.append("Trang thai: ")
                     .append(order.getStatus())
-                    .append("\",\n");
+                    .append("\n");
 
-            json.append("\"paymentMethod\":\"")
+            txt.append("Phuong thuc thanh toan: ")
                     .append(order.getPaymentMethod())
-                    .append("\",\n");
+                    .append("\n");
 
-            json.append("\"items\":[\n");
+            txt.append("Tong tien: ")
+                    .append(order.getTotalAmount())
+                    .append(" VNĐ\n\n");
 
-            for (int i = 0;
-                 i < details.size();
-                 i++) {
+            txt.append("===== DANH SACH SAN PHAM =====\n\n");
 
-                OrderDetail item =
-                        details.get(i);
+            for (OrderDetail item : details) {
 
-                json.append("{");
-
-                json.append("\"productId\":")
-                        .append(item.getProductId())
-                        .append(",");
-
-                json.append("\"productName\":\"")
+                txt.append("San pham: ")
                         .append(item.getProductName())
-                        .append("\",");
+                        .append("\n");
 
-                json.append("\"quantity\":")
+                txt.append("So luong: ")
                         .append(item.getQuantity())
-                        .append(",");
+                        .append("\n");
 
-                json.append("\"price\":")
-                        .append(item.getPrice());
+                txt.append("Don gia: ")
+                        .append(item.getPrice())
+                        .append(" VNĐ\n");
 
-                json.append("}");
-
-                if (i < details.size() - 1) {
-                    json.append(",");
-                }
-
-                json.append("\n");
+                txt.append("-----------------------------\n");
             }
 
-            json.append("]\n");
+            response.setContentType("text/plain");
 
-            json.append("}");
-
-            response.setContentType(
-                    "application/json");
-
-            response.setCharacterEncoding(
-                    "UTF-8");
+            response.setCharacterEncoding("UTF-8");
 
             response.setHeader(
                     "Content-Disposition",
                     "attachment; filename=order_"
                             + orderId
-                            + ".json");
+                            + ".txt");
 
-            response.getWriter()
-                    .write(json.toString());
+            response.getWriter().write(txt.toString());
 
         } catch (Exception e) {
 
