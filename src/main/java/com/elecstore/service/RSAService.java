@@ -25,14 +25,6 @@ public class RSAService {
 
         String privateKey = Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded());
 
-        RSAKey rsaKey = new RSAKey();
-
-        rsaKey.setUserId(userId);
-        rsaKey.setKeySize(keySize);
-        rsaKey.setPublicKey(publicKey);
-
-        rsaDAO.save(rsaKey);
-
         RSAKeyResponse response = new RSAKeyResponse();
 
         response.setPublicKey(publicKey);
