@@ -12,8 +12,8 @@ public class RSAKeyDAOImpl implements RSAKeyDAO {
     public boolean save(RSAKey key) {
 
         String sql =
-                "INSERT INTO rsa_keys(user_id,key_size,public_key,private_key) " +
-                        "VALUES(?,?,?,?)";
+                "INSERT INTO rsa_keys(user_id,key_size,public_key) " +
+                        "VALUES(?,?,?)";
 
         try (
                 Connection conn = DatabaseConnection.getConnection();
@@ -23,7 +23,6 @@ public class RSAKeyDAOImpl implements RSAKeyDAO {
             ps.setInt(1, key.getUserId());
             ps.setInt(2, key.getKeySize());
             ps.setString(3, key.getPublicKey());
-            ps.setString(4, key.getPrivateKey());
 
             return ps.executeUpdate() > 0;
 
