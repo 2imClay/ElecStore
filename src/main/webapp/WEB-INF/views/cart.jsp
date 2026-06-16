@@ -238,6 +238,21 @@
                     <button class="continue-shopping-btn" onclick="continueShopping()">
                         <i class="fa fa-arrow-left"></i> Tiếp tục mua
                     </button>
+                    <button class="generate-key-btn" onclick="openKeyModal()" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-top: 10px;
+                        background-color: #1565c0;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background 0.3s;
+                    ">
+                        <i class="fa fa-key"></i> Tạo khóa xác thực
+                    </button>
                 </div>
 
                 <!-- Features -->
@@ -266,6 +281,147 @@
 <!-- Toast Message -->
 <div id="toastMessage" class="toast-message"></div>
 
+<!-- Modal Tạo Khóa Xác Thực -->
+<div id="keyModal" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+">
+    <div style="
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        width: 440px;
+        max-width: 90%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        text-align: center;
+    ">
+
+        <!-- ===== BƯỚC 1: Xác nhận ===== -->
+        <div id="stepConfirm">
+            <div style="margin-bottom:15px;">
+                <i class="fa fa-key" style="font-size:48px;color:#1565c0;"></i>
+            </div>
+
+            <h3>Tạo khóa RSA</h3>
+
+            <p style="margin-bottom:20px;">
+                Chọn kích thước khóa RSA muốn tạo
+            </p>
+
+            <div style="text-align:left;margin-bottom:20px;">
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="1024">
+                    RSA 1024 bit
+                </label>
+
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="2048" checked>
+                    RSA 2048 bit (Khuyến nghị)
+                </label>
+
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="3072">
+                    RSA 3072 bit
+                </label>
+
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="4096">
+                    RSA 4096 bit
+                </label>
+            </div>
+
+            <div style="display:flex;gap:10px;justify-content:center;">
+                <button onclick="closeKeyModal()">
+                    Hủy
+                </button>
+
+                <button onclick="generateRSAKey()">
+                    Tạo khóa
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== BƯỚC 2: Thành công + Khóa ===== -->
+        <div id="stepSuccess" style="display:none;">
+
+            <div class="success-icon">
+                <i class="fa fa-check-circle"></i>
+            </div>
+
+            <h3>Tạo khóa RSA thành công</h3>
+
+            <p>
+                Hãy tải và lưu trữ Private Key cẩn thận trước khi sử dụng.
+            </p>
+
+            <div class="key-section">
+
+                <label>
+                    <strong>Public Key</strong>
+                </label>
+
+                <textarea
+                        id="publicKeyDisplay"
+                        readonly>
+        </textarea>
+
+            </div>
+
+            <div class="key-section">
+
+                <label>
+                    <strong>Private Key</strong>
+                </label>
+
+                <textarea
+                        id="privateKeyDisplay"
+                        readonly>
+        </textarea>
+
+            </div>
+
+            <div class="button-group">
+
+                <button onclick="downloadPublicKey()">
+                    Tải Public Key
+                </button>
+
+                <button onclick="downloadPrivateKey()">
+                    Tải Private Key
+                </button>
+
+            </div>
+
+            <div class="button-group">
+
+                <button class="btn-success"
+                        onclick="useKey()">
+                    Sử dụng khóa
+                </button>
+
+                <button class="btn-danger"
+                        onclick="cancelKey()">
+                    Hủy khóa
+                </button>
+
+            </div>
+
+            <div class="warning-box">
+                Private Key không được lưu trên hệ thống.
+                Nếu mất Private Key bạn phải tạo khóa mới.
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 
 <!-- jQuery Plugins -->
 <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
@@ -273,6 +429,9 @@
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
 
 <script>
+    let generatedPublicKey = "";
+    let generatedPrivateKey = "";
+    let selectedKeySize = 2048;
     // Toast notification
     function showToast(message, isError = false) {
         const toast = document.getElementById('toastMessage');
@@ -360,6 +519,227 @@
         // TODO: Implement promo code validation
         showToast('Đã áp dụng mã: ' + promoCode);
     }
+
+    // Mở modal - reset về bước 1
+    function openKeyModal() {
+        document.getElementById('stepConfirm').style.display = 'block';
+        document.getElementById('stepSuccess').style.display = 'none';
+        document.getElementById('keyModal').style.display = 'flex';
+    }
+
+    // Đóng modal
+    function closeKeyModal() {
+        document.getElementById('keyModal').style.display = 'none';
+    }
+
+    // Bước 1 → Bước 2: Tạo khóa và chuyển sang màn thành công
+    function generateRSAKey() {
+
+        const keySize =
+            document.querySelector(
+                'input[name="keySize"]:checked'
+            ).value;
+
+        $.ajax({
+            url: '${pageContext.request.contextPath}/generate-rsa-key',
+            type: 'POST',
+            data: {
+                keySize: keySize
+            },
+
+            success: function(response) {
+
+                generatedPublicKey = response.publicKey;
+                generatedPrivateKey = response.privateKey;
+
+                selectedKeySize =
+                    document.querySelector(
+                        'input[name="keySize"]:checked'
+                    ).value;
+
+                document.getElementById(
+                    "publicKeyDisplay"
+                ).value = generatedPublicKey;
+
+                document.getElementById(
+                    "privateKeyDisplay"
+                ).value = generatedPrivateKey;
+
+                document.getElementById(
+                    'stepConfirm'
+                ).style.display = 'none';
+
+                document.getElementById(
+                    'stepSuccess'
+                ).style.display = 'block';
+            },
+
+            error: function() {
+                showToast(
+                    'Tạo khóa RSA thất bại',
+                    true
+                );
+            }
+        });
+    }
+    function downloadPublicKey() {
+
+        const content =
+            document.getElementById(
+                "publicKeyDisplay"
+            ).value;
+
+        const blob =
+            new Blob(
+                [content],
+                {type:"text/plain"}
+            );
+
+        const link =
+            document.createElement("a");
+
+        link.href =
+            URL.createObjectURL(blob);
+
+        link.download =
+            "public-key.pem";
+
+        link.click();
+    }
+
+    function downloadPrivateKey() {
+
+        const content =
+            document.getElementById(
+                "privateKeyDisplay"
+            ).value;
+
+        const blob =
+            new Blob(
+                [content],
+                {type:"text/plain"}
+            );
+
+        const link =
+            document.createElement("a");
+
+        link.href =
+            URL.createObjectURL(blob);
+
+        link.download =
+            "private-key.pem";
+
+        link.click();
+    }
+    function useKey() {
+
+        if (!generatedPublicKey) {
+            showToast(
+                "Không tìm thấy khóa",
+                true
+            );
+            return;
+        }
+
+        $.ajax({
+
+            url:
+                '${pageContext.request.contextPath}/save-rsa-key',
+
+            type: 'POST',
+
+            data: {
+
+                publicKey:
+                generatedPublicKey,
+
+                keySize:
+                selectedKeySize
+            },
+
+            dataType: 'json',
+
+            success: function(response) {
+
+                if(response.success){
+
+                    showToast(
+                        "Khóa đã được lưu thành công"
+                    );
+
+                    closeKeyModal();
+
+                }else{
+
+                    showToast(
+                        "Lưu khóa thất bại",
+                        true
+                    );
+                }
+            },
+
+            error: function() {
+
+                showToast(
+                    "Lỗi khi lưu khóa",
+                    true
+                );
+            }
+        });
+    }
+
+    function cancelKey() {
+
+        if(
+            !confirm(
+                "Bạn có chắc muốn hủy khóa này?"
+            )
+        ){
+            return;
+        }
+
+        generatedPublicKey = "";
+        generatedPrivateKey = "";
+
+        document.getElementById(
+            "publicKeyDisplay"
+        ).value = "";
+
+        document.getElementById(
+            "privateKeyDisplay"
+        ).value = "";
+
+        document.getElementById(
+            "stepSuccess"
+        ).style.display = "none";
+
+        document.getElementById(
+            "stepConfirm"
+        ).style.display = "block";
+
+        showToast(
+            "Đã hủy khóa"
+        );
+    }
+
+    // Sao chép khóa vào clipboard
+    function copyKey() {
+        const key = document.getElementById('generatedKey').textContent;
+        navigator.clipboard.writeText(key).then(() => {
+            showToast('Đã sao chép khóa!');
+        });
+    }
+
+    // Xác nhận lưu và đóng modal
+    function saveAndClose() {
+        closeKeyModal();
+        showToast('Khóa xác thực đã được lưu thành công!');
+    }
+
+    // Đóng modal khi click ra ngoài
+    document.getElementById('keyModal').addEventListener('click', function(e) {
+        if (e.target === this) closeKeyModal();
+    });
 
     // Checkout
     function checkout() {
