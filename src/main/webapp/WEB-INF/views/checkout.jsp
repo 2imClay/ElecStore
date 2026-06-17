@@ -453,12 +453,14 @@
 
                         <div class="button-group">
 
-                            <button class="btn-success"
+                            <button type="button"
+                                    class="btn-success"
                                     onclick="useKey()">
                                 Sử dụng khóa
                             </button>
 
-                            <button class="btn-danger"
+                            <button type="button"
+                                    class="btn-danger"
                                     onclick="cancelKey()">
                                 Hủy khóa
                             </button>
