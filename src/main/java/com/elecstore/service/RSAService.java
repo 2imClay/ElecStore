@@ -32,4 +32,8 @@ public class RSAService {
 
         return response;
     }
+    public boolean hasKey(int userId) {
+
+        return rsaDAO.hasKey(userId);
+    }
 }
