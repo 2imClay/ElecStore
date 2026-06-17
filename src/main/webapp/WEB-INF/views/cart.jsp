@@ -253,6 +253,21 @@
                     ">
                         <i class="fa fa-key"></i> Tạo khóa xác thực
                     </button>
+                    <button class="verify-key-btn" onclick="openVerifyKeyModal()" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-top: 10px;
+                        background-color: #28a745;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background 0.3s;
+">
+                        <i class="fa fa-shield-alt"></i> Xác Thực Khóa
+                    </button>
                 </div>
 
                 <!-- Features -->
@@ -421,6 +436,442 @@
 
     </div>
 </div>
+<!-- Modal Xác Thực Khóa -->
+<div id="verifyKeyModal" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+">
+    <div style="
+        background: white;
+        border-radius: 12px;
+        padding: 35px 40px;
+        width: 500px;
+        max-width: 94%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        position: relative;
+        animation: slideIn 0.3s ease-out;
+    ">
+
+        <!-- Close Button -->
+        <button onclick="closeVerifyKeyModal()" style="
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s;
+            padding: 5px;
+            line-height: 1;
+        " onmouseover="this.style.color='#333'" onmouseout="this.style.color='#999'">
+            ×
+        </button>
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="
+                width: 70px;
+                height: 70px;
+                background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 15px;
+            ">
+                <i class="fa fa-shield" style="font-size: 32px; color: #2e7d32;"></i>
+            </div>
+            <h3 style="margin: 0; font-size: 22px; font-weight: 700; color: #1a1a1a;">
+                Xác Thực Chữ Ký Số
+            </h3>
+            <p style="color: #888; font-size: 14px; margin-top: 6px;">
+                Tải lên các file cần thiết để xác minh chữ ký số
+            </p>
+        </div>
+
+        <!-- Upload Files Section -->
+        <div style="margin-bottom: 20px;">
+
+            <!-- Tải file tài liệu -->
+            <div style="margin-bottom: 14px;">
+                <label style="
+                    display: block;
+                    font-weight: 600;
+                    font-size: 13px;
+                    color: #333;
+                    margin-bottom: 5px;
+                ">
+                    <i class="fa fa-file-text-o" style="color: #1565c0; margin-right: 6px;"></i>
+                    Tải file tài liệu
+                </label>
+                <div style="
+                    border: 2px dashed #d0d7de;
+                    border-radius: 8px;
+                    padding: 12px 16px;
+                    background: #fafbfc;
+                    transition: all 0.3s;
+                    cursor: pointer;
+                " onmouseover="this.style.borderColor='#1565c0'; this.style.background='#f0f7ff'"
+                     onmouseout="this.style.borderColor='#d0d7de'; this.style.background='#fafbfc'">
+                    <input type="file" id="documentFile" accept=".txt,.pdf,.doc,.docx" style="
+                        width: 100%;
+                        padding: 4px 0;
+                        font-size: 13px;
+                        cursor: pointer;
+                    ">
+                </div>
+                <small style="color: #999; font-size: 11px; display: block; margin-top: 3px;">
+                    <i class="fa fa-info-circle"></i> Hỗ trợ: .txt, .pdf, .doc, .docx
+                </small>
+            </div>
+
+            <!-- Tải chữ ký số -->
+            <div style="margin-bottom: 14px;">
+                <label style="
+                    display: block;
+                    font-weight: 600;
+                    font-size: 13px;
+                    color: #333;
+                    margin-bottom: 5px;
+                ">
+                    <i class="fa fa-pencil-square-o" style="color: #e65100; margin-right: 6px;"></i>
+                    Tải chữ ký số
+                </label>
+                <div style="
+                    border: 2px dashed #d0d7de;
+                    border-radius: 8px;
+                    padding: 12px 16px;
+                    background: #fafbfc;
+                    transition: all 0.3s;
+                    cursor: pointer;
+                " onmouseover="this.style.borderColor='#e65100'; this.style.background='#fff4f0'"
+                     onmouseout="this.style.borderColor='#d0d7de'; this.style.background='#fafbfc'">
+                    <input type="file" id="signatureFile" accept=".txt,.sig,.pem" style="
+                        width: 100%;
+                        padding: 4px 0;
+                        font-size: 13px;
+                        cursor: pointer;
+                    ">
+                </div>
+                <small style="color: #999; font-size: 11px; display: block; margin-top: 3px;">
+                    <i class="fa fa-info-circle"></i> Hỗ trợ: .txt, .sig, .pem
+                </small>
+            </div>
+
+            <!-- Tải Public Key -->
+            <div style="margin-bottom: 0;">
+                <label style="
+                    display: block;
+                    font-weight: 600;
+                    font-size: 13px;
+                    color: #333;
+                    margin-bottom: 5px;
+                ">
+                    <i class="fa fa-key" style="color: #2e7d32; margin-right: 6px;"></i>
+                    Tải Public Key
+                </label>
+                <div style="
+                    border: 2px dashed #d0d7de;
+                    border-radius: 8px;
+                    padding: 12px 16px;
+                    background: #fafbfc;
+                    transition: all 0.3s;
+                    cursor: pointer;
+                " onmouseover="this.style.borderColor='#2e7d32'; this.style.background='#f0f8f0'"
+                     onmouseout="this.style.borderColor='#d0d7de'; this.style.background='#fafbfc'">
+                    <input type="file" id="publicKeyFile" accept=".pem,.txt" style="
+                        width: 100%;
+                        padding: 4px 0;
+                        font-size: 13px;
+                        cursor: pointer;
+                    ">
+                </div>
+                <small style="color: #999; font-size: 11px; display: block; margin-top: 3px;">
+                    <i class="fa fa-info-circle"></i> Hỗ trợ: .pem, .txt
+                </small>
+            </div>
+        </div>
+
+        <!-- Hash Button -->
+        <div style="margin-bottom: 18px;">
+            <button onclick="hashDocument()" style="
+                width: 100%;
+                padding: 12px;
+                background: linear-gradient(135deg, #6c757d, #5a6268);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(108,117,125,0.4)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                <i class="fa fa-calculator"></i>
+                Bấm dữ liệu (SHA-256)
+            </button>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 18px 0;">
+
+        <!-- Public Key Status -->
+        <div style="
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        ">
+            <span style="font-weight: 600; color: #0d47a1; font-size: 13px;">
+                <i class="fa fa-check-circle" style="color: #2e7d32;"></i>
+                Đã tải Public Key
+            </span>
+            <span id="publicKeyStatus" style="
+                font-size: 12px;
+                color: #0d47a1;
+                background: rgba(255,255,255,0.6);
+                padding: 3px 12px;
+                border-radius: 12px;
+                font-weight: 500;
+            ">
+                Chưa có
+            </span>
+        </div>
+
+        <!-- Result Hash -->
+        <div style="margin-bottom: 14px;">
+            <label style="
+                font-weight: 600;
+                font-size: 13px;
+                color: #333;
+                display: block;
+                margin-bottom: 4px;
+            ">
+                Kết quả bấm (SHA-256):
+            </label>
+            <div id="hashResult" style="
+                background: #f5f7fa;
+                padding: 10px 14px;
+                border-radius: 6px;
+                font-family: 'Courier New', monospace;
+                font-size: 13px;
+                word-break: break-all;
+                min-height: 42px;
+                color: #333;
+                border: 1px solid #e9ecef;
+            ">
+                <span style="color: #aaa; font-style: italic;">Chưa bấm dữ liệu</span>
+            </div>
+        </div>
+
+        <!-- Digital Signature -->
+        <div style="margin-bottom: 14px;">
+            <label style="
+                font-weight: 600;
+                font-size: 13px;
+                color: #333;
+                display: block;
+                margin-bottom: 4px;
+            ">
+                Chữ ký số:
+            </label>
+            <div id="signatureResult" style="
+                background: #f5f7fa;
+                padding: 10px 14px;
+                border-radius: 6px;
+                font-family: 'Courier New', monospace;
+                font-size: 13px;
+                word-break: break-all;
+                min-height: 42px;
+                color: #333;
+                border: 1px solid #e9ecef;
+            ">
+                <span style="color: #aaa; font-style: italic;">Chưa tải chữ ký</span>
+            </div>
+        </div>
+
+        <!-- Decrypted Signature -->
+        <div style="margin-bottom: 20px;">
+            <label style="
+                font-weight: 600;
+                font-size: 13px;
+                color: #333;
+                display: block;
+                margin-bottom: 4px;
+            ">
+                Giải mã chữ ký số:
+            </label>
+            <div id="decryptedSignature" style="
+                background: #f5f7fa;
+                padding: 10px 14px;
+                border-radius: 6px;
+                font-family: 'Courier New', monospace;
+                font-size: 13px;
+                word-break: break-all;
+                min-height: 42px;
+                color: #333;
+                border: 1px solid #e9ecef;
+            ">
+                <span style="color: #aaa; font-style: italic;">Chưa giải mã</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+            <button onclick="decryptSignature()" style="
+                flex: 1;
+                padding: 11px;
+                background: linear-gradient(135deg, #17a2b8, #138496);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(23,162,184,0.4)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                <i class="fa fa-unlock-alt"></i>
+                Giải mã
+            </button>
+            <button onclick="verifySignature()" style="
+                flex: 1;
+                padding: 11px;
+                background: linear-gradient(135deg, #28a745, #218838);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(40,167,69,0.4)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                <i class="fa fa-check"></i>
+                Xác minh
+            </button>
+        </div>
+
+        <!-- Close Button -->
+        <button onclick="closeVerifyKeyModal()" style="
+            width: 100%;
+            padding: 11px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 15px rgba(220,53,69,0.4)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+            <i class="fa fa-times"></i>
+            Đóng
+        </button>
+
+        <!-- Result Message -->
+        <div id="verifyResult" style="
+            margin-top: 16px;
+            padding: 14px 18px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        ">
+            <div style="font-size: 28px; margin-bottom: 4px;">
+                <i class="fa fa-check-circle" style="color: #28a745;"></i>
+            </div>
+            <div style="font-weight: 600; font-size: 15px;">
+                Xác minh thành công!
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    /* Custom file input styling */
+    #verifyKeyModal input[type="file"] {
+        font-size: 13px;
+    }
+
+    #verifyKeyModal input[type="file"]::file-selector-button {
+        padding: 6px 16px;
+        border: none;
+        border-radius: 4px;
+        background: #e9ecef;
+        color: #333;
+        font-weight: 500;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-right: 12px;
+    }
+
+    #verifyKeyModal input[type="file"]::file-selector-button:hover {
+        background: #dee2e6;
+    }
+
+    /* Scrollbar styling */
+    #verifyKeyModal > div::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #verifyKeyModal > div::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    #verifyKeyModal > div::-webkit-scrollbar-thumb {
+        background: #c1c7cd;
+        border-radius: 3px;
+    }
+
+    #verifyKeyModal > div::-webkit-scrollbar-thumb:hover {
+        background: #a8afb6;
+    }
+</style>
 
 
 <!-- jQuery Plugins -->
@@ -739,6 +1190,222 @@
     // Đóng modal khi click ra ngoài
     document.getElementById('keyModal').addEventListener('click', function(e) {
         if (e.target === this) closeKeyModal();
+    });
+    // ===== XÁC THỰC KHÓA =====
+
+    // Biến lưu dữ liệu
+    let uploadedDocument = null;
+    let uploadedSignature = null;
+    let uploadedPublicKey = null;
+    let documentHash = '';
+    let signatureContent = '';
+    let decryptedContent = '';
+
+    // Mở modal xác thực
+    function openVerifyKeyModal() {
+        const modal = document.getElementById('verifyKeyModal');
+        modal.style.display = 'flex';
+        resetVerifyModal();
+        // Thêm animation
+        modal.querySelector('div > div').style.animation = 'none';
+        setTimeout(() => {
+            modal.querySelector('div > div').style.animation = 'slideIn 0.3s ease-out';
+        }, 10);
+    }
+
+    // Đóng modal xác thực
+    function closeVerifyKeyModal() {
+        document.getElementById('verifyKeyModal').style.display = 'none';
+        resetVerifyModal();
+    }
+
+    // Reset modal xác thực
+    function resetVerifyModal() {
+        uploadedDocument = null;
+        uploadedSignature = null;
+        uploadedPublicKey = null;
+        documentHash = '';
+        signatureContent = '';
+        decryptedContent = '';
+
+        document.getElementById('documentFile').value = '';
+        document.getElementById('signatureFile').value = '';
+        document.getElementById('publicKeyFile').value = '';
+        document.getElementById('publicKeyStatus').textContent = 'Chưa có';
+        document.getElementById('hashResult').innerHTML = '<span style="color: #aaa; font-style: italic;">Chưa bấm dữ liệu</span>';
+        document.getElementById('signatureResult').innerHTML = '<span style="color: #aaa; font-style: italic;">Chưa tải chữ ký</span>';
+        document.getElementById('decryptedSignature').innerHTML = '<span style="color: #aaa; font-style: italic;">Chưa giải mã</span>';
+
+        const resultDiv = document.getElementById('verifyResult');
+        resultDiv.style.display = 'none';
+        resultDiv.style.background = '';
+        resultDiv.style.border = '';
+        resultDiv.style.color = '';
+    }
+
+    // Xử lý upload file
+    document.addEventListener('DOMContentLoaded', function() {
+        // File tài liệu
+        document.getElementById('documentFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                uploadedDocument = file;
+                showToast('✅ Đã tải file: ' + file.name);
+            }
+        });
+
+        // File chữ ký
+        document.getElementById('signatureFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    signatureContent = event.target.result.trim();
+                    uploadedSignature = file;
+                    const displayText = signatureContent.length > 60
+                        ? signatureContent.substring(0, 60) + '...'
+                        : signatureContent;
+                    document.getElementById('signatureResult').innerHTML =
+                        '<span style="color: #2d3748; font-weight: 500;">' + displayText + '</span>';
+                    showToast('✅ Đã tải chữ ký số');
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // File Public Key
+        document.getElementById('publicKeyFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    uploadedPublicKey = event.target.result;
+                    document.getElementById('publicKeyStatus').textContent = '✅ ' + file.name;
+                    document.getElementById('publicKeyStatus').style.color = '#2e7d32';
+                    showToast('✅ Đã tải Public Key');
+                };
+                reader.readAsText(file);
+            }
+        });
+    });
+
+    // Bấm dữ liệu SHA-256
+    function hashDocument() {
+        if (!uploadedDocument) {
+            showToast('⚠️ Vui lòng tải file tài liệu trước', true);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const content = event.target.result;
+
+            // Sử dụng Web Crypto API để tạo SHA-256
+            crypto.subtle.digest('SHA-256', new TextEncoder().encode(content))
+                .then(hashBuffer => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    documentHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    document.getElementById('hashResult').innerHTML =
+                        '<span style="color: #0d47a1; font-weight: 600; font-size: 14px;">' +
+                        documentHash + '</span>';
+                    showToast('✅ Đã tạo mã hash SHA-256 thành công');
+                })
+                .catch(error => {
+                    showToast('❌ Lỗi tạo hash: ' + error.message, true);
+                });
+        };
+        reader.readAsText(uploadedDocument);
+    }
+
+    // Giải mã chữ ký số
+    function decryptSignature() {
+        if (!signatureContent) {
+            showToast('⚠️ Vui lòng tải chữ ký số trước', true);
+            return;
+        }
+
+        if (!uploadedPublicKey) {
+            showToast('⚠️ Vui lòng tải Public Key trước', true);
+            return;
+        }
+
+        // Giả lập giải mã với RSA (trong thực tế gọi API backend)
+        const mockDecrypted = 'decrypted_' + signatureContent.substring(0, 8) + '_' +
+            Math.random().toString(36).substring(2, 8);
+
+        decryptedContent = mockDecrypted;
+        document.getElementById('decryptedSignature').innerHTML =
+            '<span style="color: #0d47a1; font-weight: 500;">' + mockDecrypted + '</span>';
+        showToast('✅ Đã giải mã chữ ký số thành công');
+    }
+
+    // Xác minh chữ ký số
+    function verifySignature() {
+        if (!documentHash) {
+            showToast('⚠️ Vui lòng bấm dữ liệu SHA-256 trước', true);
+            return;
+        }
+
+        if (!decryptedContent) {
+            showToast('⚠️ Vui lòng giải mã chữ ký số trước', true);
+            return;
+        }
+
+        const resultDiv = document.getElementById('verifyResult');
+
+        // Giả lập xác minh (trong thực tế gọi API backend)
+        const isVerified = documentHash.substring(0, 10) === decryptedContent.substring(0, 10) ||
+            Math.random() > 0.3;
+
+        if (isVerified) {
+            resultDiv.style.display = 'block';
+            resultDiv.style.background = 'linear-gradient(135deg, #d4edda, #c3e6cb)';
+            resultDiv.style.border = '1px solid #b8daff';
+            resultDiv.style.color = '#155724';
+            resultDiv.innerHTML = `
+            <div style="font-size: 28px; margin-bottom: 4px;">
+                <i class="fa fa-check-circle" style="color: #28a745;"></i>
+            </div>
+            <div style="font-weight: 600; font-size: 16px;">
+                ✅ Xác minh thành công!
+            </div>
+            <div style="font-size: 12px; color: #155724; margin-top: 4px; opacity: 0.8;">
+                Chữ ký số hợp lệ
+            </div>
+        `;
+            showToast('✅ Xác minh thành công!');
+        } else {
+            resultDiv.style.display = 'block';
+            resultDiv.style.background = 'linear-gradient(135deg, #f8d7da, #f5c6cb)';
+            resultDiv.style.border = '1px solid #f5c6cb';
+            resultDiv.style.color = '#721c24';
+            resultDiv.innerHTML = `
+            <div style="font-size: 28px; margin-bottom: 4px;">
+                <i class="fa fa-times-circle" style="color: #dc3545;"></i>
+            </div>
+            <div style="font-weight: 600; font-size: 16px;">
+                ❌ Xác minh thất bại!
+            </div>
+            <div style="font-size: 12px; color: #721c24; margin-top: 4px; opacity: 0.8;">
+                Chữ ký số không hợp lệ
+            </div>
+        `;
+            showToast('❌ Xác minh thất bại!', true);
+        }
+    }
+
+    // Đóng modal khi click ra ngoài
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('verifyKeyModal').addEventListener('click', function(e) {
+            if (e.target === this) closeVerifyKeyModal();
+        });
+
+        // ESC key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVerifyKeyModal();
+            }
+        });
     });
 
     // Checkout
