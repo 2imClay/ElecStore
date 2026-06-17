@@ -622,9 +622,42 @@
 
     // Mở modal - reset về bước 1
     function openKeyModal() {
-        document.getElementById('stepConfirm').style.display = 'block';
-        document.getElementById('stepSuccess').style.display = 'none';
-        document.getElementById('keyModal').style.display = 'flex';
+
+        $.ajax({
+
+            url:
+                '${pageContext.request.contextPath}/check-rsa-key',
+
+            type: 'GET',
+
+            dataType: 'json',
+
+            success: function(response) {
+
+                if(response.hasKey){
+
+                    showToast(
+                        'Bạn đã tạo khóa RSA trước đó',
+                        true
+                    );
+
+                    return;
+                }
+
+                document.getElementById(
+                    'keyModal'
+                ).style.display =
+                    'flex';
+            },
+
+            error: function() {
+
+                showToast(
+                    'Không thể kiểm tra khóa RSA',
+                    true
+                );
+            }
+        });
     }
 
     // Đóng modal

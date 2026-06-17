@@ -238,21 +238,6 @@
                     <button class="continue-shopping-btn" onclick="continueShopping()">
                         <i class="fa fa-arrow-left"></i> Tiếp tục mua
                     </button>
-                    <button class="generate-key-btn" onclick="openKeyModal()" style="
-                        width: 100%;
-                        padding: 12px;
-                        margin-top: 10px;
-                        background-color: #1565c0;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        font-size: 14px;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: background 0.3s;
-                    ">
-                        <i class="fa fa-key"></i> Tạo khóa xác thực
-                    </button>
                     <button class="verify-key-btn" onclick="openVerifyKeyModal()" style="
                         width: 100%;
                         padding: 12px;
@@ -676,7 +661,7 @@
     }
 
     // --- End Verification Logic ---
-    
+
     // Checkout
     function checkout() {
         window.location.href = '${pageContext.request.contextPath}/checkout';
