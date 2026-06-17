@@ -256,41 +256,41 @@
                     </div>
                 </label>
 
-<%--                <!-- CREDIT CARD -->--%>
-<%--                <label class="payment-method">--%>
-<%--                    <input type="radio" name="paymentMethod" value="card" onchange="updatePaymentMethod('card')">--%>
-<%--                    <div class="payment-icon">--%>
-<%--                        <i class="fas fa-credit-card"></i>--%>
-<%--                    </div>--%>
-<%--                    <div class="payment-info">--%>
-<%--                        <div class="payment-name">Thẻ tín dụng / Ghi nợ</div>--%>
-<%--                        <div class="payment-desc">Visa, Mastercard, JCB</div>--%>
-<%--                    </div>--%>
-<%--                </label>--%>
+                    <%--                <!-- CREDIT CARD -->--%>
+                    <%--                <label class="payment-method">--%>
+                    <%--                    <input type="radio" name="paymentMethod" value="card" onchange="updatePaymentMethod('card')">--%>
+                    <%--                    <div class="payment-icon">--%>
+                    <%--                        <i class="fas fa-credit-card"></i>--%>
+                    <%--                    </div>--%>
+                    <%--                    <div class="payment-info">--%>
+                    <%--                        <div class="payment-name">Thẻ tín dụng / Ghi nợ</div>--%>
+                    <%--                        <div class="payment-desc">Visa, Mastercard, JCB</div>--%>
+                    <%--                    </div>--%>
+                    <%--                </label>--%>
 
-<%--                <!-- BANK TRANSFER -->--%>
-<%--                <label class="payment-method">--%>
-<%--                    <input type="radio" name="paymentMethod" value="bank" onchange="updatePaymentMethod('bank')">--%>
-<%--                    <div class="payment-icon">--%>
-<%--                        <i class="fas fa-university"></i>--%>
-<%--                    </div>--%>
-<%--                    <div class="payment-info">--%>
-<%--                        <div class="payment-name">Chuyển khoản ngân hàng</div>--%>
-<%--                        <div class="payment-desc">Chuyển khoản trực tiếp</div>--%>
-<%--                    </div>--%>
-<%--                </label>--%>
+                    <%--                <!-- BANK TRANSFER -->--%>
+                    <%--                <label class="payment-method">--%>
+                    <%--                    <input type="radio" name="paymentMethod" value="bank" onchange="updatePaymentMethod('bank')">--%>
+                    <%--                    <div class="payment-icon">--%>
+                    <%--                        <i class="fas fa-university"></i>--%>
+                    <%--                    </div>--%>
+                    <%--                    <div class="payment-info">--%>
+                    <%--                        <div class="payment-name">Chuyển khoản ngân hàng</div>--%>
+                    <%--                        <div class="payment-desc">Chuyển khoản trực tiếp</div>--%>
+                    <%--                    </div>--%>
+                    <%--                </label>--%>
 
-<%--                <!-- EWALLET -->--%>
-<%--                <label class="payment-method">--%>
-<%--                    <input type="radio" name="paymentMethod" value="ewallet" onchange="updatePaymentMethod('ewallet')">--%>
-<%--                    <div class="payment-icon">--%>
-<%--                        <i class="fas fa-mobile-alt"></i>--%>
-<%--                    </div>--%>
-<%--                    <div class="payment-info">--%>
-<%--                        <div class="payment-name">Ví điện tử</div>--%>
-<%--                        <div class="payment-desc">Momo, Zalopay, VCBPay</div>--%>
-<%--                    </div>--%>
-<%--                </label>--%>
+                    <%--                <!-- EWALLET -->--%>
+                    <%--                <label class="payment-method">--%>
+                    <%--                    <input type="radio" name="paymentMethod" value="ewallet" onchange="updatePaymentMethod('ewallet')">--%>
+                    <%--                    <div class="payment-icon">--%>
+                    <%--                        <i class="fas fa-mobile-alt"></i>--%>
+                    <%--                    </div>--%>
+                    <%--                    <div class="payment-info">--%>
+                    <%--                        <div class="payment-name">Ví điện tử</div>--%>
+                    <%--                        <div class="payment-desc">Momo, Zalopay, VCBPay</div>--%>
+                    <%--                    </div>--%>
+                    <%--                </label>--%>
             </form>
 
             <!-- ORDER SUMMARY -->
@@ -318,8 +318,134 @@
             <button class="btn-checkout" onclick="submitOrder()">
                 <i class="fas fa-check-circle"></i> Đặt hàng ngay
             </button>
+            <button class="verify-key-btn" onclick="openVerifyKeyModal()" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-top: 10px;
+                        background-color: #28a745;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background 0.3s;
+">
+                <i class="fa fa-shield-alt"></i> Xác Thực
+            </button>
+            <button class="download-order-btn" onclick="downloadOrderDocument()" style="
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background-color: #17a2b8; /* Màu xanh cyan biệt lập */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+">
+                <i class="fa fa-download"></i> Tải file đơn hàng (document.txt)
+            </button>
         </div>
     </c:if>
+</div>
+<!-- Modal Xác Thực Chữ Ký -->
+<div id="verifyKeyModal" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+">
+    <div style="
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        width: 500px;
+        max-width: 95%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    ">
+        <h3 style="text-align: center; margin-bottom: 20px;">Xác Thực Chữ Ký Số</h3>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">1. File đơn hàng (document.txt):</label>
+            <input type="file" id="documentFile" class="form-control" accept=".txt">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">2. Chữ ký số (signature.sig):</label>
+            <input type="file" id="signatureFile" class="form-control" accept=".sig">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">3. Public Key (public-key.pem):</label>
+            <input type="file" id="publicKeyFile" class="form-control" accept=".pem">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Mã băm (SHA-256):</label>
+            <textarea id="hashDisplay" readonly style="
+                width: 100%;
+                height: 60px;
+                background: #f8f9fa;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 10px;
+                font-family: monospace;
+                font-size: 12px;
+                resize: none;
+            " placeholder="Giá trị hash sẽ hiển thị ở đây..."></textarea>
+        </div>
+
+        <div id="verificationResult" style="
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        "></div>
+
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button onclick="processHash()" style="
+                background-color: #6c757d;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            ">
+                <i class="fa fa-hashtag"></i> Băm dữ liệu (SHA-256)
+            </button>
+
+            <button onclick="verifyDigitalSignature()" style="
+                background-color: #28a745;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            ">
+                <i class="fa fa-check-circle"></i> Xác thực chữ ký
+            </button>
+
+            <button onclick="closeVerifyKeyModal()" style="
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            ">
+                Đóng
+            </button>
+        </div>
+    </div>
 </div>
 
 
@@ -329,11 +455,219 @@
 <%--<script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>--%>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+<script>
+    const cartItems = [
+        <c:forEach items="${cartItems}" var="item" varStatus="status">
+        {
+            id: "${item.id}",
+            productName: "${item.product.name}",
+            quantity: ${item.quantity},
+            price: ${item.price},
+            total: ${item.price * item.quantity}
+        }<c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
+
+    const subtotal = ${subtotal};
+</script>
 
 <script>
+    let isVerified = false;
+
     function updatePaymentMethod(method) {
         console.log('Selected payment method:', method);
         // Có thể thêm logic để hiển thị form chi tiết thanh toán
+    }
+
+    // --- Verification Logic ---
+
+    function openVerifyKeyModal() {
+        document.getElementById('verifyKeyModal').style.display = 'flex';
+        document.getElementById('hashDisplay').value = '';
+        document.getElementById('verificationResult').style.display = 'none';
+        isVerified = false;
+    }
+
+    function closeVerifyKeyModal() {
+        document.getElementById('verifyKeyModal').style.display = 'none';
+    }
+
+    // Hàm đọc nội dung file
+    async function readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (e) => reject(e);
+            reader.readAsText(file);
+        });
+    }
+
+    // Hàm đọc nội dung file dưới dạng ArrayBuffer (cho chữ ký hoặc dữ liệu nhị phân)
+    async function readFileAsArrayBuffer(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (e) => reject(e);
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    // Hàm băm dữ liệu SHA-256
+    async function processHash() {
+        const docFile = document.getElementById('documentFile').files[0];
+        if (!docFile) {
+            showToast('Vui lòng chọn file tài liệu', true);
+            return;
+        }
+
+        try {
+            const msgBuffer = await readFileAsArrayBuffer(docFile); // Đọc nhị phân để đảm bảo tính toàn vẹn tuyệt đối
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+            document.getElementById('hashDisplay').value = hashHex;
+            showToast('Đã băm dữ liệu thành công');
+        } catch (err) {
+            showToast('Lỗi khi băm dữ liệu', true);
+        }
+    }
+
+    function pemToArrayBuffer(pem) {
+        const lines = pem.split('\n');
+        let b64 = "";
+        for (let line of lines) {
+            if (!line.includes("-----") && line.trim() !== "") {
+                b64 += line.trim();
+            }
+        }
+        const binaryStr = window.atob(b64);
+        const len = binaryStr.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+
+    function strToBuffer(str) {
+        const buf = new ArrayBuffer(str.length);
+        const bufView = new Uint8Array(buf);
+        for (let i = 0; i < str.length; i++) {
+            bufView[i] = str.charCodeAt(i);
+        }
+        return buf;
+    }
+
+    // Hàm xác thực chữ ký
+    async function verifyDigitalSignature() {
+        const docFile = document.getElementById('documentFile').files[0];
+        const sigFile = document.getElementById('signatureFile').files[0];
+        const pubKeyFile = document.getElementById('publicKeyFile').files[0];
+        const hashVal = document.getElementById('hashDisplay').value;
+
+        if (!docFile || !sigFile || !pubKeyFile) {
+            showToast('Vui lòng tải lên đủ 3 file', true);
+            return;
+        }
+        if (!hashVal) {
+            showToast('Vui lòng băm dữ liệu trước khi xác thực', true);
+            return;
+        }
+
+        try {
+            const sigBuffer = await readFileAsArrayBuffer(sigFile);
+            const pubKeyContent = await readFileAsText(pubKeyFile);
+
+            const resultDiv = document.getElementById('verificationResult');
+            resultDiv.style.display = 'none';
+
+            let sigRaw;
+            // Chuyển sigBuffer sang chuỗi để kiểm tra định dạng (Hex hoặc Base64)
+            const decoder = new TextDecoder();
+            const sigString = decoder.decode(sigBuffer).trim().replace(/\s/g, '');
+
+            // 1. Kiểm tra nếu là Hex
+            if (/^[0-9a-fA-F]+$/.test(sigString) && sigString.length % 2 === 0) {
+                const bytes = new Uint8Array(sigString.length / 2);
+                for (let i = 0; i < sigString.length; i += 2) {
+                    bytes[i / 2] = parseInt(sigString.substring(i, i + 2), 16);
+                }
+                sigRaw = bytes.buffer;
+            }
+            // 2. Kiểm tra nếu là Base64
+            else if (/^[A-Za-z0-9+/=]+$/.test(sigString)) {
+                try {
+                    const binaryStr = window.atob(sigString);
+                    const bytes = new Uint8Array(binaryStr.length);
+                    for (let i = 0; i < binaryStr.length; i++) {
+                        bytes[i] = binaryStr.charCodeAt(i);
+                    }
+                    sigRaw = bytes.buffer;
+                } catch (e) { sigRaw = sigBuffer; }
+            } else {
+                sigRaw = sigBuffer;
+            }
+
+            // 1. Import Public Key
+            const binaryDer = pemToArrayBuffer(pubKeyContent);
+            const publicKey = await window.crypto.subtle.importKey(
+                "spki",
+                binaryDer,
+                {
+                    name: "RSASSA-PKCS1-v1_5",
+                    hash: "SHA-256",
+                },
+                false,
+                ["verify"]
+            );
+
+
+            const dataToVerify = new TextEncoder().encode(hashVal);
+
+            const isValid = await window.crypto.subtle.verify(
+                "RSASSA-PKCS1-v1_5",
+                publicKey,
+                sigRaw,
+                dataToVerify
+            );
+
+            // 3. Hiển thị kết quả
+            resultDiv.style.display = 'block';
+            if (isValid) {
+                isVerified = true; // <--- Người dùng đã xác thực thành công
+                resultDiv.style.backgroundColor = '#d4edda';
+                resultDiv.style.color = '#155724';
+                resultDiv.innerHTML = '<i class="fa fa-check"></i> Chữ ký hợp lệ! Tài liệu toàn vẹn.';
+                showToast('Xác thực thành công');
+
+                // Tùy chọn: Tự động đóng modal sau 1.5 giây để người dùng tiện bấm đặt hàng
+                setTimeout(closeVerifyKeyModal, 1500);
+            } else {
+                isVerified = false; // <--- Xác thực thất bại
+                resultDiv.style.backgroundColor = '#f8d7da';
+                resultDiv.style.color = '#721c24';
+                resultDiv.innerHTML = '<i class="fa fa-times"></i> Chữ ký không hợp lệ hoặc tài liệu đã bị chỉnh sửa!';
+                showToast('Xác thực thất bại', true);
+            }
+
+        } catch (err) {
+            console.error(err);
+            showToast('Lỗi: File không đúng định dạng hoặc Public Key sai', true);
+            const resultDiv = document.getElementById('verificationResult');
+            resultDiv.style.display = 'block';
+            resultDiv.style.backgroundColor = '#fff3cd';
+            resultDiv.innerHTML = 'Lỗi xử lý file (Kiểm tra định dạng Public Key .pem)';
+        }
+    }
+
+    // Đóng modal khi click ra ngoài (cập nhật cho cả 2 modal)
+    window.onclick = function(event) {
+        const keyModal = document.getElementById('keyModal');
+        const verifyModal = document.getElementById('verifyKeyModal');
+        if (event.target === keyModal) closeKeyModal();
+        if (event.target === verifyModal) closeVerifyKeyModal();
     }
 
     function removeItem(cartItemId) {
@@ -357,7 +691,13 @@
         }
     }
 
+
     function submitOrder() {
+        if (!isVerified) {
+            alert('⚠️ Bạn chưa xác thực chữ ký số! Vui lòng bấm vào nút "Xác Thực" và tải các file liên quan trước khi đặt hàng.');
+            openVerifyKeyModal(); // Tự động mở luôn modal xác thực cho người dùng
+            return;
+        }
         const fullName = $('input[name="fullName"]').val();
         const phone = $('input[name="phone"]').val();
         const email = $('input[name="email"]').val();
@@ -390,6 +730,69 @@
             }
         }, 'json');
     }
+    function downloadOrderDocument() {
+
+        const fullName = $('input[name="fullName"]').val();
+        const phone = $('input[name="phone"]').val();
+        const email = $('input[name="email"]').val();
+        const address = $('input[name="address"]').val();
+        const city = $('input[name="city"]').val();
+        const country = $('input[name="country"]').val();
+        const paymentMethod = $('input[name="paymentMethod"]:checked').val();
+        const note = $('textarea[name="note"]').val();
+
+        let content = "";
+
+        content += "========== DON HANG ==========\n\n";
+
+        content += "===== THONG TIN GIAO HANG =====\n";
+        content += "Ho ten: " + fullName + "\n";
+        content += "So dien thoai: " + phone + "\n";
+        content += "Email: " + email + "\n";
+        content += "Dia chi: " + address + "\n";
+        content += "Thanh pho: " + city + "\n";
+        content += "Quoc gia: " + country + "\n";
+        content += "Thanh toan: " + paymentMethod + "\n";
+        content += "Ghi chu: " + note + "\n\n";
+
+        content += "===== SAN PHAM =====\n";
+
+        cartItems.forEach(function(item, index){
+
+            content += "San pham " + (index + 1) + "\n";
+            content += "Ten: " + item.productName + "\n";
+            content += "So luong: " + item.quantity + "\n";
+            content += "Don gia: " + item.price + " VND\n";
+            content += "Thanh tien: " + item.total + " VND\n";
+            content += "--------------------------\n";
+
+        });
+
+        content += "\n===== TONG TIEN =====\n";
+        content += "Tam tinh: " + subtotal + " VND\n";
+        content += "Phi van chuyen: 30000 VND\n";
+        content += "Tong thanh toan: " + (subtotal + 30000) + " VND\n";
+
+        const blob = new Blob([content], {type:"text/plain;charset=utf-8"});
+
+        const link = document.createElement("a");
+
+        link.href = URL.createObjectURL(blob);
+
+        link.download = "document.txt";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(link.href);
+
+    }
+
+
+
 
     $(document).ready(function() {
         // AJAX gợi ý tìm kiếm
