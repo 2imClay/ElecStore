@@ -530,19 +530,21 @@
     ">
         <h3 style="text-align: center; margin-bottom: 20px;">Xác Thực Chữ Ký Số</h3>
 
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 5px;">1. File đơn hàng (document.txt):</label>
-            <input type="file" id="documentFile" class="form-control" accept=".txt">
+        <div id="verifyAutoInfo" style="
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            background: #e9ecef;
+            font-size: 13px;
+            color: #495057;
+        ">
+            <i class="fa fa-database"></i>
+            File đơn hàng (document.txt) và Public Key sẽ được hệ thống tự động lấy từ dữ liệu giỏ hàng và khóa RSA của bạn trong cơ sở dữ liệu.
         </div>
 
         <div style="margin-bottom: 15px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 5px;">2. Chữ ký số (signature.sig):</label>
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Chữ ký số (signature.sig):</label>
             <input type="file" id="signatureFile" class="form-control" accept=".sig">
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 5px;">3. Public Key (public-key.pem):</label>
-            <input type="file" id="publicKeyFile" class="form-control" accept=".pem">
         </div>
 
         <div style="margin-bottom: 15px;">
@@ -570,17 +572,6 @@
         "></div>
 
         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-            <button onclick="processHash()" style="
-                background-color: #6c757d;
-                color: white;
-                border: none;
-                padding: 10px 15px;
-                border-radius: 5px;
-                cursor: pointer;
-            ">
-                <i class="fa fa-hashtag"></i> Băm dữ liệu (SHA-256)
-            </button>
-
             <button onclick="verifyDigitalSignature()" style="
                 background-color: #28a745;
                 color: white;
@@ -642,11 +633,50 @@
 
     // --- Verification Logic ---
 
+    let verificationDocumentContent = null; // Nội dung document.txt lấy từ server (DB)
+    let verificationPublicKey = null;        // Public key (Base64) lấy từ bảng rsa_keys
+
     function openVerifyKeyModal() {
         document.getElementById('verifyKeyModal').style.display = 'flex';
         document.getElementById('hashDisplay').value = '';
         document.getElementById('verificationResult').style.display = 'none';
+        document.getElementById('signatureFile').value = '';
         isVerified = false;
+        verificationDocumentContent = null;
+        verificationPublicKey = null;
+
+        loadVerificationData();
+    }
+
+    // Lấy nội dung đơn hàng (từ giỏ hàng trong DB) + public key (từ bảng rsa_keys) từ server
+    function loadVerificationData() {
+        const infoBox = document.getElementById('verifyAutoInfo');
+        infoBox.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Đang lấy dữ liệu đơn hàng và Public Key từ hệ thống...';
+
+        $.ajax({
+            url: '${pageContext.request.contextPath}/get-verification-data',
+            type: 'GET',
+            dataType: 'json',
+            success: async function(response) {
+                if (!response.success) {
+                    infoBox.innerHTML = '<i class="fa fa-exclamation-triangle"></i> ' + (response.message || 'Không thể lấy dữ liệu xác thực');
+                    showToast(response.message || 'Không thể lấy dữ liệu xác thực', true);
+                    return;
+                }
+
+                verificationDocumentContent = response.documentContent;
+                verificationPublicKey = response.publicKey;
+
+                infoBox.innerHTML = '<i class="fa fa-check-circle" style="color:#28a745"></i> Đã lấy dữ liệu đơn hàng và Public Key (RSA ' + response.keySize + ' bit) từ hệ thống.';
+
+                // Tự động băm dữ liệu ngay khi lấy được nội dung đơn hàng
+                await processHash();
+            },
+            error: function() {
+                infoBox.innerHTML = '<i class="fa fa-exclamation-triangle"></i> Lỗi khi lấy dữ liệu xác thực từ server';
+                showToast('Lỗi khi lấy dữ liệu xác thực từ server', true);
+            }
+        });
     }
 
     function closeVerifyKeyModal() {
@@ -673,22 +703,20 @@
         });
     }
 
-    // Hàm băm dữ liệu SHA-256
+    // Hàm băm dữ liệu SHA-256 (dùng nội dung document lấy từ server/DB)
     async function processHash() {
-        const docFile = document.getElementById('documentFile').files[0];
-        if (!docFile) {
-            showToast('Vui lòng chọn file tài liệu', true);
+        if (!verificationDocumentContent) {
+            showToast('Chưa có dữ liệu đơn hàng để băm', true);
             return;
         }
 
         try {
-            const msgBuffer = await readFileAsArrayBuffer(docFile); // Đọc nhị phân để đảm bảo tính toàn vẹn tuyệt đối
+            const msgBuffer = new TextEncoder().encode(verificationDocumentContent);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
             document.getElementById('hashDisplay').value = hashHex;
-            showToast('Đã băm dữ liệu thành công');
         } catch (err) {
             showToast('Lỗi khi băm dữ liệu', true);
         }
@@ -723,23 +751,24 @@
 
     // Hàm xác thực chữ ký
     async function verifyDigitalSignature() {
-        const docFile = document.getElementById('documentFile').files[0];
         const sigFile = document.getElementById('signatureFile').files[0];
-        const pubKeyFile = document.getElementById('publicKeyFile').files[0];
         const hashVal = document.getElementById('hashDisplay').value;
 
-        if (!docFile || !sigFile || !pubKeyFile) {
-            showToast('Vui lòng tải lên đủ 3 file', true);
+        if (!verificationDocumentContent || !verificationPublicKey) {
+            showToast('Chưa lấy được dữ liệu đơn hàng / Public Key từ hệ thống. Vui lòng thử lại.', true);
+            return;
+        }
+        if (!sigFile) {
+            showToast('Vui lòng tải lên file chữ ký (.sig)', true);
             return;
         }
         if (!hashVal) {
-            showToast('Vui lòng băm dữ liệu trước khi xác thực', true);
+            showToast('Đang xử lý dữ liệu, vui lòng thử lại sau giây lát', true);
             return;
         }
 
         try {
             const sigBuffer = await readFileAsArrayBuffer(sigFile);
-            const pubKeyContent = await readFileAsText(pubKeyFile);
 
             const resultDiv = document.getElementById('verificationResult');
             resultDiv.style.display = 'none';
@@ -771,8 +800,8 @@
                 sigRaw = sigBuffer;
             }
 
-            // 1. Import Public Key
-            const binaryDer = pemToArrayBuffer(pubKeyContent);
+            // 1. Import Public Key (lấy từ bảng rsa_keys qua server, dạng Base64 thuần)
+            const binaryDer = pemToArrayBuffer(verificationPublicKey);
             const publicKey = await window.crypto.subtle.importKey(
                 "spki",
                 binaryDer,
@@ -815,11 +844,11 @@
 
         } catch (err) {
             console.error(err);
-            showToast('Lỗi: File không đúng định dạng hoặc Public Key sai', true);
+            showToast('Lỗi: File chữ ký không đúng định dạng hoặc Public Key không hợp lệ', true);
             const resultDiv = document.getElementById('verificationResult');
             resultDiv.style.display = 'block';
             resultDiv.style.backgroundColor = '#fff3cd';
-            resultDiv.innerHTML = 'Lỗi xử lý file (Kiểm tra định dạng Public Key .pem)';
+            resultDiv.innerHTML = 'Lỗi xử lý file (Kiểm tra định dạng file chữ ký .sig)';
         }
     }
 
