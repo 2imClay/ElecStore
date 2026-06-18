@@ -9,6 +9,10 @@ public class RSAKey {
     private int keySize;
     private String publicKey;
     private Timestamp createdAt;
+    private String status;
+    private Timestamp revokedAt;
+    private String revokedReason;
+    private Integer replacedByKeyId;
 
     public RSAKey() {
     }
@@ -52,5 +56,37 @@ public class RSAKey {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Timestamp getRevokedAt() {
+        return revokedAt;
+    }
+
+    public void setRevokedAt(Timestamp revokedAt) {
+        this.revokedAt = revokedAt;
+    }
+
+    public String getRevokedReason() {
+        return revokedReason;
+    }
+
+    public void setRevokedReason(String revokedReason) {
+        this.revokedReason = revokedReason;
+    }
+
+    public Integer getReplacedByKeyId() {
+        return replacedByKeyId;
+    }
+
+    public void setReplacedByKeyId(Integer replacedByKeyId) {
+        this.replacedByKeyId = replacedByKeyId;
     }
 }
