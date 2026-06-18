@@ -2,6 +2,7 @@ package com.elecstore.controller.admin;
 
 import com.elecstore.dao.*;
 import com.elecstore.model.*;
+import com.elecstore.utils.OrderDocumentUtil;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -19,6 +20,7 @@ public class AdminDashboardServlet extends HttpServlet {
     private ProductDAO productDAO = new ProductDAOImpl();
     private CategoryDAO categoryDAO = new CategoryDAOImpl();
     private OrderDAO orderDAO = new OrderDAOImpl();
+    private OrderSignatureDAO orderSignatureDAO = new OrderSignatureDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -36,6 +38,10 @@ public class AdminDashboardServlet extends HttpServlet {
             List<Category> categories = categoryDAO.findAll();
             List<Order> orders = orderDAO.getAllOrders();
 
+            for (Order order : orders) {
+                attachVerificationStatus(order);
+            }
+
             request.setAttribute("users", users);
             request.setAttribute("products", products);
             request.setAttribute("categories", categories);
@@ -51,6 +57,36 @@ public class AdminDashboardServlet extends HttpServlet {
             System.err.println("[AdminServlet] Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void attachVerificationStatus(Order order) {
+        OrderSignature signature = orderSignatureDAO.getLatestByOrderId(order.getId());
+
+        if (signature == null) {
+            order.setVerificationStatus("NOT_SIGNED");
+            return;
+        }
+
+        String currentSnapshot = OrderDocumentUtil.buildOrderSnapshotContent(
+                order.getId(),
+                order.getCustomerName(),
+                order.getAddress(),
+                order.getPhone(),
+                order.getPaymentMethod(),
+                order.getNote(),
+                order.getTotalAmount(),
+                order.getItems()
+        );
+
+        String currentHash = OrderDocumentUtil.sha256Hex(currentSnapshot);
+
+        if (currentHash.equals(signature.getOrderDataHash())) {
+            order.setVerificationStatus("VALID");
+        } else {
+            order.setVerificationStatus("TAMPERED");
+        }
+
+        order.setSignedAt(signature.getVerifiedAt());
     }
 
     @Override

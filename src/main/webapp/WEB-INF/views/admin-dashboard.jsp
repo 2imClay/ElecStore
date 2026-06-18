@@ -146,6 +146,7 @@
                                         <th>Khách hàng</th>
                                         <th>Ngày đặt</th>
                                         <th>Tổng tiền</th>
+                                        <th>Tình trạng xác thực</th>
                                         <th>Trạng thái</th>
                                     </tr>
                                 </thead>
@@ -156,6 +157,25 @@
                                             <td>${order.customerName}</td>
                                             <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
                                             <td><fmt:formatNumber value="${order.totalAmount}"/> VNĐ</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${order.verificationStatus == 'VALID'}">
+                                                        <span class="verify-badge verify-valid" title="Dữ liệu đơn hàng còn nguyên vẹn, khớp với chữ ký số đã lưu">
+                                                            <i class="fas fa-shield-alt"></i> Đã xác thực
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${order.verificationStatus == 'TAMPERED'}">
+                                                        <span class="verify-badge verify-tampered" title="Dữ liệu đơn hàng đã bị thay đổi so với lúc ký, có thể đã bị sửa trực tiếp trong database">
+                                                            <i class="fas fa-exclamation-triangle"></i> Dữ liệu đã thay đổi - Cần xác thực lại
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="verify-badge verify-none" title="Đơn hàng này chưa từng được xác thực bằng chữ ký số">
+                                                            <i class="fas fa-shield"></i> Chưa xác thực
+                                                        </span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
                                             <td>
                                                 <span class="badge-status ${order.status == 'completed' ? 'badge-completed' : order.status == 'processing' ? 'badge-processing' : order.status == 'cancelled' ? 'badge-cancelled' : 'badge-pending'}">
                                                     ${order.status == 'completed' ? 'Hoàn thành' : order.status == 'processing' ? 'Đang xử lý' : order.status == 'cancelled' ? 'Đã hủy' : 'Chờ xử lý'}
@@ -395,6 +415,7 @@
                                         <th>Khách hàng</th>
                                         <th>Ngày đặt</th>
                                         <th>Tổng tiền</th>
+                                        <th>Tình trạng xác thực</th>
                                         <th>Trạng thái</th>
                                         <th>Hành động</th>
                                     </tr>
@@ -406,6 +427,25 @@
                                             <td>${order.customerName}</td>
                                             <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
                                             <td><fmt:formatNumber value="${order.totalAmount}"/> VNĐ</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${order.verificationStatus == 'VALID'}">
+                                                        <span class="verify-badge verify-valid" title="Dữ liệu đơn hàng còn nguyên vẹn, khớp với chữ ký số đã lưu">
+                                                            <i class="fas fa-shield-alt"></i> Đã xác thực
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${order.verificationStatus == 'TAMPERED'}">
+                                                        <span class="verify-badge verify-tampered" title="Dữ liệu đơn hàng đã bị thay đổi so với lúc ký, có thể đã bị sửa trực tiếp trong database">
+                                                            <i class="fas fa-exclamation-triangle"></i> Dữ liệu đã thay đổi - Cần xác thực lại
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="verify-badge verify-none" title="Đơn hàng này chưa từng được xác thực bằng chữ ký số">
+                                                            <i class="fas fa-shield"></i> Chưa xác thực
+                                                        </span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
                                             <td>
                                                 <select class="form-select form-select-sm" 
                                                         onchange="updateOrderStatus(${order.id}, this.value)"
