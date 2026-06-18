@@ -136,7 +136,7 @@ public class CheckoutServlet extends HttpServlet {
                     if (signatureBase64 != null && !signatureBase64.isEmpty()
                             && documentHash != null && !documentHash.isEmpty()) {
 
-                        RSAKey rsaKey = rsaService.getLatestKey(userId);
+                        RSAKey rsaKey = rsaService.getActiveKey(userId);
 
                         if (rsaKey != null) {
                             Order savedOrder = orderDAO.getOrderById(orderId);
