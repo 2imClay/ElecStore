@@ -333,6 +333,21 @@
 ">
                 <i class="fa fa-shield-alt"></i> Xác Thực
             </button>
+            <button class="generate-key-btn" onclick="openKeyModal()" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-top: 10px;
+                        background-color: #1565c0;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background 0.3s;
+                    ">
+                <i class="fa fa-key"></i> Tạo khóa xác thực
+            </button>
             <button class="download-order-btn" onclick="downloadOrderDocument()" style="
             width: 100%;
             padding: 12px;
@@ -351,6 +366,149 @@
         </div>
     </c:if>
 </div>
+
+<!-- Modal Tạo Khóa Xác Thực -->
+<div id="keyModal" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+">
+    <div style="
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        width: 440px;
+        max-width: 90%;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        text-align: center;
+    ">
+
+        <!-- ===== BƯỚC 1: Xác nhận ===== -->
+        <div id="stepConfirm">
+            <div style="margin-bottom:15px;">
+                <i class="fa fa-key" style="font-size:48px;color:#1565c0;"></i>
+            </div>
+
+            <h3>Tạo khóa RSA</h3>
+
+            <p style="margin-bottom:20px;">
+                Chọn kích thước khóa RSA muốn tạo
+            </p>
+
+            <div style="text-align:left;margin-bottom:20px;">
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="1024">
+                    RSA 1024 bit
+                </label>
+
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="2048" checked>
+                    RSA 2048 bit (Khuyến nghị)
+                </label>
+
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="3072">
+                    RSA 3072 bit
+                </label>
+
+                <label style="display:block;padding:8px 0;">
+                    <input type="radio" name="keySize" value="4096">
+                    RSA 4096 bit
+                </label>
+            </div>
+
+            <div style="display:flex;gap:10px;justify-content:center;">
+                <button onclick="closeKeyModal()">
+                    Hủy
+                </button>
+
+                <button onclick="generateRSAKey()">
+                    Tạo khóa
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== BƯỚC 2: Thành công + Khóa ===== -->
+        <div id="stepSuccess" style="display:none;">
+
+            <div class="success-icon">
+                <i class="fa fa-check-circle"></i>
+            </div>
+
+            <h3>Tạo khóa RSA thành công</h3>
+
+            <p>
+                Hãy tải và lưu trữ Private Key cẩn thận trước khi sử dụng.
+            </p>
+
+            <div class="key-section">
+
+                <label>
+                    <strong>Public Key</strong>
+                </label>
+
+                <textarea
+                        id="publicKeyDisplay"
+                        readonly>
+        </textarea>
+
+            </div>
+
+            <div class="key-section">
+
+                <label>
+                    <strong>Private Key</strong>
+                </label>
+
+                <textarea
+                        id="privateKeyDisplay"
+                        readonly>
+        </textarea>
+
+            </div>
+
+            <div class="button-group">
+
+                <button onclick="downloadPublicKey()">
+                    Tải Public Key
+                </button>
+
+                <button onclick="downloadPrivateKey()">
+                    Tải Private Key
+                </button>
+
+            </div>
+
+            <div class="button-group">
+
+                <button class="btn-success"
+                        onclick="useKey()">
+                    Sử dụng khóa
+                </button>
+
+                <button class="btn-danger"
+                        onclick="cancelKey()">
+                    Hủy khóa
+                </button>
+
+            </div>
+
+            <div class="warning-box">
+                Private Key không được lưu trên hệ thống.
+                Nếu mất Private Key bạn phải tạo khóa mới.
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
 <!-- Modal Xác Thực Chữ Ký -->
 <div id="verifyKeyModal" style="
     display: none;
