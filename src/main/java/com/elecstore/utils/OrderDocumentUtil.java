@@ -1,6 +1,13 @@
 package com.elecstore.utils;
 
+import com.elecstore.model.Order;
+import com.elecstore.model.OrderDetail;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 public class OrderDocumentUtil {
 
     public static final double SHIPPING_FEE = 30000;
@@ -147,5 +154,25 @@ public class OrderDocumentUtil {
             return String.valueOf((long) value);
         }
         return String.valueOf(value);
+    }
+
+    public static String buildOrderSnapshotJson(
+            Order order) {
+
+        Map<String,Object> snapshot =
+                new HashMap<>();
+
+        snapshot.put(
+                "order",
+                order
+        );
+
+        snapshot.put(
+                "details",
+                order.getItems()
+        );
+
+        return new Gson()
+                .toJson(snapshot);
     }
 }

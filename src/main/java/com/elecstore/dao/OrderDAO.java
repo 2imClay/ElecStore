@@ -18,4 +18,11 @@ public interface OrderDAO {
     double calculateTotalRevenue();
     public Order mapResultSetToOrder(ResultSet rs) throws SQLException;
     public List<OrderDetail> getOrderDetails(int orderId);
+
+    void updateFromSnapshot(Order order);
+
+    void deleteOrderDetails(int orderId);
+
+    void insertOrderDetail(
+            OrderDetail detail);
 }

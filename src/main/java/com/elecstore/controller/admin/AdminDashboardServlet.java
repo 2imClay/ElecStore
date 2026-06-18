@@ -59,6 +59,8 @@ public class AdminDashboardServlet extends HttpServlet {
         }
     }
 
+    private RSAKeyDAO rsaKeyDAO = new RSAKeyDAOImpl();
+
     private void attachVerificationStatus(Order order) {
         OrderSignature signature = orderSignatureDAO.getLatestByOrderId(order.getId());
 
@@ -80,10 +82,45 @@ public class AdminDashboardServlet extends HttpServlet {
 
         String currentHash = OrderDocumentUtil.sha256Hex(currentSnapshot);
 
-        if (currentHash.equals(signature.getOrderDataHash())) {
-            order.setVerificationStatus("VALID");
-        } else {
+        if (!currentHash.equals(signature.getOrderDataHash())) {
             order.setVerificationStatus("TAMPERED");
+            order.setSignedAt(signature.getVerifiedAt());
+            return;
+        }
+
+        RSAKey keyUsedToSign = rsaKeyDAO.getById(signature.getKeyId());
+
+        if (keyUsedToSign == null) {
+            order.setVerificationStatus("KEY_NOT_FOUND");
+            order.setSignedAt(signature.getVerifiedAt());
+            return;
+        }
+
+        boolean validSignature = com.elecstore.utils.RSASignatureVerifier.verify(
+                keyUsedToSign.getPublicKey(),
+                signature.getDocumentHash(),
+                signature.getSignature()
+        );
+
+        if (!validSignature) {
+            order.setVerificationStatus("INVALID_SIGNATURE");
+            order.setSignedAt(signature.getVerifiedAt());
+            return;
+        }
+
+        if (keyUsedToSign.getRevokedAt() != null
+                && signature.getVerifiedAt() != null
+                && !signature.getVerifiedAt().before(keyUsedToSign.getRevokedAt())) {
+
+            order.setVerificationStatus("SIGNED_AFTER_KEY_LOST");
+            order.setSignedAt(signature.getVerifiedAt());
+            return;
+        }
+
+        if ("LOST".equals(keyUsedToSign.getStatus()) || "REVOKED".equals(keyUsedToSign.getStatus())) {
+            order.setVerificationStatus("VALID_WITH_OLD_KEY");
+        } else {
+            order.setVerificationStatus("VALID");
         }
 
         order.setSignedAt(signature.getVerifiedAt());

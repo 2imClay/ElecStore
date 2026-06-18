@@ -46,13 +46,16 @@ public class ReVerifyOrderSignatureServlet extends HttpServlet {
                 return;
             }
 
-            String signature = request.getParameter("signature");
-            if (signature == null || signature.trim().isEmpty()) {
-                response.getWriter().write("{\"success\":false,\"message\":\"Thiếu file chữ ký\"}");
-                return;
-            }
 
             Order order = orderDAO.getOrderById(orderId);
+            OrderSignature latestSignature =
+                    orderSignatureDAO.getLatestByOrderId(orderId);
+
+            if (latestSignature == null) {
+                response.getWriter().write(
+                        "{\"success\":false,\"message\":\"Không tìm thấy chữ ký gốc của đơn hàng\"}");
+                return;
+            }
             if (order == null) {
                 response.getWriter().write("{\"success\":false,\"message\":\"Không tìm thấy đơn hàng\"}");
                 return;
@@ -73,7 +76,37 @@ public class ReVerifyOrderSignatureServlet extends HttpServlet {
             // Tính lại hash từ dữ liệu HIỆN TẠI trong DB (không tin documentHash do client gửi lên)
             String currentSnapshot = OrderDocumentUtil.buildOrderSnapshotContent(order);
             String currentHash = OrderDocumentUtil.sha256Hex(currentSnapshot);
+            String oldHash = latestSignature.getOrderDataHash();
 
+            if (currentHash.equals(oldHash)) {
+
+                response.getWriter().write(
+                        "{\"success\":false,"
+                                + "\"needChooseVersion\":false,"
+                                + "\"message\":\"Đơn hàng chưa thay đổi, không cần xác thực lại\"}"
+                );
+
+                return;
+            }
+            String action = request.getParameter("action");
+            if (!"USE_NEW_ORDER".equals(action)) {
+
+                response.getWriter().write(
+                        "{"
+                                + "\"success\":false,"
+                                + "\"needChooseVersion\":true,"
+                                + "\"message\":\"Đơn hàng đã thay đổi\","
+                                + "\"orderId\":" + orderId
+                                + "}"
+                );
+
+                return;
+            }
+            String signature = request.getParameter("signature");
+            if (signature == null || signature.trim().isEmpty()) {
+                response.getWriter().write("{\"success\":false,\"message\":\"Thiếu file chữ ký\"}");
+                return;
+            }
             boolean signatureValid = RSASignatureVerifier.verify(rsaKey.getPublicKey(), currentHash, signature);
 
             if (!signatureValid) {

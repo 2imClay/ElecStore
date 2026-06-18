@@ -331,7 +331,7 @@
                         cursor: pointer;
                         transition: background 0.3s;
 ">
-                <i class="fa-solid fa-download"></i><a href="" style="color: white; padding: 12px">Tải tool ký đơn hàng</a>
+                <i class="fa-solid fa-download"></i><a href="https://drive.google.com/file/d/15ITqRpyK0F1SVMXInD50zX_LlMXHtnSl/view?usp=sharing" style="color: white; padding: 12px">Tải tool ký đơn hàng</a>
             </button>
             <button class="verify-key-btn" onclick="openVerifyKeyModal()" style="
                         width: 100%;

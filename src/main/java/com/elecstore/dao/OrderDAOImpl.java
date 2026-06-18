@@ -208,4 +208,87 @@ public class OrderDAOImpl implements OrderDAO {
         }
         return details;
     }
+    @Override
+    public void updateFromSnapshot(Order order) {
+
+        String sql =
+                "UPDATE orders SET "
+                        + "customer_name=?, "
+                        + "total_amount=?, "
+                        + "status=?, "
+                        + "address=?, "
+                        + "phone=?, "
+                        + "payment_method=?, "
+                        + "note=? "
+                        + "WHERE id=?";
+
+        try (Connection conn =
+                     DatabaseConnection.getConnection();
+
+             PreparedStatement ps =
+                     conn.prepareStatement(sql)) {
+
+            ps.setString(1, order.getCustomerName());
+            ps.setDouble(2, order.getTotalAmount());
+            ps.setString(3, order.getStatus());
+            ps.setString(4, order.getAddress());
+            ps.setString(5, order.getPhone());
+            ps.setString(6, order.getPaymentMethod());
+            ps.setString(7, order.getNote());
+            ps.setInt(8, order.getId());
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void deleteOrderDetails(int orderId) {
+
+        String sql =
+                "DELETE FROM order_details "
+                        + "WHERE order_id=?";
+
+        try (Connection conn =
+                     DatabaseConnection.getConnection();
+
+             PreparedStatement ps =
+                     conn.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void insertOrderDetail(
+            OrderDetail detail) {
+
+        String sql =
+                "INSERT INTO order_details "
+                        + "(order_id,product_id,"
+                        + "quantity,price)"
+                        + " VALUES (?,?,?,?)";
+
+        try (Connection conn =
+                     DatabaseConnection.getConnection();
+
+             PreparedStatement ps =
+                     conn.prepareStatement(sql)) {
+
+            ps.setInt(1, detail.getOrderId());
+            ps.setInt(2, detail.getProductId());
+            ps.setInt(3, detail.getQuantity());
+            ps.setDouble(4, detail.getPrice());
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
