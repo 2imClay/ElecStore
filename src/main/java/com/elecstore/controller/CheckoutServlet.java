@@ -133,36 +133,30 @@ public class CheckoutServlet extends HttpServlet {
                         orderDAO.addOrderDetail(detail);
                     }
 
-                    // Lưu chữ ký số của đơn hàng (nếu người dùng đã xác thực trước khi đặt hàng)
                     if (signatureBase64 != null && !signatureBase64.isEmpty()
                             && documentHash != null && !documentHash.isEmpty()) {
 
                         RSAKey rsaKey = rsaService.getLatestKey(userId);
 
                         if (rsaKey != null) {
-                            // Lấy lại đơn hàng vừa tạo (đúng dữ liệu THỰC SỰ đã lưu trong DB)
-                            // để tính "snapshot hash" làm mốc đối chiếu chống sửa dữ liệu sau này.
                             Order savedOrder = orderDAO.getOrderById(orderId);
-                            String orderSnapshot = com.elecstore.utils.OrderDocumentUtil.buildOrderSnapshotContent(
-                                    orderId,
-                                    savedOrder.getCustomerName(),
-                                    savedOrder.getAddress(),
-                                    savedOrder.getPhone(),
-                                    savedOrder.getPaymentMethod(),
-                                    savedOrder.getNote(),
-                                    savedOrder.getTotalAmount(),
-                                    savedOrder.getItems()
-                            );
+                            String orderSnapshot = com.elecstore.utils.OrderDocumentUtil.buildOrderSnapshotContent(savedOrder);
                             String orderDataHash = com.elecstore.utils.OrderDocumentUtil.sha256Hex(orderSnapshot);
 
-                            OrderSignature orderSignature = new OrderSignature();
-                            orderSignature.setOrderId(orderId);
-                            orderSignature.setKeyId(rsaKey.getId());
-                            orderSignature.setSignature(signatureBase64);
-                            orderSignature.setDocumentHash(documentHash);
-                            orderSignature.setOrderDataHash(orderDataHash);
+                            boolean signatureValid = com.elecstore.utils.RSASignatureVerifier.verify(
+                                    rsaKey.getPublicKey(), documentHash, signatureBase64);
 
-                            orderSignatureDAO.save(orderSignature);
+                            if (signatureValid) {
+                                OrderSignature orderSignature = new OrderSignature();
+                                orderSignature.setOrderId(orderId);
+                                orderSignature.setKeyId(rsaKey.getId());
+                                orderSignature.setSignature(signatureBase64);
+                                orderSignature.setDocumentHash(documentHash);
+                                orderSignature.setOrderDataHash(orderDataHash);
+                                orderSignature.setOrderSnapshotContent(orderSnapshot);
+
+                                orderSignatureDAO.save(orderSignature);
+                            }
                         }
                     }
 

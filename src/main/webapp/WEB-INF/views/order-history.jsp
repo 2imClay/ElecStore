@@ -262,7 +262,7 @@
                         <strong>Phương thức:</strong> ${order.paymentMethod}
                         <c:if test="${order.verificationStatus == 'TAMPERED'}">
                             <br>
-                            <button class="btn-reverify" onclick="requestReVerify(${order.id})">
+                            <button class="btn-reverify" onclick="openReVerifyModal(${order.id})">
                                 <i class="fas fa-redo"></i> Yêu cầu xác thực lại đơn hàng
                             </button>
                         </c:if>
@@ -302,6 +302,122 @@
                 </div>
             </div>
         </c:forEach>
+    </div>
+</div>
+
+<!-- Modal Xác Thực Lại Đơn Hàng -->
+<div id="reVerifyModal" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+">
+    <div style="
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        width: 700px;
+        max-width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    ">
+        <h3 style="text-align: center; margin-bottom: 20px;">Xác Thực Lại Đơn Hàng</h3>
+
+        <div id="reVerifyInfo" style="
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            background: #e9ecef;
+            font-size: 13px;
+            color: #495057;
+        ">
+            <i class="fa fa-database"></i>
+            Dữ liệu đơn hàng hiện tại và Public Key sẽ được hệ thống tự động lấy từ cơ sở dữ liệu.
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 8px;">
+                <i class="fas fa-exchange-alt"></i> So sánh dữ liệu (dòng đỏ là phần đã bị thay đổi):
+            </label>
+            <div id="reVerifyCompareBox" style="
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                max-height: 280px;
+                overflow-y: auto;
+                font-family: monospace;
+                font-size: 12px;
+            ">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                            <th style="text-align: left; padding: 6px 10px; border-bottom: 1px solid #ddd; width: 50%;">Lúc ký lần trước</th>
+                            <th style="text-align: left; padding: 6px 10px; border-bottom: 1px solid #ddd; width: 50%;">Hiện tại trong hệ thống</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reVerifyCompareBody">
+                        <tr><td colspan="2" style="padding: 10px; color: #999;">Đang tải dữ liệu...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Chữ ký số mới (signature.sig):</label>
+            <input type="file" id="reVerifySignatureFile" class="form-control" accept=".sig">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Mã băm (SHA-256) của dữ liệu hiện tại:</label>
+            <textarea id="reVerifyHashDisplay" readonly style="
+                width: 100%;
+                height: 60px;
+                background: #f8f9fa;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 10px;
+                font-family: monospace;
+                font-size: 12px;
+                resize: none;
+            " placeholder="Giá trị hash sẽ hiển thị ở đây..."></textarea>
+        </div>
+
+        <div id="reVerifyResult" style="
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        "></div>
+
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button onclick="verifyAndSaveSignature()" style="
+                background-color: #28a745;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            ">
+                <i class="fa fa-check-circle"></i> Xác thực &amp; Lưu lại
+            </button>
+
+            <button onclick="closeReVerifyModal()" style="
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            ">
+                Đóng
+            </button>
+        </div>
     </div>
 </div>
 
@@ -364,10 +480,264 @@
         }
     }
 
-    function requestReVerify(orderId) {
-        alert('⚠️ Dữ liệu đơn hàng #' + orderId + ' không còn khớp với chữ ký số đã lưu (có thể đã bị thay đổi trong cơ sở dữ liệu).\n\n' +
-              'Vui lòng liên hệ bộ phận hỗ trợ hoặc thực hiện lại bước xác thực để đảm bảo tính toàn vẹn của đơn hàng này.');
+    // --- Re-verify Logic (cho đơn hàng đã bị TAMPERED) ---
+
+    let reVerifyOrderId = null;
+    let reVerifyDocumentContent = null;  // Snapshot hiện tại của đơn hàng, lấy từ DB
+    let reVerifyOriginalContent = null;  // Snapshot đã ký lần gần nhất (để so sánh), có thể null
+    let reVerifyPublicKey = null;        // Public key (Base64) của user, lấy từ bảng rsa_keys
+    let reVerifyHash = null;             // Hash SHA-256 (hex) của snapshot hiện tại
+
+    function openReVerifyModal(orderId) {
+        reVerifyOrderId = orderId;
+        document.getElementById('reVerifyModal').style.display = 'flex';
+        document.getElementById('reVerifySignatureFile').value = '';
+        document.getElementById('reVerifyHashDisplay').value = '';
+        document.getElementById('reVerifyResult').style.display = 'none';
+        document.getElementById('reVerifyCompareBody').innerHTML =
+            '<tr><td colspan="2" style="padding: 10px; color: #999;">Đang tải dữ liệu...</td></tr>';
+        reVerifyDocumentContent = null;
+        reVerifyOriginalContent = null;
+        reVerifyPublicKey = null;
+        reVerifyHash = null;
+
+        loadReVerifyData(orderId);
     }
+
+    function closeReVerifyModal() {
+        document.getElementById('reVerifyModal').style.display = 'none';
+    }
+
+    // Lấy snapshot HIỆN TẠI của đơn hàng (đọc trực tiếp từ DB) + snapshot đã ký lần trước (nếu có) + public key
+    function loadReVerifyData(orderId) {
+        const infoBox = document.getElementById('reVerifyInfo');
+        infoBox.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Đang lấy dữ liệu đơn hàng hiện tại và Public Key...';
+
+        $.ajax({
+            url: '${pageContext.request.contextPath}/get-order-verification-data',
+            type: 'GET',
+            data: { orderId: orderId },
+            dataType: 'json',
+            success: async function(response) {
+                if (!response.success) {
+                    infoBox.innerHTML = '<i class="fa fa-exclamation-triangle"></i> ' + (response.message || 'Không thể lấy dữ liệu xác thực');
+                    return;
+                }
+
+                reVerifyDocumentContent = response.documentContent;
+                reVerifyOriginalContent = response.originalDocumentContent; // có thể là null
+                reVerifyPublicKey = response.publicKey;
+
+                infoBox.innerHTML = '<i class="fa fa-check-circle" style="color:#28a745"></i> Đã lấy dữ liệu đơn hàng hiện tại (RSA ' + response.keySize + ' bit).';
+
+                renderCompareTable(reVerifyOriginalContent, reVerifyDocumentContent);
+                await reHashDocument();
+            },
+            error: function() {
+                infoBox.innerHTML = '<i class="fa fa-exclamation-triangle"></i> Lỗi khi lấy dữ liệu xác thực từ server';
+            }
+        });
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Render bảng so sánh dòng-theo-dòng giữa snapshot đã ký lần trước và snapshot hiện tại.
+    // Mỗi dòng trong snapshot có dạng "Nhãn: giá trị" (Dia chi, So dien thoai, Don gia, ...),
+    // nên việc so từng dòng giúp người dùng thấy ngay đúng trường nào bị thay đổi.
+    function renderCompareTable(original, current) {
+        const tbody = document.getElementById('reVerifyCompareBody');
+        tbody.innerHTML = '';
+
+        if (!original) {
+            tbody.innerHTML =
+                '<tr><td colspan="2" style="padding: 10px; color: #999;">' +
+                'Không có dữ liệu gốc để so sánh (đơn này được ký trước khi tính năng so sánh được bổ sung). ' +
+                'Bên dưới là dữ liệu hiện tại của đơn hàng.</td></tr>';
+
+            const lines = (current || '').split('\n');
+            lines.forEach(function(line) {
+                tbody.innerHTML +=
+                    '<tr><td style="padding: 4px 10px; border-bottom: 1px solid #f1f1f1;"></td>' +
+                    '<td style="padding: 4px 10px; border-bottom: 1px solid #f1f1f1;">' + escapeHtml(line) + '</td></tr>';
+            });
+            return;
+        }
+
+        const originalLines = original.split('\n');
+        const currentLines = current.split('\n');
+        const maxLines = Math.max(originalLines.length, currentLines.length);
+
+        for (let i = 0; i < maxLines; i++) {
+            const oldLine = originalLines[i] !== undefined ? originalLines[i] : '';
+            const newLine = currentLines[i] !== undefined ? currentLines[i] : '';
+            const changed = oldLine !== newLine;
+
+            const rowStyle = changed ? 'background:#fee2e2;' : '';
+            const oldCellStyle = changed ? 'color:#991b1b; text-decoration: line-through;' : 'color:#495057;';
+            const newCellStyle = changed ? 'color:#991b1b; font-weight:bold;' : 'color:#495057;';
+
+            tbody.innerHTML +=
+                '<tr style="' + rowStyle + '">' +
+                '<td style="padding: 4px 10px; border-bottom: 1px solid #f1f1f1; ' + oldCellStyle + '">' + escapeHtml(oldLine) + '</td>' +
+                '<td style="padding: 4px 10px; border-bottom: 1px solid #f1f1f1; ' + newCellStyle + '">' + escapeHtml(newLine) + '</td>' +
+                '</tr>';
+        }
+    }
+
+    async function reHashDocument() {
+        if (!reVerifyDocumentContent) return;
+        const msgBuffer = new TextEncoder().encode(reVerifyDocumentContent);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        reVerifyHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        document.getElementById('reVerifyHashDisplay').value = reVerifyHash;
+    }
+
+    function reVerifyPemToArrayBuffer(pem) {
+        const lines = pem.split('\n');
+        let b64 = "";
+        for (let line of lines) {
+            if (!line.includes("-----") && line.trim() !== "") {
+                b64 += line.trim();
+            }
+        }
+        const binaryStr = window.atob(b64);
+        const bytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    function reVerifyReadFileAsArrayBuffer(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (e) => reject(e);
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    // Xác thực chữ ký mới (ký trên dữ liệu HIỆN TẠI) ngay trên trình duyệt,
+    // nếu hợp lệ thì gửi lên server để server xác minh lại lần 2 và lưu vào DB.
+    async function verifyAndSaveSignature() {
+        const sigFile = document.getElementById('reVerifySignatureFile').files[0];
+        const resultDiv = document.getElementById('reVerifyResult');
+
+        if (!reVerifyDocumentContent || !reVerifyPublicKey || !reVerifyHash) {
+            alert('Chưa lấy được dữ liệu đơn hàng / Public Key từ hệ thống. Vui lòng thử lại.');
+            return;
+        }
+        if (!sigFile) {
+            alert('Vui lòng tải lên file chữ ký (.sig) mới ký trên dữ liệu hiện tại.');
+            return;
+        }
+
+        try {
+            const sigBuffer = await reVerifyReadFileAsArrayBuffer(sigFile);
+
+            resultDiv.style.display = 'none';
+
+            let sigRaw;
+            const decoder = new TextDecoder();
+            const sigString = decoder.decode(sigBuffer).trim().replace(/\s/g, '');
+
+            // 1. Kiểm tra nếu là Hex
+            if (/^[0-9a-fA-F]+$/.test(sigString) && sigString.length % 2 === 0) {
+                const bytes = new Uint8Array(sigString.length / 2);
+                for (let i = 0; i < sigString.length; i += 2) {
+                    bytes[i / 2] = parseInt(sigString.substring(i, i + 2), 16);
+                }
+                sigRaw = bytes.buffer;
+            }
+            // 2. Kiểm tra nếu là Base64
+            else if (/^[A-Za-z0-9+/=]+$/.test(sigString)) {
+                try {
+                    const binaryStr = window.atob(sigString);
+                    const bytes = new Uint8Array(binaryStr.length);
+                    for (let i = 0; i < binaryStr.length; i++) {
+                        bytes[i] = binaryStr.charCodeAt(i);
+                    }
+                    sigRaw = bytes.buffer;
+                } catch (e) { sigRaw = sigBuffer; }
+            } else {
+                sigRaw = sigBuffer;
+            }
+
+            const binaryDer = reVerifyPemToArrayBuffer(reVerifyPublicKey);
+            const publicKey = await window.crypto.subtle.importKey(
+                "spki",
+                binaryDer,
+                {
+                    name: "RSASSA-PKCS1-v1_5",
+                    hash: "SHA-256",
+                },
+                false,
+                ["verify"]
+            );
+
+            const dataToVerify = new TextEncoder().encode(reVerifyHash);
+
+            const isValid = await window.crypto.subtle.verify(
+                "RSASSA-PKCS1-v1_5",
+                publicKey,
+                sigRaw,
+                dataToVerify
+            );
+
+            resultDiv.style.display = 'block';
+
+            if (!isValid) {
+                resultDiv.style.backgroundColor = '#f8d7da';
+                resultDiv.style.color = '#721c24';
+                resultDiv.innerHTML = '<i class="fa fa-times"></i> Chữ ký không hợp lệ với dữ liệu đơn hàng hiện tại!';
+                return;
+            }
+
+            // Chữ ký hợp lệ ở client -> gửi lên server xác minh lại lần 2 và lưu vào DB
+            $.post('${pageContext.request.contextPath}/order/re-verify', {
+                orderId: reVerifyOrderId,
+                signature: sigString,
+                documentHash: reVerifyHash
+            }, function(res) {
+                resultDiv.style.display = 'block';
+                if (res.success) {
+                    resultDiv.style.backgroundColor = '#d4edda';
+                    resultDiv.style.color = '#155724';
+                    resultDiv.innerHTML = '<i class="fa fa-check"></i> Xác thực lại thành công! Đơn hàng đã được đánh dấu hợp lệ.';
+                    setTimeout(function() {
+                        closeReVerifyModal();
+                        location.reload();
+                    }, 1200);
+                } else {
+                    resultDiv.style.backgroundColor = '#f8d7da';
+                    resultDiv.style.color = '#721c24';
+                    resultDiv.innerHTML = '<i class="fa fa-times"></i> ' + (res.message || 'Lưu chữ ký thất bại');
+                }
+            }, 'json').fail(function() {
+                resultDiv.style.display = 'block';
+                resultDiv.style.backgroundColor = '#f8d7da';
+                resultDiv.style.color = '#721c24';
+                resultDiv.innerHTML = 'Lỗi kết nối khi lưu chữ ký lên server';
+            });
+
+        } catch (err) {
+            console.error(err);
+            resultDiv.style.display = 'block';
+            resultDiv.style.backgroundColor = '#fff3cd';
+            resultDiv.innerHTML = 'Lỗi xử lý file (Kiểm tra định dạng file chữ ký .sig)';
+        }
+    }
+
+    // Đóng modal khi click ra ngoài
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('reVerifyModal');
+        if (event.target === modal) closeReVerifyModal();
+    });
 
     $(document).ready(function() {
         // AJAX gợi ý tìm kiếm
