@@ -36,4 +36,9 @@ public class RSAService {
 
         return rsaDAO.hasKey(userId);
     }
+
+    public RSAKey getLatestKey(int userId) {
+
+        return rsaDAO.getLatestKeyByUserId(userId);
+    }
 }

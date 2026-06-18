@@ -33,6 +33,7 @@ public class RSAKeyDAOImpl implements RSAKeyDAO {
 
         return false;
     }
+    @Override
     public boolean hasKey(int userId) {
 
         String sql =
@@ -60,5 +61,42 @@ public class RSAKeyDAOImpl implements RSAKeyDAO {
         }
 
         return false;
+    }
+
+    @Override
+    public RSAKey getLatestKeyByUserId(int userId) {
+
+        String sql =
+                "SELECT id, user_id, key_size, public_key, created_at " +
+                        "FROM rsa_keys WHERE user_id = ? " +
+                        "ORDER BY id DESC LIMIT 1";
+
+        try (
+                Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                RSAKey key = new RSAKey();
+                key.setId(rs.getInt("id"));
+                key.setUserId(rs.getInt("user_id"));
+                key.setKeySize(rs.getInt("key_size"));
+                key.setPublicKey(rs.getString("public_key"));
+                key.setCreatedAt(rs.getTimestamp("created_at"));
+
+                return key;
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
