@@ -12,6 +12,8 @@ public class OrderSignature {
     private String orderDataHash; // Hash "snapshot" của dữ liệu đơn hàng (orders + order_details) tại thời điểm ký
     private String orderSnapshotContent; // Nội dung snapshot gốc (không phải hash) tại thời điểm ký, dùng để so sánh/diff
     private Timestamp verifiedAt;
+    private String orderSnapshotJson;
+
 
     public OrderSignature() {
     }
@@ -78,5 +80,13 @@ public class OrderSignature {
 
     public void setVerifiedAt(Timestamp verifiedAt) {
         this.verifiedAt = verifiedAt;
+    }
+
+    public String getOrderSnapshotJson() {
+        return orderSnapshotJson;
+    }
+
+    public void setOrderSnapshotJson(String orderSnapshotJson) {
+        this.orderSnapshotJson = orderSnapshotJson;
     }
 }

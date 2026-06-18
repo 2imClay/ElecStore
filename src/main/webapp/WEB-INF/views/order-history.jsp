@@ -368,7 +368,125 @@
 
         <div style="margin-bottom: 15px;">
             <label style="display: block; font-weight: bold; margin-bottom: 5px;">Chữ ký số mới (signature.sig):</label>
-            <input type="file" id="reVerifySignatureFile" class="form-control" accept=".sig">
+            <div id="chooseVersionSection">
+
+                <div style="
+        padding:15px;
+        background:#fff3cd;
+        border:1px solid #ffeeba;
+        border-radius:6px;
+        margin-bottom:20px;
+    ">
+                    Đơn hàng đã bị thay đổi.
+                    Bạn muốn sử dụng dữ liệu nào?
+                </div>
+
+                <div style="
+        display:flex;
+        gap:10px;
+        justify-content:center;
+        margin-bottom:20px;
+    ">
+
+                    <button
+                            onclick="useOldOrder()"
+                            class="btn btn-danger">
+
+                        Sử dụng đơn hàng cũ
+
+                    </button>
+
+                    <button
+                            onclick="useNewOrder()"
+                            class="btn btn-success">
+
+                        Sử dụng đơn hàng mới
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- ẨN TOÀN BỘ PHẦN XÁC THỰC MỚI -->
+            <div id="newOrderSection" style="display:none;">
+
+                <div style="margin-bottom:15px">
+
+                    <a id="downloadNewOrderBtn"
+                       class="btn btn-primary">
+
+                        <i class="fa fa-download"></i>
+                        Tải đơn hàng mới
+
+                    </a>
+
+                </div>
+
+                <input type="file"
+                       id="reVerifySignatureFile"
+                       class="form-control"
+                       accept=".sig">
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block;
+                      font-weight:bold;
+                      margin-bottom:5px;">
+                        Mã băm (SHA-256) của dữ liệu hiện tại:
+                    </label>
+
+                    <textarea id="reVerifyHashDisplay"
+                              readonly
+                              style="
+                    width:100%;
+                    height:60px;
+                    background:#f8f9fa;
+                    border:1px solid #ddd;
+                    border-radius:4px;
+                    padding:10px;
+                    font-family:monospace;
+                    font-size:12px;
+                    resize:none;
+                  ">
+        </textarea>
+                </div>
+
+                <div id="reVerifyResult"
+                     style="
+            margin-bottom:20px;
+            padding:10px;
+            border-radius:4px;
+            display:none;
+            text-align:center;
+            font-weight:bold;
+         ">
+                </div>
+
+                <div style="
+        display:flex;
+        gap:10px;
+        justify-content:center;
+        flex-wrap:wrap;
+    ">
+
+                    <button onclick="verifyAndSaveSignature()"
+                            style="
+                    background-color:#28a745;
+                    color:white;
+                    border:none;
+                    padding:10px 15px;
+                    border-radius:5px;
+                    cursor:pointer;
+                ">
+
+                        <i class="fa fa-check-circle"></i>
+                        Xác thực & Lưu lại
+
+                    </button>
+
+                </div>
+
+            </div>
         </div>
 
         <div style="margin-bottom: 15px;">
@@ -496,10 +614,14 @@
         document.getElementById('reVerifyResult').style.display = 'none';
         document.getElementById('reVerifyCompareBody').innerHTML =
             '<tr><td colspan="2" style="padding: 10px; color: #999;">Đang tải dữ liệu...</td></tr>';
+        document.getElementById("chooseVersionSection").style.display = "block";
+        document.getElementById("newOrderSection").style.display = "none";
+        document.getElementById("downloadNewOrderBtn").href = '${pageContext.request.contextPath}/download-order?id=' + orderId;
         reVerifyDocumentContent = null;
         reVerifyOriginalContent = null;
         reVerifyPublicKey = null;
         reVerifyHash = null;
+
 
         loadReVerifyData(orderId);
     }
@@ -699,8 +821,10 @@
             }
 
             // Chữ ký hợp lệ ở client -> gửi lên server xác minh lại lần 2 và lưu vào DB
-            $.post('${pageContext.request.contextPath}/order/re-verify', {
+            $.post('${pageContext.request.contextPath}/order/re-verify',
+            {
                 orderId: reVerifyOrderId,
+                    action: "USE_NEW_ORDER",
                 signature: sigString,
                 documentHash: reVerifyHash
             }, function(res) {
@@ -802,6 +926,66 @@
             $('#suggestDropdown').hide();
         });
     });
+    function useNewOrder() {
+
+        document
+            .getElementById("chooseVersionSection")
+            .style.display = "none";
+
+        document
+            .getElementById("newOrderSection")
+            .style.display = "block";
+    }
+    function useOldOrder() {
+
+        if (!confirm(
+            "Khôi phục đơn hàng về trạng thái lúc ký?"
+        )) {
+            return;
+        }
+
+        $.ajax({
+
+            url:
+                '${pageContext.request.contextPath}/order/revert',
+
+            type: 'POST',
+
+            data: {
+                orderId: reVerifyOrderId
+            },
+
+            dataType: 'json',
+
+            success: function(res) {
+
+                if (res.success) {
+
+                    alert(
+                        'Đã khôi phục đơn hàng cũ thành công'
+                    );
+
+                    closeReVerifyModal();
+
+                    location.reload();
+
+                } else {
+
+                    alert(
+                        res.message ||
+                        'Khôi phục thất bại'
+                    );
+                }
+            },
+
+            error: function() {
+
+                alert(
+                    'Không thể kết nối server'
+                );
+            }
+        });
+    }
 
 </script>
 </body>

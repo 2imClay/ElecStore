@@ -14,8 +14,16 @@ public class OrderSignatureDAOImpl implements OrderSignatureDAO {
     public boolean save(OrderSignature signature) {
 
         String sql =
-                "INSERT INTO order_signatures(order_id, key_id, signature, document_hash, order_data_hash, order_snapshot_content) " +
-                        "VALUES(?,?,?,?,?,?)";
+                "INSERT INTO order_signatures(\n" +
+                        "    order_id,\n" +
+                        "    key_id,\n" +
+                        "    signature,\n" +
+                        "    document_hash,\n" +
+                        "    order_data_hash,\n" +
+                        "    order_snapshot_content,\n" +
+                        "    order_snapshot_json\n" +
+                        ")\n" +
+                        "VALUES(?,?,?,?,?,?,?)";
 
         try (
                 Connection conn = DatabaseConnection.getConnection();
@@ -28,6 +36,7 @@ public class OrderSignatureDAOImpl implements OrderSignatureDAO {
             ps.setString(4, signature.getDocumentHash());
             ps.setString(5, signature.getOrderDataHash());
             ps.setString(6, signature.getOrderSnapshotContent());
+            ps.setString(7, signature.getOrderSnapshotJson());
 
             int rows = ps.executeUpdate();
 
@@ -50,7 +59,7 @@ public class OrderSignatureDAOImpl implements OrderSignatureDAO {
     public OrderSignature getLatestByOrderId(int orderId) {
 
         String sql =
-                "SELECT id, order_id, key_id, signature, document_hash, order_data_hash, order_snapshot_content, verified_at " +
+                "SELECT id, order_id, key_id, signature, document_hash, order_data_hash, order_snapshot_content, verified_at, order_snapshot_json " +
                         "FROM order_signatures WHERE order_id = ? " +
                         "ORDER BY id DESC LIMIT 1";
 
@@ -74,6 +83,9 @@ public class OrderSignatureDAOImpl implements OrderSignatureDAO {
                 signature.setOrderDataHash(rs.getString("order_data_hash"));
                 signature.setOrderSnapshotContent(rs.getString("order_snapshot_content"));
                 signature.setVerifiedAt(rs.getTimestamp("verified_at"));
+                signature.setOrderSnapshotJson(
+                        rs.getString("order_snapshot_json")
+                );
 
                 return signature;
             }
