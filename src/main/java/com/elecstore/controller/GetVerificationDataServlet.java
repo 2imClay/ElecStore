@@ -9,12 +9,15 @@ import com.elecstore.model.CartItem;
 import com.elecstore.model.RSAKey;
 import com.elecstore.model.User;
 import com.elecstore.service.RSAService;
+import com.elecstore.utils.OrderDocumentUtil;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
 @WebServlet("/get-verification-data")
 public class GetVerificationDataServlet extends HttpServlet {
 
@@ -91,71 +94,27 @@ public class GetVerificationDataServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Build nội dung văn bản đơn hàng giống định dạng file document.txt,
-     * hoàn toàn dựa trên dữ liệu lấy từ database (thông tin user + giỏ hàng),
-     * không sử dụng dữ liệu người dùng gõ tay trên form (note, payment method...).
-     */
     private String buildDocumentContent(User user, List<CartItem> cartItems) {
-
-        double subtotal = 0;
-        for (CartItem item : cartItems) {
-            subtotal += item.getPrice() * item.getQuantity();
-        }
-        double shippingFee = 30000;
-        double total = subtotal + shippingFee;
 
         String fullName = (user.getFirstName() != null ? user.getFirstName() : "")
                 + " " + (user.getLastName() != null ? user.getLastName() : "");
 
-        StringBuilder content = new StringBuilder();
+        List<OrderDocumentUtil.LineItem> lineItems = new ArrayList<>();
 
-        content.append("========== DON HANG ==========\n\n");
-
-        content.append("===== THONG TIN GIAO HANG =====\n");
-        content.append("Ho ten: ").append(fullName.trim()).append("\n");
-        content.append("So dien thoai: ").append(nullToEmpty(user.getPhone())).append("\n");
-        content.append("Email: ").append(nullToEmpty(user.getEmail())).append("\n");
-        content.append("Dia chi: ").append(nullToEmpty(user.getAddress())).append("\n");
-        content.append("Thanh pho: ").append(nullToEmpty(user.getCity())).append("\n");
-        content.append("Quoc gia: ").append(nullToEmpty(user.getCountry())).append("\n");
-        content.append("Thanh toan: cod\n");
-        content.append("Ghi chu: \n\n");
-
-        content.append("===== SAN PHAM =====\n");
-
-        int index = 1;
         for (CartItem item : cartItems) {
-
-            double itemTotal = item.getPrice() * item.getQuantity();
-
-            content.append("San pham ").append(index).append("\n");
-            content.append("Ten: ").append(item.getProduct() != null ? item.getProduct().getName() : "").append("\n");
-            content.append("So luong: ").append(item.getQuantity()).append("\n");
-            content.append("Don gia: ").append(formatNumber(item.getPrice())).append(" VND\n");
-            content.append("Thanh tien: ").append(formatNumber(itemTotal)).append(" VND\n");
-            content.append("--------------------------\n");
-
-            index++;
+            String productName = item.getProduct() != null ? item.getProduct().getName() : "";
+            lineItems.add(new OrderDocumentUtil.LineItem(productName, item.getQuantity(), item.getPrice()));
         }
 
-        content.append("\n===== TONG TIEN =====\n");
-        content.append("Tam tinh: ").append(formatNumber(subtotal)).append(" VND\n");
-        content.append("Phi van chuyen: ").append(formatNumber(shippingFee)).append(" VND\n");
-        content.append("Tong thanh toan: ").append(formatNumber(total)).append(" VND\n");
-
-        return content.toString();
-    }
-
-    private String nullToEmpty(String s) {
-        return s == null ? "" : s;
-    }
-
-    private String formatNumber(double value) {
-        if (value == Math.floor(value)) {
-            return String.valueOf((long) value);
-        }
-        return String.valueOf(value);
+        return OrderDocumentUtil.buildDocumentContent(
+                fullName,
+                user.getPhone(),
+                user.getEmail(),
+                user.getAddress(),
+                user.getCity(),
+                user.getCountry(),
+                lineItems
+        );
     }
 
     private String escapeJson(String s) {
