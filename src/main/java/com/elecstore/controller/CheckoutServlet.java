@@ -140,11 +140,27 @@ public class CheckoutServlet extends HttpServlet {
                         RSAKey rsaKey = rsaService.getLatestKey(userId);
 
                         if (rsaKey != null) {
+                            // Lấy lại đơn hàng vừa tạo (đúng dữ liệu THỰC SỰ đã lưu trong DB)
+                            // để tính "snapshot hash" làm mốc đối chiếu chống sửa dữ liệu sau này.
+                            Order savedOrder = orderDAO.getOrderById(orderId);
+                            String orderSnapshot = com.elecstore.utils.OrderDocumentUtil.buildOrderSnapshotContent(
+                                    orderId,
+                                    savedOrder.getCustomerName(),
+                                    savedOrder.getAddress(),
+                                    savedOrder.getPhone(),
+                                    savedOrder.getPaymentMethod(),
+                                    savedOrder.getNote(),
+                                    savedOrder.getTotalAmount(),
+                                    savedOrder.getItems()
+                            );
+                            String orderDataHash = com.elecstore.utils.OrderDocumentUtil.sha256Hex(orderSnapshot);
+
                             OrderSignature orderSignature = new OrderSignature();
                             orderSignature.setOrderId(orderId);
                             orderSignature.setKeyId(rsaKey.getId());
                             orderSignature.setSignature(signatureBase64);
                             orderSignature.setDocumentHash(documentHash);
+                            orderSignature.setOrderDataHash(orderDataHash);
 
                             orderSignatureDAO.save(orderSignature);
                         }

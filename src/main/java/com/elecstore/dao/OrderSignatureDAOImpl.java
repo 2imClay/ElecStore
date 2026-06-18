@@ -14,8 +14,8 @@ public class OrderSignatureDAOImpl implements OrderSignatureDAO {
     public boolean save(OrderSignature signature) {
 
         String sql =
-                "INSERT INTO order_signatures(order_id, key_id, signature, document_hash) " +
-                        "VALUES(?,?,?,?)";
+                "INSERT INTO order_signatures(order_id, key_id, signature, document_hash, order_data_hash) " +
+                        "VALUES(?,?,?,?,?)";
 
         try (
                 Connection conn = DatabaseConnection.getConnection();
@@ -26,6 +26,7 @@ public class OrderSignatureDAOImpl implements OrderSignatureDAO {
             ps.setInt(2, signature.getKeyId());
             ps.setString(3, signature.getSignature());
             ps.setString(4, signature.getDocumentHash());
+            ps.setString(5, signature.getOrderDataHash());
 
             int rows = ps.executeUpdate();
 
@@ -48,7 +49,7 @@ public class OrderSignatureDAOImpl implements OrderSignatureDAO {
     public OrderSignature getLatestByOrderId(int orderId) {
 
         String sql =
-                "SELECT id, order_id, key_id, signature, document_hash, verified_at " +
+                "SELECT id, order_id, key_id, signature, document_hash, order_data_hash, verified_at " +
                         "FROM order_signatures WHERE order_id = ? " +
                         "ORDER BY id DESC LIMIT 1";
 
@@ -69,6 +70,7 @@ public class OrderSignatureDAOImpl implements OrderSignatureDAO {
                 signature.setKeyId(rs.getInt("key_id"));
                 signature.setSignature(rs.getString("signature"));
                 signature.setDocumentHash(rs.getString("document_hash"));
+                signature.setOrderDataHash(rs.getString("order_data_hash"));
                 signature.setVerifiedAt(rs.getTimestamp("verified_at"));
 
                 return signature;

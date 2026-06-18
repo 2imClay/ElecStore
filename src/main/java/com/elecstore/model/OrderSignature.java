@@ -9,6 +9,7 @@ public class OrderSignature {
     private int keyId;
     private String signature;
     private String documentHash;
+    private String orderDataHash; // Hash "snapshot" của dữ liệu đơn hàng (orders + order_details) tại thời điểm ký
     private Timestamp verifiedAt;
 
     public OrderSignature() {
@@ -52,6 +53,14 @@ public class OrderSignature {
 
     public void setDocumentHash(String documentHash) {
         this.documentHash = documentHash;
+    }
+
+    public String getOrderDataHash() {
+        return orderDataHash;
+    }
+
+    public void setOrderDataHash(String orderDataHash) {
+        this.orderDataHash = orderDataHash;
     }
 
     public Timestamp getVerifiedAt() {
