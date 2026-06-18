@@ -12,8 +12,8 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public int createOrder(Order order) {
-        String sql = "INSERT INTO orders (user_id, customer_name, order_date, total_amount, status, address, phone, note) " +
-                "VALUES (?, ?, NOW(), ?, 'pending', ?, ?, ?)";
+        String sql = "INSERT INTO orders (user_id, customer_name, order_date, total_amount, status, address, phone, payment_method, note) " +
+                "VALUES (?, ?, NOW(), ?, 'pending', ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -23,7 +23,8 @@ public class OrderDAOImpl implements OrderDAO {
             ps.setDouble(3, order.getTotalAmount());
             ps.setString(4, order.getAddress());
             ps.setString(5, order.getPhone());
-            ps.setString(6, order.getNote());
+            ps.setString(6, order.getPaymentMethod() != null ? order.getPaymentMethod() : "cod");
+            ps.setString(7, order.getNote());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
@@ -173,6 +174,7 @@ public class OrderDAOImpl implements OrderDAO {
         order.setAddress(rs.getString("address"));
         order.setPhone(rs.getString("phone"));
         order.setNote(rs.getString("note"));
+        order.setPaymentMethod(rs.getString("payment_method"));
         return order;
     }
 

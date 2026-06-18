@@ -16,6 +16,11 @@ public class Order {
     private List<OrderDetail> items; // Danh sách sản phẩm trong đơn
     private String paymentMethod;
 
+    // Các field dưới đây KHÔNG map vào cột DB nào - chỉ tính toán lúc hiển thị
+    // để show trạng thái xác thực chữ ký số của đơn hàng.
+    private String verificationStatus; // "NOT_SIGNED" | "VALID" | "TAMPERED"
+    private Date signedAt;
+
     // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -44,5 +49,21 @@ public class Order {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getVerificationStatus() {
+        return verificationStatus;
+    }
+
+    public void setVerificationStatus(String verificationStatus) {
+        this.verificationStatus = verificationStatus;
+    }
+
+    public Date getSignedAt() {
+        return signedAt;
+    }
+
+    public void setSignedAt(Date signedAt) {
+        this.signedAt = signedAt;
     }
 }

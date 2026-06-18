@@ -13,6 +13,8 @@ public class CheckoutServlet extends HttpServlet {
 
     private CartDAO cartDAO = new CartDAOImpl();
     private CartItemDAO cartItemDAO = new CartItemDAOImpl();
+    private final com.elecstore.service.RSAService rsaService = new com.elecstore.service.RSAService();
+    private final OrderSignatureDAO orderSignatureDAO = new OrderSignatureDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -81,6 +83,10 @@ public class CheckoutServlet extends HttpServlet {
                 String paymentMethod = request.getParameter("paymentMethod");
                 String note = request.getParameter("note");
 
+                // Dữ liệu chữ ký số (được tạo ở bước "Xác Thực" trên trang checkout)
+                String signatureBase64 = request.getParameter("signature");
+                String documentHash = request.getParameter("documentHash");
+
                 int userId = user.getId();
 
                 Cart cart = cartDAO.findByUserId(userId);
@@ -125,6 +131,33 @@ public class CheckoutServlet extends HttpServlet {
                         detail.setQuantity(item.getQuantity());
                         detail.setPrice(item.getPrice());
                         orderDAO.addOrderDetail(detail);
+                    }
+
+                    if (signatureBase64 != null && !signatureBase64.isEmpty()
+                            && documentHash != null && !documentHash.isEmpty()) {
+
+                        RSAKey rsaKey = rsaService.getLatestKey(userId);
+
+                        if (rsaKey != null) {
+                            Order savedOrder = orderDAO.getOrderById(orderId);
+                            String orderSnapshot = com.elecstore.utils.OrderDocumentUtil.buildOrderSnapshotContent(savedOrder);
+                            String orderDataHash = com.elecstore.utils.OrderDocumentUtil.sha256Hex(orderSnapshot);
+
+                            boolean signatureValid = com.elecstore.utils.RSASignatureVerifier.verify(
+                                    rsaKey.getPublicKey(), documentHash, signatureBase64);
+
+                            if (signatureValid) {
+                                OrderSignature orderSignature = new OrderSignature();
+                                orderSignature.setOrderId(orderId);
+                                orderSignature.setKeyId(rsaKey.getId());
+                                orderSignature.setSignature(signatureBase64);
+                                orderSignature.setDocumentHash(documentHash);
+                                orderSignature.setOrderDataHash(orderDataHash);
+                                orderSignature.setOrderSnapshotContent(orderSnapshot);
+
+                                orderSignatureDAO.save(orderSignature);
+                            }
+                        }
                     }
 
                     session.removeAttribute("cart");
