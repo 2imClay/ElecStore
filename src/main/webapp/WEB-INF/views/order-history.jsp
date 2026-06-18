@@ -28,6 +28,37 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css"/>
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/order-history.css"/>
+    <style>
+        .verify-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .verify-valid { background: #d1fae5; color: #065f46; }
+        .verify-tampered { background: #fee2e2; color: #991b1b; }
+        .verify-none { background: #f3f4f6; color: #4b5563; }
+        .btn-reverify {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid #991b1b;
+            background: #fff;
+            color: #991b1b;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-reverify:hover { background: #fee2e2; }
+    </style>
 </head>
 <body>
 
@@ -183,6 +214,24 @@
                                 <c:when test="${order.status == 'cancelled'}">❌ Đã hủy</c:when>
                             </c:choose>
                         </span>
+                        <br>
+                        <c:choose>
+                            <c:when test="${order.verificationStatus == 'VALID'}">
+                                <span class="verify-badge verify-valid" title="Dữ liệu đơn hàng còn nguyên vẹn, khớp với chữ ký số đã lưu">
+                                    <i class="fas fa-shield-alt"></i> Đã xác thực
+                                </span>
+                            </c:when>
+                            <c:when test="${order.verificationStatus == 'TAMPERED'}">
+                                <span class="verify-badge verify-tampered" title="Dữ liệu đơn hàng đã bị thay đổi so với lúc ký, có thể đã bị sửa trực tiếp trong database">
+                                    <i class="fas fa-exclamation-triangle"></i> Dữ liệu đã thay đổi - Cần xác thực lại
+                                </span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="verify-badge verify-none" title="Đơn hàng này chưa từng được xác thực bằng chữ ký số">
+                                    <i class="fas fa-shield"></i> Chưa xác thực
+                                </span>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     <div>
                         <strong>Địa chỉ:</strong><br>
@@ -211,6 +260,12 @@
                 <div class="order-footer">
                     <div>
                         <strong>Phương thức:</strong> ${order.paymentMethod}
+                        <c:if test="${order.verificationStatus == 'TAMPERED'}">
+                            <br>
+                            <button class="btn-reverify" onclick="requestReVerify(${order.id})">
+                                <i class="fas fa-redo"></i> Yêu cầu xác thực lại đơn hàng
+                            </button>
+                        </c:if>
                     </div>
                     <div class="order-footer">
 
@@ -307,6 +362,11 @@
                     }
                 }, 'json');
         }
+    }
+
+    function requestReVerify(orderId) {
+        alert('⚠️ Dữ liệu đơn hàng #' + orderId + ' không còn khớp với chữ ký số đã lưu (có thể đã bị thay đổi trong cơ sở dữ liệu).\n\n' +
+              'Vui lòng liên hệ bộ phận hỗ trợ hoặc thực hiện lại bước xác thực để đảm bảo tính toàn vẹn của đơn hàng này.');
     }
 
     $(document).ready(function() {

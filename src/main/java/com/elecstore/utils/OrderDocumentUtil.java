@@ -71,6 +71,53 @@ public class OrderDocumentUtil {
         return content.toString();
     }
 
+    /**
+     * Dựng nội dung "snapshot" từ dữ liệu đơn hàng ĐÃ LƯU trong DB (bảng orders + order_details).
+     * Dùng để tính hash đối chiếu sau này: nếu ai đó sửa trực tiếp dữ liệu trong DB
+     * (địa chỉ, sđt, phương thức thanh toán, sản phẩm, số lượng, giá, tổng tiền...),
+     * hash tính lại từ dữ liệu hiện tại sẽ khác với hash đã lưu lúc ký => phát hiện bị thay đổi.
+     *
+     * Lưu ý: KHÔNG đưa "status" hay các mốc thời gian vào đây, vì admin cập nhật trạng thái
+     * đơn hàng (pending -> completed...) là thao tác hợp lệ, không phải "tamper".
+     */
+    public static String buildOrderSnapshotContent(
+            int orderId,
+            String customerName,
+            String address,
+            String phone,
+            String paymentMethod,
+            String note,
+            double totalAmount,
+            List<com.elecstore.model.OrderDetail> items) {
+
+        StringBuilder content = new StringBuilder();
+
+        content.append("========== ORDER SNAPSHOT ==========\n");
+        content.append("OrderId: ").append(orderId).append("\n");
+        content.append("Ho ten: ").append(nullToEmpty(customerName).trim()).append("\n");
+        content.append("Dia chi: ").append(nullToEmpty(address).trim()).append("\n");
+        content.append("So dien thoai: ").append(nullToEmpty(phone).trim()).append("\n");
+        content.append("Thanh toan: ").append(nullToEmpty(paymentMethod).trim()).append("\n");
+        content.append("Ghi chu: ").append(nullToEmpty(note).trim()).append("\n");
+
+        content.append("===== SAN PHAM =====\n");
+
+        // Sắp xếp theo product_id để đảm bảo thứ tự ổn định, không phụ thuộc thứ tự trả về của query
+        List<com.elecstore.model.OrderDetail> sorted = new java.util.ArrayList<>(items);
+        sorted.sort((a, b) -> Integer.compare(a.getProductId(), b.getProductId()));
+
+        for (com.elecstore.model.OrderDetail item : sorted) {
+            content.append("ProductId: ").append(item.getProductId()).append("\n");
+            content.append("So luong: ").append(item.getQuantity()).append("\n");
+            content.append("Don gia: ").append(formatNumber(item.getPrice())).append(" VND\n");
+            content.append("--------------------------\n");
+        }
+
+        content.append("Tong thanh toan: ").append(formatNumber(totalAmount)).append(" VND\n");
+
+        return content.toString();
+    }
+
     public static String sha256Hex(String content) {
         try {
             java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-256");
