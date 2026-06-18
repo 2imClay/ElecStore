@@ -24,7 +24,6 @@ public class AdminDashboardServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.err.println("===== ADMIN DASHBOARD SERVLET DOGET CALLED =====");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
@@ -63,10 +62,7 @@ public class AdminDashboardServlet extends HttpServlet {
     private void attachVerificationStatus(Order order) {
         OrderSignature signature = orderSignatureDAO.getLatestByOrderId(order.getId());
 
-        System.out.println("========== CHECK ORDER " + order.getId() + " ==========");
-
         if (signature == null) {
-            System.out.println("Signature: NULL");
             order.setVerificationStatus("NOT_SIGNED");
             return;
         }
@@ -83,11 +79,6 @@ public class AdminDashboardServlet extends HttpServlet {
         );
 
         String currentHash = OrderDocumentUtil.sha256Hex(currentSnapshot);
-
-        System.out.println("DB Hash      : " + signature.getOrderDataHash());
-        System.out.println("Current Hash : " + currentHash);
-        System.out.println("Current Snapshot:");
-        System.out.println(currentSnapshot);
 
         if (currentHash.equals(signature.getOrderDataHash())) {
             order.setVerificationStatus("VALID");
