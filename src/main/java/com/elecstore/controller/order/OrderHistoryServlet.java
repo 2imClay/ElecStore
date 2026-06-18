@@ -48,12 +48,6 @@ public class OrderHistoryServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Tính lại hash từ dữ liệu đơn hàng HIỆN TẠI trong DB và so với hash đã lưu lúc ký.
-     * - Không có bản ghi order_signatures -> đơn chưa từng được xác thực ("NOT_SIGNED")
-     * - Hash khớp -> dữ liệu còn nguyên vẹn, chữ ký còn hợp lệ ("VALID")
-     * - Hash lệch -> dữ liệu đã bị thay đổi sau khi ký (ví dụ sửa trực tiếp trong DB) -> cần xác thực lại ("TAMPERED")
-     */
     private void attachVerificationStatus(Order order) {
         OrderSignature signature = orderSignatureDAO.getLatestByOrderId(order.getId());
 

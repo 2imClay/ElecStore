@@ -71,15 +71,6 @@ public class OrderDocumentUtil {
         return content.toString();
     }
 
-    /**
-     * Dựng nội dung "snapshot" từ dữ liệu đơn hàng ĐÃ LƯU trong DB (bảng orders + order_details).
-     * Dùng để tính hash đối chiếu sau này: nếu ai đó sửa trực tiếp dữ liệu trong DB
-     * (địa chỉ, sđt, phương thức thanh toán, sản phẩm, số lượng, giá, tổng tiền...),
-     * hash tính lại từ dữ liệu hiện tại sẽ khác với hash đã lưu lúc ký => phát hiện bị thay đổi.
-     *
-     * Lưu ý: KHÔNG đưa "status" hay các mốc thời gian vào đây, vì admin cập nhật trạng thái
-     * đơn hàng (pending -> completed...) là thao tác hợp lệ, không phải "tamper".
-     */
     public static String buildOrderSnapshotContent(
             int orderId,
             String customerName,
@@ -116,6 +107,19 @@ public class OrderDocumentUtil {
         content.append("Tong thanh toan: ").append(formatNumber(totalAmount)).append(" VND\n");
 
         return content.toString();
+    }
+
+    public static String buildOrderSnapshotContent(com.elecstore.model.Order order) {
+        return buildOrderSnapshotContent(
+                order.getId(),
+                order.getCustomerName(),
+                order.getAddress(),
+                order.getPhone(),
+                order.getPaymentMethod(),
+                order.getNote(),
+                order.getTotalAmount(),
+                order.getItems()
+        );
     }
 
     public static String sha256Hex(String content) {
