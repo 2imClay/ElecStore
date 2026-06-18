@@ -5,6 +5,7 @@ import com.elecstore.utils.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class RSAKeyDAOImpl implements RSAKeyDAO {
 
@@ -27,6 +28,34 @@ public class RSAKeyDAOImpl implements RSAKeyDAO {
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    public boolean hasKey(int userId) {
+
+        String sql =
+                "SELECT COUNT(*) FROM rsa_keys WHERE user_id = ?";
+
+        try (
+                Connection conn = DatabaseConnection.getConnection();
+
+                PreparedStatement ps =
+                        conn.prepareStatement(sql)
+        ) {
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (Exception e) {
+
             e.printStackTrace();
         }
 

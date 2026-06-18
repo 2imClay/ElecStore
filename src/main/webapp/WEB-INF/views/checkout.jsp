@@ -448,6 +448,9 @@
     </div>
 </div>
 
+<!-- Toast Message -->
+<div id="toastMessage" class="toast-message"></div>
+
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -857,6 +860,276 @@
             $('#suggestDropdown').hide();
         });
     });
+
+    // Mở modal - reset về bước 1
+    function openKeyModal() {
+
+        $.ajax({
+
+            url:
+                '${pageContext.request.contextPath}/check-rsa-key',
+
+            type: 'GET',
+
+            dataType: 'json',
+
+            success: function(response) {
+
+                if(response.hasKey){
+
+                    showToast(
+                        'Bạn đã tạo khóa RSA trước đó',
+                        true
+                    );
+
+                    return;
+                }
+
+                document.getElementById(
+                    'keyModal'
+                ).style.display =
+                    'flex';
+            },
+
+            error: function() {
+
+                showToast(
+                    'Không thể kiểm tra khóa RSA',
+                    true
+                );
+            }
+        });
+    }
+
+    // Đóng modal
+    function closeKeyModal() {
+        document.getElementById('keyModal').style.display = 'none';
+    }
+
+    // Tạo khóa RSA
+    function generateRSAKey() {
+
+        const keySize =
+            document.querySelector(
+                'input[name="keySize"]:checked'
+            ).value;
+
+        $.ajax({
+            url: '${pageContext.request.contextPath}/generate-rsa-key',
+            type: 'POST',
+            data: {
+                keySize: keySize
+            },
+
+            success: function(response) {
+
+                generatedPublicKey = response.publicKey;
+                generatedPrivateKey = response.privateKey;
+
+                selectedKeySize =
+                    document.querySelector(
+                        'input[name="keySize"]:checked'
+                    ).value;
+
+                document.getElementById(
+                    "publicKeyDisplay"
+                ).value = generatedPublicKey;
+
+                document.getElementById(
+                    "privateKeyDisplay"
+                ).value = generatedPrivateKey;
+
+                document.getElementById(
+                    'stepConfirm'
+                ).style.display = 'none';
+
+                document.getElementById(
+                    'stepSuccess'
+                ).style.display = 'block';
+            },
+
+            error: function() {
+                showToast(
+                    'Tạo khóa RSA thất bại',
+                    true
+                );
+            }
+        });
+    }
+
+    // Tải public key
+    function downloadPublicKey() {
+
+        const content =
+            document.getElementById(
+                "publicKeyDisplay"
+            ).value;
+
+        const blob =
+            new Blob(
+                [content],
+                {type:"text/plain"}
+            );
+
+        const link =
+            document.createElement("a");
+
+        link.href =
+            URL.createObjectURL(blob);
+
+        link.download =
+            "public-key.pem";
+
+        link.click();
+    }
+
+    //Tải private key
+    function downloadPrivateKey() {
+
+        const content =
+            document.getElementById(
+                "privateKeyDisplay"
+            ).value;
+
+        const blob =
+            new Blob(
+                [content],
+                {type:"text/plain"}
+            );
+
+        const link =
+            document.createElement("a");
+
+        link.href =
+            URL.createObjectURL(blob);
+
+        link.download =
+            "private-key.pem";
+
+        link.click();
+    }
+
+    //Xác nhận sử dụng key
+    function useKey() {
+
+        if (!generatedPublicKey) {
+            showToast(
+                "Không tìm thấy khóa",
+                true
+            );
+            return;
+        }
+
+        $.ajax({
+
+            url:
+                '${pageContext.request.contextPath}/save-rsa-key',
+
+            type: 'POST',
+
+            data: {
+
+                publicKey:
+                generatedPublicKey,
+
+                keySize:
+                selectedKeySize
+            },
+
+            dataType: 'json',
+
+            success: function(response) {
+
+                if(response.success){
+
+                    showToast(
+                        "Khóa đã được lưu thành công"
+                    );
+
+                    closeKeyModal();
+
+                }else{
+
+                    showToast(
+                        "Lưu khóa thất bại",
+                        true
+                    );
+                }
+            },
+
+            error: function() {
+
+                showToast(
+                    "Lỗi khi lưu khóa",
+                    true
+                );
+            }
+        });
+    }
+
+    //Hủy xác nhận key
+    function cancelKey() {
+
+        if(
+            !confirm(
+                "Bạn có chắc muốn hủy khóa này?"
+            )
+        ){
+            return;
+        }
+
+        generatedPublicKey = "";
+        generatedPrivateKey = "";
+
+        document.getElementById(
+            "publicKeyDisplay"
+        ).value = "";
+
+        document.getElementById(
+            "privateKeyDisplay"
+        ).value = "";
+
+        document.getElementById(
+            "stepSuccess"
+        ).style.display = "none";
+
+        document.getElementById(
+            "stepConfirm"
+        ).style.display = "block";
+
+        showToast(
+            "Đã hủy khóa"
+        );
+    }
+
+    // Sao chép khóa vào clipboard
+    function copyKey() {
+        const key = document.getElementById('generatedKey').textContent;
+        navigator.clipboard.writeText(key).then(() => {
+            showToast('Đã sao chép khóa!');
+        });
+    }
+
+    // Xác nhận lưu và đóng modal
+    function saveAndClose() {
+        closeKeyModal();
+        showToast('Khóa xác thực đã được lưu thành công!');
+    }
+
+    // Toast notification
+    function showToast(message, isError = false) {
+        const toast = document.getElementById('toastMessage');
+        toast.textContent = message;
+        if (isError) {
+            toast.classList.add('error');
+        } else {
+            toast.classList.remove('error');
+        }
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    }
 
 </script>
 </body>
