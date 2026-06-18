@@ -625,6 +625,8 @@
 
 <script>
     let isVerified = false;
+    let savedSignatureBase64 = "";
+    let savedDocumentHash = "";
 
     function updatePaymentMethod(method) {
         console.log('Selected payment method:', method);
@@ -826,7 +828,9 @@
             // 3. Hiển thị kết quả
             resultDiv.style.display = 'block';
             if (isValid) {
-                isVerified = true; // <--- Người dùng đã xác thực thành công
+                isVerified = true;
+                savedSignatureBase64 = sigString;
+                savedDocumentHash = hashVal;
                 resultDiv.style.backgroundColor = '#d4edda';
                 resultDiv.style.color = '#155724';
                 resultDiv.innerHTML = '<i class="fa fa-check"></i> Chữ ký hợp lệ! Tài liệu toàn vẹn.';
@@ -910,7 +914,9 @@
             city: city,
             country: country,
             paymentMethod: paymentMethod,
-            note: note
+            note: note,
+            signature: savedSignatureBase64,
+            documentHash: savedDocumentHash
         }, function(response) {
             if (response.success) {
                 alert('✅ Đặt hàng thành công!');
