@@ -318,6 +318,21 @@
             <button class="btn-checkout" onclick="submitOrder()">
                 <i class="fas fa-check-circle"></i> Đặt hàng ngay
             </button>
+            <button class="verify-key-btn" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-top: 10px;
+                        background-color: #316c3d;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background 0.3s;
+">
+                <i class="fa-solid fa-download"></i><a href="" style="color: white; padding: 12px">Tải tool ký đơn hàng</a>
+            </button>
             <button class="verify-key-btn" onclick="openVerifyKeyModal()" style="
                         width: 100%;
                         padding: 12px;
@@ -348,6 +363,22 @@
                     ">
                 <i class="fa fa-key"></i> Tạo khóa xác thực
             </button>
+            <button class="btn btn-danger" onclick="reportLostPrivateKey()" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-top: 10px;
+                        background-color: #c01515;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: background 0.3s;
+                    ">
+                <i class="fa fa-key"></i> Mất khóa
+            </button>
+            <div id="keyDownloadBox" style="margin-top: 12px;"></div>
             <button class="download-order-btn" onclick="downloadOrderDocument()" style="
             width: 100%;
             padding: 12px;
@@ -1322,6 +1353,85 @@
         setTimeout(() => {
             toast.style.display = 'none';
         }, 3000);
+    }
+
+    function reportLostPrivateKey() {
+        const confirmLost = confirm(
+            "Bạn chắc chắn muốn báo mất private key?\n\n" +
+            "Khóa cũ sẽ bị thu hồi ngay lập tức và hệ thống sẽ tạo khóa mới. " +
+            "Các đơn hàng cũ vẫn có thể xác thực bằng public key cũ."
+        );
+
+        if (!confirmLost) return;
+
+        fetch(`${pageContext.request.contextPath}/report-lost-private-key`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "reason=" + encodeURIComponent("User reported lost private key")
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+
+                if (data.success) {
+                    showKeyDownloadButtons(data.privateKey, data.publicKey);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Có lỗi xảy ra khi báo mất private key.");
+            });
+    }
+
+    function showKeyDownloadButtons(privateKey, publicKey) {
+        const box = document.getElementById("keyDownloadBox");
+        if (!box) {
+            alert("Không tìm thấy vùng hiển thị nút tải khóa!");
+            return;
+        }
+
+        box.innerHTML = `
+        <button type="button" id="downloadPrivateKeyBtn" class="btn btn-danger" style="margin-right: 8px;">
+            Tải private key mới
+        </button>
+
+        <button type="button" id="downloadPublicKeyBtn" class="btn btn-primary">
+            Tải public key mới
+        </button>
+    `;
+
+        document.getElementById("downloadPrivateKeyBtn").onclick = function () {
+            downloadKeyFile(privateKey, `private_key_new.pem`);
+        };
+
+        document.getElementById("downloadPublicKeyBtn").onclick = function () {
+            downloadKeyFile(publicKey, `public_key_new.pem`);
+        };
+    }
+
+    function downloadKeyFile(content, fileName) {
+        if (!content) {
+            alert("Không có dữ liệu để tải: " + fileName);
+            return;
+        }
+
+        const blob = new Blob([content], {
+            type: "text/plain;charset=utf-8"
+        });
+
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
 </script>
