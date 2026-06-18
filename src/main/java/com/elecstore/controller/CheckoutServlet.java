@@ -2,6 +2,7 @@ package com.elecstore.controller;
 
 import com.elecstore.dao.*;
 import com.elecstore.model.*;
+import com.elecstore.utils.OrderDocumentUtil;
 import com.google.gson.JsonObject;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -148,12 +149,15 @@ public class CheckoutServlet extends HttpServlet {
 
                             if (signatureValid) {
                                 OrderSignature orderSignature = new OrderSignature();
+                                List<OrderDetail> details = orderDAO.getOrderDetails(orderId);
+                                String snapshotJson = OrderDocumentUtil.buildOrderSnapshotJson(savedOrder);
                                 orderSignature.setOrderId(orderId);
                                 orderSignature.setKeyId(rsaKey.getId());
                                 orderSignature.setSignature(signatureBase64);
                                 orderSignature.setDocumentHash(documentHash);
                                 orderSignature.setOrderDataHash(orderDataHash);
                                 orderSignature.setOrderSnapshotContent(orderSnapshot);
+                                orderSignature.setOrderSnapshotJson(snapshotJson);
 
                                 orderSignatureDAO.save(orderSignature);
                             }
